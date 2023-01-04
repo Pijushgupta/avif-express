@@ -57,8 +57,11 @@
 		 url('../fonts/poppins-v20-latin-700.svg#Poppins') format('svg'); /* Legacy iOS */
   }
 
-#avife-root{
-	font-family: 'Poppins', sans-serif;
+#avife-root, .awraq-toast{
+	font-family: 'Poppins', sans-serif !important;
+}
+.Vue-Toastification__toast-body{
+	@apply text-sm !important;
 }
 @media (min-width: 768px) {
 	#wpcontent{

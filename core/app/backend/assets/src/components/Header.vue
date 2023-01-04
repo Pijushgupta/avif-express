@@ -2,7 +2,7 @@
 	
 		<div class="avife-header flex flex-col justify-center p-4 text-white  rounded-t-xl bg-gradient-to-r  from-blue-800 to-blue-500   min-h-[200px] mt-5">
 		<h2 class="text-2xl font-semibold text-white mb-3">Avif express</h2>
-		<span>Convert existing and newly uploaded Images to lite-weight AVIF format</span>
+		<div class="flex flex-col md:flex-row md:justify-between"><span>Converts existing and newly uploaded Images to lite-weight AVIF format.</span><a href="https://www.linkedin.com/in/pijush-gupta-php/" class="bg-white text-blue-800 rounded-full px-4 py-1" target="_blank">hire me</a></div>
 	
 	</div>
 		

@@ -16,5 +16,8 @@ class Routes {
 		add_action('wp_ajax_ajaxSetImgQuality', array('App\common\Options', 'ajaxSetImgQuality'));
 		add_action('wp_ajax_ajaxGetComSpeed', array('App\common\Options', 'ajaxGetComSpeed'));
 		add_action('wp_ajax_ajaxSetComSpeed', array('App\common\Options', 'ajaxSetComSpeed'));
+		add_action('wp_ajax_ajaxConvertRemaining', array('App\common\Media', 'ajaxConvertRemaining'));
+		add_action('wp_ajax_ajaxDeleteAll', array('App\common\Media', 'ajaxDeleteAll'));
+		add_action('wp_ajax_ajaxGetCurrentTheme', array('App\backend\Theme', 'ajaxGetCurrentTheme'));
 	}
 }

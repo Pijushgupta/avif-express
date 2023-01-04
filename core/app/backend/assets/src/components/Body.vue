@@ -10,7 +10,8 @@
 			<ImageQuality />
 			<ImageCompression/>
 			<BulkConv/>
-			<DeleteImage/>
+			<ThemeConvVue/>
+			
 			
 		</div>
 	</div>
@@ -22,7 +23,8 @@ import OperationMode from './body/OperationMode.vue';
 import ImageQuality from './body/ImageQuality.vue';
 import ImageCompression from './body/ImageCompression.vue';
 import BulkConv from './body/BulkConv.vue';
-import DeleteImage from './body/DeleteImage.vue';
+import ThemeConvVue from './body/ThemeConv.vue';
+
 
 const gdstatus = gd;
 console.log(gdstatus);

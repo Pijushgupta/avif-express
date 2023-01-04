@@ -106,8 +106,10 @@ class Image {
 			if (file_exists($file)) wp_delete_file($file);
 		}
 
-		update_post_meta($post_id, 'avifexpressconverted', false);
+		delete_post_meta($post_id, 'avifexpressconverted', false);
 	}
+
+
 
 	public static function convert($mime, $src, $des, $quality, $speed) {
 		if (!$mime && !$src && !$des && !$quality && !$speed) return false;
