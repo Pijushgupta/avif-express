@@ -27,5 +27,5 @@ import ThemeConvVue from './body/ThemeConv.vue';
 
 
 const gdstatus = gd;
-console.log(gdstatus);
+
 </script>

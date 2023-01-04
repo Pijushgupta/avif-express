@@ -17259,7 +17259,6 @@ __webpack_require__.r(__webpack_exports__);
     var expose = _ref.expose;
     expose();
     var gdstatus = gd;
-    console.log(gdstatus);
     var __returned__ = {
       gdstatus: gdstatus,
       AutoConvStatus: _body_AutoConvStatus_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -17433,6 +17432,8 @@ __webpack_require__.r(__webpack_exports__);
           var _toast2 = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_1__.useToast)();
 
           _toast2("Deleted all Avif Images inside upload directory.");
+
+          convertedImage.value = 0;
         }
       })["catch"](function (err) {
         return console.log(err);
@@ -17675,10 +17676,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
+    var theme_name = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)();
+    var is_child = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)();
+    var conveted_files = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)();
+    var total_files = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)();
 
     function getTheme() {
       var data = new FormData();
@@ -17692,14 +17699,53 @@ __webpack_require__.r(__webpack_exports__);
         return res.json();
       }).then(function (res) {
         console.log(res);
+        theme_name.value = res[0].theme_name;
+        is_child.value = res[0].is_child;
+        conveted_files.value = res[0].files.converted;
+        total_files.value = res[0].files.total;
       })["catch"](function (err) {
         return console.log(err);
       });
     }
 
     getTheme();
+
+    function convert() {
+      if (conveted_files.value == total_files.value || total_files.value <= 0) {
+        return false;
+      }
+
+      var data = new FormData();
+      data.append('avife_nonce', avife_nonce);
+      data.append('action', 'ajaxThemeFilesConvert');
+      fetch(avife_ajax_path, {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: data
+      }).then(function (res) {
+        return res.json();
+      }).then(function (res) {
+        console.log(res);
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    }
+
+    function deleteImg() {
+      if (conveted_files.value == 0) {
+        return false;
+      }
+    }
+
     var __returned__ = {
-      getTheme: getTheme
+      theme_name: theme_name,
+      is_child: is_child,
+      conveted_files: conveted_files,
+      total_files: total_files,
+      getTheme: getTheme,
+      convert: convert,
+      deleteImg: deleteImg,
+      ref: vue__WEBPACK_IMPORTED_MODULE_0__.ref
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -17893,7 +17939,7 @@ var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_2, [_hoisted_3, $setup.totalImages != null && $setup.convertedImage != null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.convertedImage) + " /" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.totalImages) + ")", 1
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.convertedImage) + " / " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.totalImages) + ")", 1
   /* TEXT */
   )], 2112
   /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
@@ -18096,21 +18142,26 @@ __webpack_require__.r(__webpack_exports__);
 var _hoisted_1 = {
   "class": "w-full flex flex-row justify-between items-center p-4 border-b"
 };
-
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_2 = {
   "class": "w-1/2 flex justify-start",
   "for": "bulkcnvtbtn"
-}, "Theme:", -1
+};
+
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  "class": "bg-gray-600 text-white px-4 py-2 rounded-full"
+}, "Delete", -1
 /* HOISTED */
 );
 
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_4 = [_hoisted_2, _hoisted_3];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, _hoisted_4);
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_2, "Theme: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.theme_name) + " (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.conveted_files) + " / " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.total_files) + ")", 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "w-1/2 flex justify-end"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "bg-blue-600 text-white px-4 py-2 rounded-full mr-3",
+    onClick: $setup.convert
+  }, "Convert"), _hoisted_3])]);
 }
 
 /***/ }),

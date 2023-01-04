@@ -23,7 +23,6 @@ class Media {
 		echo json_encode(array($convertedMedia, $allMedia));
 		wp_die();
 	}
-
 	public static function ajaxConvertRemaining() {
 		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
 
@@ -31,9 +30,6 @@ class Media {
 		echo json_encode('done');
 		wp_die();
 	}
-
-
-
 	public static function convertRemaining() {
 		$unConvertedAttachments = self::getAttachments(0);
 		if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) {
@@ -45,13 +41,11 @@ class Media {
 			Image::beforeConvert(wp_get_attachment_metadata($unConvertedAttachment->ID), $unConvertedAttachment->ID);
 		}
 	}
-
 	public static function ajaxDeleteAll() {
 		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
 		echo json_encode(self::deleteAll());
 		wp_die();
 	}
-
 	public static function deleteAll() {
 		$attachments = self::getAttachments(1);
 		foreach ($attachments as $attachment) {

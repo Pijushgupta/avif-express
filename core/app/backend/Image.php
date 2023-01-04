@@ -115,16 +115,16 @@ class Image {
 		if (!$mime && !$src && !$des && !$quality && !$speed) return false;
 
 		if ($mime == 'image/jpeg' || $mime == 'image/jpg') {
-			$src = imagecreatefromjpeg($src);
+			$sourceGDImg = @imagecreatefromjpeg($src);
 		}
 		if ($mime == 'image/png') {
-			$src = imagecreatefrompng($src);
+			$sourceGDImg = @imagecreatefrompng($src);
 		}
 		if ($mime == 'image/webp') {
-			$src = imagecreatefromwebp($src);
+			$sourceGDImg = @imagecreatefromwebp($src);
 		}
-
-		imageavif($src, $des, $quality, $speed);
+		if (gettype($sourceGDImg) == 'boolean') return;
+		@imageavif($sourceGDImg, $des, $quality, $speed);
 	}
 
 

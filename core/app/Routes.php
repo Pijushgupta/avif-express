@@ -19,5 +19,6 @@ class Routes {
 		add_action('wp_ajax_ajaxConvertRemaining', array('App\common\Media', 'ajaxConvertRemaining'));
 		add_action('wp_ajax_ajaxDeleteAll', array('App\common\Media', 'ajaxDeleteAll'));
 		add_action('wp_ajax_ajaxGetCurrentTheme', array('App\backend\Theme', 'ajaxGetCurrentTheme'));
+		add_action('wp_ajax_ajaxThemeFilesConvert', array('App\backend\Theme', 'ajaxThemeFilesConvert'));
 	}
 }

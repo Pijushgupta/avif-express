@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full flex flex-row justify-between items-center p-4 border-b">
-				<label class="w-1/2 flex justify-start" for="bulkcnvtbtn">Upload Directory <template v-if="totalImages != null && convertedImage != null">({{convertedImage}}  /{{totalImages}})</template></label>
+				<label class="w-1/2 flex justify-start" for="bulkcnvtbtn">Upload Directory <template v-if="totalImages != null && convertedImage != null">({{convertedImage}} / {{totalImages}})</template></label>
 				<div class="w-1/2 flex justify-end">
 					<button class=" bg-blue-600 text-white px-4 py-2 rounded-full mr-3" id="bulkcnvtbtn" v-on:click="convert">Convert</button>
 					<button class=" bg-gray-600 text-white px-4 py-2 rounded-full" id="delconvimgs" v-on:click="deleteAll" >Delete</button>
@@ -74,6 +74,7 @@ function deleteAll() {
 			if (res == true) {
 				const toast = useToast();
 				toast("Deleted all Avif Images inside upload directory.");
+				convertedImage.value = 0;
 			}
 		})
 		.catch(err => console.log(err));
