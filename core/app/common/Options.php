@@ -33,7 +33,7 @@ class Options {
 	public static function getOperationMode() {
 		$opMode = get_option('avifoperationmode', false);
 		if ($opMode == false) {
-			update_option('avifoperationmode', 'active');
+			update_option('avifoperationmode', sanitize_text_field('inactive'));
 		}
 		return get_option('avifoperationmode');
 	}
@@ -41,7 +41,7 @@ class Options {
 
 	public static function ajaxSetOperationMode() {
 		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
-		echo json_encode(self::setOperationMode($_POST['mode']));
+		echo json_encode(self::setOperationMode(sanitize_text_field($_POST['mode'])));
 		wp_die();
 	}
 
@@ -66,7 +66,7 @@ class Options {
 	}
 	public static function setImgQuality($value = '') {
 		if ($value == '') return;
-		return update_option('avifimagequality', intval($value));
+		return update_option('avifimagequality', $value);
 	}
 
 	public static function ajaxGetComSpeed() {
@@ -84,6 +84,6 @@ class Options {
 	}
 	public static function setComSpeed($value = '') {
 		if ($value == '') return;
-		return update_option('avifcompressionspeed', intval($value));
+		return update_option('avifcompressionspeed', $value);
 	}
 }

@@ -20,7 +20,7 @@ class Media {
 		if (gettype($convertedMedia) == 'array') {
 			$convertedMedia = count($convertedMedia);
 		}
-		echo json_encode(array($convertedMedia, $allMedia));
+		echo json_encode(array($convertedMedia, $allMedia, count(get_intermediate_image_sizes())));
 		wp_die();
 	}
 	public static function ajaxConvertRemaining() {

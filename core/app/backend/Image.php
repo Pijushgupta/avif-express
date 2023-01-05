@@ -44,14 +44,14 @@ class Image {
 
 				$srcPath = self::attachmentUrlToPath($originalImage);
 				$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
-				$mime = 'image/' . pathinfo($srcPath, PATHINFO_EXTENSION);
-				self::convert($mime, $srcPath, $desPath, $quality, $speed);
+
+				self::convert($srcPath, $desPath, $quality, $speed);
 			}
 		} else {
 			$srcPath = self::attachmentUrlToPath($originalImages[0]);
 			$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
-			$mime = 'image/' . pathinfo($srcPath, PATHINFO_EXTENSION);
-			self::convert($mime, $srcPath, $desPath, $quality, $speed);
+
+			self::convert($srcPath, $desPath, $quality, $speed);
 		}
 		/**
 		 * ends
@@ -65,8 +65,8 @@ class Image {
 		foreach ($allSizes as $size) {
 			$src = $fileDir . '/' . $size['file'];
 			$des = rtrim($src, '.' . pathinfo($src, PATHINFO_EXTENSION)) . '.avif';
-			$mime = 'image/' . pathinfo($src, PATHINFO_EXTENSION);
-			self::convert($mime, $src, $des, $quality, $speed);
+
+			self::convert($src, $des, $quality, $speed);
 		}
 		/**
 		 * ends
@@ -111,16 +111,18 @@ class Image {
 
 
 
-	public static function convert($mime, $src, $des, $quality, $speed) {
-		if (!$mime && !$src && !$des && !$quality && !$speed) return false;
+	public static function convert($src, $des, $quality, $speed) {
+		if (!$src && !$des && !$quality && !$speed) return false;
 
-		if ($mime == 'image/jpeg' || $mime == 'image/jpg') {
+        $fileType = getimagesize($src)['mime'];
+
+		if ( $fileType == 'image/jpeg' ||  $fileType == 'image/jpg') {
 			$sourceGDImg = @imagecreatefromjpeg($src);
 		}
-		if ($mime == 'image/png') {
+		if ( $fileType == 'image/png') {
 			$sourceGDImg = @imagecreatefrompng($src);
 		}
-		if ($mime == 'image/webp') {
+		if ( $fileType == 'image/webp') {
 			$sourceGDImg = @imagecreatefromwebp($src);
 		}
 		if (gettype($sourceGDImg) == 'boolean') return;

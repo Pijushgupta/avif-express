@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full flex md:flex-row flex-col justify-between items-center p-4 border-b">
-				<label class="w-full md:w-1/2 flex justify-start mb-2 md:mb-0" for="opmode">Operation Mode</label>
-				<div class="w-full md:w-1/2 flex justify-start md:justify-end"><select id="opmode" class="w-full md:w-auto" v-model="operationModeStatus" v-on:change="setOperationMode"><option value="active">Active</option><option value="idle">Idle (if you are using another plugin for the same.)</option></select></div>
+				<label class="w-full md:w-1/2 flex justify-start mb-2 md:mb-0" for="opmode">Rendering</label>
+				<div class="w-full md:w-1/2 flex justify-start md:justify-end"><select id="opmode" class="w-full md:w-auto" v-model="operationModeStatus" v-on:change="setOperationMode"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
 			</div>
 </template>
 <script setup>
