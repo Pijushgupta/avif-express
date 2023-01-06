@@ -18382,7 +18382,7 @@ var _hoisted_2 = {
   "for": "bulkcnvtbtn"
 };
 
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Upload Directory ");
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Upload directory ");
 
 var _hoisted_4 = {
   key: 0,
