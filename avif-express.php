@@ -2,10 +2,12 @@
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 /**
  * Plugin Name: AVIF Express
+ * Plugin URI: https://www.aavoya.co/avif-express
  * Author: Pijush Gupta
  * Author uri: https://www.linkedin.com/in/pijush-gupta-php/
  * Description: Converts Images to AVIF
  * Version: 2023.01
+ * Tags: avif, images, performance
  */
 
 if (!file_exists(__DIR__ . '/core/app/app.php')) return;

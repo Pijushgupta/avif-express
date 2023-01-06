@@ -76,7 +76,7 @@ class Theme {
 
 	/**
 	 * ajaxThemeFilesDelete
-	 *
+	 * ajax handle for themeFilesDelete
 	 * @return void
 	 */
 	public static function ajaxThemeFilesDelete() {
@@ -85,17 +85,37 @@ class Theme {
 		wp_die();
 	}
 
+	/**
+	 * themeFilesDelete
+	 * Deletes .avif files from theme folders. 
+	 * In case of child theme, delete from parent and child.
+	 * @return boolean
+	 */
 	public static function themeFilesDelete() {
-		$themeDirs = self::avif_get_theme_dirs();
-		$filePaths = [];
-		foreach ($themeDirs as $themeDir) {
-			$filePaths = array_merge($filePaths, self::findFiles($themeDir, array("png", "jpg", "webp", "jpeg"), -1));
-		}
+
+		$filePaths = self::themeFilesConverted();
+		/**
+		 * if no file found , terminating the process.
+		 */
 		if (empty($filePaths)) return false;
+		/**
+		 * iterating through file paths
+		 * 
+		 */
 		foreach ($filePaths as $filePath) {
+			/**
+			 * creating path for file to delete. Just by removing original extension with .avif 
+			 */
 			$dest = (string)rtrim($filePath, '.' . pathinfo($filePath, PATHINFO_EXTENSION)) . '.avif';
+
+			/**
+			 * Finally deleting the file
+			 */
 			if (file_exists($dest)) wp_delete_file($dest);
 		}
+		/**
+		 * returning true for positive signal
+		 */
 		return true;
 	}
 
@@ -103,14 +123,13 @@ class Theme {
 
 	/**
 	 * themeFilesConverted
-	 * returns a array containing the paths of jpg,webp and jpeg images in the theme dir
-	 * that are already converted
-	 * @return array
+	 * @return array returns a array containing the paths of jpg,webp and jpeg images in the theme dir(s) that are already converted
 	 */
 	public static function themeFilesConverted() {
 		$themeDirs = self::avif_get_theme_dirs();
 		$convertedFiles = [];
 		foreach ($themeDirs as $themeDir) {
+
 			$convertedFiles = array_merge($convertedFiles, self::findFiles($themeDir, array("png", "jpg", "webp", "jpeg"), -1));
 		}
 		return $convertedFiles;
@@ -149,56 +168,84 @@ class Theme {
 
 	/**
 	 * findFiles
-	 * @param  string $basePath : root path
+	 * @param  string $basePath : root path to start the search
 	 * @param  array $exts : extension of files to look for
 	 * @param  int $hasAvif: 0  - All , 1 - Unconverted, -1 - Converted 
-	 * @return array
+	 * @return array file paths
 	 */
 	public static function findFiles($basePath, $exts, $hasAvif = 0) {
+		/**
+		 * To store the paths 
+		 */
 		$files = [];
+		/**
+		 * iterating through provided extensions 
+		 */
 		foreach ($exts as $ext) {
-
+			/**
+			 * looking at provided directory path and storing all the file path with specific extension($ext) 
+			 */
 			$baseFiles = glob("$basePath/*.$ext");
 
-			if ($hasAvif == 1) {
-				foreach ($baseFiles as $key => $baseFile) {
-					$avifFile = rtrim($baseFile, '.' . pathinfo($baseFile, PATHINFO_EXTENSION)) . '.avif';
-					if (file_exists($avifFile)) {
-						unset($baseFiles[$key]);
-					}
+			/**
+			 * iterating through file paths
+			 */
+			foreach ($baseFiles as $key => $baseFile) {
+				/**
+				 * creating .avif file path from the source file path
+				 */
+				$avifFile = rtrim($baseFile, '.' . pathinfo($baseFile, PATHINFO_EXTENSION)) . '.avif';
+				/**
+				 * $hasAvif = 1 , unconverted files.
+				 * $hasAvif = -1, converted files
+				 * $hasAvif = 0, do nothing (keeping all)
+				 */
+				if (file_exists($avifFile) && $hasAvif == 1) {
+					unset($baseFiles[$key]);
+				}
+				if (!file_exists($avifFile) && $hasAvif == -1) {
+					unset($baseFiles[$key]);
 				}
 			}
-
-			if ($hasAvif == -1) {
-				foreach ($baseFiles as $key => $baseFile) {
-					$avifFile = rtrim($baseFile, '.' . pathinfo($baseFile, PATHINFO_EXTENSION)) . '.avif';
-					if (!file_exists($avifFile)) {
-						unset($baseFiles[$key]);
-					}
-				}
-			}
-
+			/**
+			 * storing the source file paths
+			 */
 			$files  = array_merge($files, $baseFiles);
 		}
+		/**
+		 * finding paths of all sub directories within provided base directory
+		 * and storing them
+		 * @type array
+		 */
+		$sub_dirs = glob("$basePath/*", GLOB_ONLYDIR);
 
-		foreach (glob("$basePath/*", GLOB_ONLYDIR) as $sub_dir) {
-
+		/**
+		 * iterating through sub_directories
+		 */
+		foreach ($sub_dirs as $sub_dir) {
+			/**
+			 * calling itself with sub_directory with originally provided extension and return type.
+			 * RECURSION 
+			 */
 			$sub_files = self::findFiles($sub_dir, $exts, $hasAvif);
+			/**
+			 * And storing that
+			 */
 			$files = array_merge($files, $sub_files);
 		}
+		/**
+		 * Finally returning all
+		 */
 		return $files;
 	}
 
 	/**
 	 * avif_get_theme_dirs
-	 * returns the theme path(s)
-	 * In case child theme, return parent and child theme path
-	 * @return array
+	 * @return array returns the theme path(s). In case of child theme, return parent and child theme path
 	 */
 	public static function avif_get_theme_dirs() {
 		$themes = array();
 		if (is_child_theme()) {
-
 			$themes[] = get_stylesheet_directory();
 			$themes[] = get_template_directory();
 		} else {
