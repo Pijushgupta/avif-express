@@ -56,11 +56,18 @@ function convert() {
 	})
 		.then(res => res.json())
 		.then(res => {
-			console.log(res);
+			
 			if (res == true) {
 				getTheme();
 				const toast = useToast();
 				toast("Converted all Images inside theme directory.");
+				toWait.toggleWaiting();
+			}
+
+			if (res == false) {
+				getTheme();
+				const toast = useToast();
+				toast.error("Operation failed, Unable to set php execution time limit.");
 				toWait.toggleWaiting();
 			}
 			
@@ -92,7 +99,7 @@ function deleteImg(){
 				toast("Deleted all Avif Images inside the Theme directory.");
 				toWait.toggleWaiting();
 			}
-			console.log(res);
+			
 			
 		})
 		.catch(err => console.log(err));

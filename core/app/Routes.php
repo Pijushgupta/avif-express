@@ -18,8 +18,8 @@ class Routes {
 		add_action('wp_ajax_ajaxSetComSpeed', array('App\common\Options', 'ajaxSetComSpeed'));
 		add_action('wp_ajax_ajaxConvertRemaining', array('App\common\Media', 'ajaxConvertRemaining'));
 		add_action('wp_ajax_ajaxDeleteAll', array('App\common\Media', 'ajaxDeleteAll'));
-		add_action('wp_ajax_ajaxGetCurrentTheme', array('App\backend\Theme', 'ajaxGetCurrentTheme'));
-		add_action('wp_ajax_ajaxThemeFilesConvert', array('App\backend\Theme', 'ajaxThemeFilesConvert'));
-		add_action('wp_ajax_ajaxThemeFilesDelete', array('App\backend\Theme', 'ajaxThemeFilesDelete'));
+		add_action('wp_ajax_ajaxGetCurrentTheme', array('App\common\Theme', 'ajaxGetCurrentTheme'));
+		add_action('wp_ajax_ajaxThemeFilesConvert', array('App\common\Theme', 'ajaxThemeFilesConvert'));
+		add_action('wp_ajax_ajaxThemeFilesDelete', array('App\common\Theme', 'ajaxThemeFilesDelete'));
 	}
 }

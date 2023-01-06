@@ -6,6 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
+    'voku\\helper\\' => array($vendorDir . '/voku/simple_html_dom/src/voku/helper'),
+    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
+    'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'App\\' => array($baseDir . '/app'),
 );

@@ -33,7 +33,7 @@ function getAttachemnts(){
 			convertedImage.value = res[0]
 			totalImages.value = res[1]
 			numberOfthums.value = res[2]	
-			console.log(res)
+		
 			
 		})
 		.catch(err => {console.log(err) });
@@ -55,9 +55,15 @@ function convert() {
 	})
 		.then(res => res.json())
 		.then(res => {
-			if (res === 'done') {
+			if (res === true) {
 				const toast = useToast();
 				toast("Converted all Images inside upload directory.");
+				getAttachemnts();
+				toWait.toggleWaiting();
+			}
+			if (res === false) {
+				const toast = useToast();
+				toast.error("Operation failed, Unable to set php execution time limit.");
 				getAttachemnts();
 				toWait.toggleWaiting();
 			}
@@ -79,7 +85,7 @@ function deleteAll() {
 	})
 		.then(res => res.json())
 		.then(res => {
-			if (res == true) {
+			if (res === true) {
 				const toast = useToast();
 				toast("Deleted all Avif Images inside upload directory.");
 				convertedImage.value = 0;

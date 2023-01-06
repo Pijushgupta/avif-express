@@ -17675,7 +17675,6 @@ __webpack_require__.r(__webpack_exports__);
         convertedImage.value = res[0];
         totalImages.value = res[1];
         numberOfthums.value = res[2];
-        console.log(res);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -17698,10 +17697,19 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         return res.json();
       }).then(function (res) {
-        if (res === 'done') {
+        if (res === true) {
           var _toast = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_2__.useToast)();
 
           _toast("Converted all Images inside upload directory.");
+
+          getAttachemnts();
+          toWait.toggleWaiting();
+        }
+
+        if (res === false) {
+          var _toast2 = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_2__.useToast)();
+
+          _toast2.error("Operation failed, Unable to set php execution time limit.");
 
           getAttachemnts();
           toWait.toggleWaiting();
@@ -17726,10 +17734,10 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         return res.json();
       }).then(function (res) {
-        if (res == true) {
-          var _toast2 = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_2__.useToast)();
+        if (res === true) {
+          var _toast3 = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_2__.useToast)();
 
-          _toast2("Deleted all Avif Images inside upload directory.");
+          _toast3("Deleted all Avif Images inside upload directory.");
 
           convertedImage.value = 0;
           toWait.toggleWaiting();
@@ -18034,14 +18042,22 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         return res.json();
       }).then(function (res) {
-        console.log(res);
-
         if (res == true) {
           getTheme();
 
           var _toast = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_1__.useToast)();
 
           _toast("Converted all Images inside theme directory.");
+
+          toWait.toggleWaiting();
+        }
+
+        if (res == false) {
+          getTheme();
+
+          var _toast2 = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_1__.useToast)();
+
+          _toast2.error("Operation failed, Unable to set php execution time limit.");
 
           toWait.toggleWaiting();
         }
@@ -18071,14 +18087,12 @@ __webpack_require__.r(__webpack_exports__);
         if (res == true) {
           getTheme();
 
-          var _toast2 = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_1__.useToast)();
+          var _toast3 = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_1__.useToast)();
 
-          _toast2("Deleted all Avif Images inside the Theme directory.");
+          _toast3("Deleted all Avif Images inside the Theme directory.");
 
           toWait.toggleWaiting();
         }
-
-        console.log(res);
       })["catch"](function (err) {
         return console.log(err);
       });

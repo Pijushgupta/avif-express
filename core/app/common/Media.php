@@ -4,10 +4,11 @@ namespace App\common;
 
 if (!defined('ABSPATH')) exit;
 
-use App\backend\Image;
+use App\common\Setting;
+use App\common\Image;
 
 class Media {
-	public static $status = null;
+
 	public static function ajaxCountMedia() {
 		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
 
@@ -26,8 +27,7 @@ class Media {
 	public static function ajaxConvertRemaining() {
 		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
 
-		self::convertRemaining();
-		echo json_encode('done');
+		echo json_encode(self::convertRemaining());
 		wp_die();
 	}
 	public static function convertRemaining() {
@@ -35,11 +35,15 @@ class Media {
 		if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) {
 			return false;
 		}
-
-
+		/**
+		 * Checking if 'set_time_limit' can be set or not 
+		 * if not don't do anything
+		 */
+		if (Setting::avif_set_time_limit() == false) return false;
 		foreach ($unConvertedAttachments as $unConvertedAttachment) {
 			Image::beforeConvert(wp_get_attachment_metadata($unConvertedAttachment->ID), $unConvertedAttachment->ID);
 		}
+		return true;
 	}
 	public static function ajaxDeleteAll() {
 		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
