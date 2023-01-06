@@ -32,16 +32,21 @@ class Media {
 	}
 	public static function convertRemaining() {
 		$unConvertedAttachments = self::getAttachments(0);
-		if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) {
-			return false;
-		}
+		if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) return null;
+
 		/**
 		 * Checking if 'set_time_limit' can be set or not 
 		 * if not don't do anything
 		 */
 		if (Setting::avif_set_time_limit() == false) return false;
+		$counter = 1;
 		foreach ($unConvertedAttachments as $unConvertedAttachment) {
+
 			Image::beforeConvert(wp_get_attachment_metadata($unConvertedAttachment->ID), $unConvertedAttachment->ID);
+			if ($counter == 2) {
+				return 'keep-alive';
+			}
+			$counter++;
 		}
 		return true;
 	}

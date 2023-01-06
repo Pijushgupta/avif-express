@@ -51,7 +51,7 @@ class Theme {
 		foreach ($themeDirs as $themeDir) {
 			$filePaths = array_merge($filePaths, self::findFiles($themeDir, array("png", "jpg", "webp", "jpeg"), 1));
 		}
-		if (empty($filePaths)) return false;
+		if (empty($filePaths) || gettype($filePaths) != 'array') return null;
 
 		$quality = Options::getImageQuality();
 		$speed = Options::getComSpeed();
@@ -60,10 +60,15 @@ class Theme {
 		 * if not don't do anything
 		 */
 		if (Setting::avif_set_time_limit() == false) return false;
+		$counter = 1;
 		foreach ($filePaths as $filePath) {
 
 			$dest = (string)rtrim($filePath, '.' . pathinfo($filePath, PATHINFO_EXTENSION)) . '.avif';
 			Image::convert($filePath, $dest, $quality, $speed);
+			if ($counter == 5) {
+				return 'keep-alive';
+			}
+			$counter++;
 		}
 
 		return true;

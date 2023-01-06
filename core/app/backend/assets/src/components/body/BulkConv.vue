@@ -44,7 +44,9 @@ function convert() {
 	if (totalImages.value === convertedImage.value) return false;
 	const toast = useToast();
 	toWait.toggleWaiting();
-	toast("Conversion may take time. Once its done, we well notify you!");
+	toast("Conversion may take time. Once its done, we will notify you!");
+
+	function innerConvert() {
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
 	data.append('action', 'ajaxConvertRemaining');
@@ -55,7 +57,7 @@ function convert() {
 	})
 		.then(res => res.json())
 		.then(res => {
-			if (res === true) {
+			if (res === true || res === null) {
 				const toast = useToast();
 				toast("Converted all Images inside upload directory.");
 				getAttachemnts();
@@ -67,8 +69,16 @@ function convert() {
 				getAttachemnts();
 				toWait.toggleWaiting();
 			}
+			if (res === 'keep-alive') {
+				console.log('keep-alive');
+				innerConvert();
+			}
 		})
 		.catch(err => console.log(err));
+	}
+
+	innerConvert();
+	
 }
 function deleteAll() {
 	if (convertedImage.value < 1) return false;

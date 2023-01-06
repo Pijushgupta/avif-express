@@ -29,7 +29,7 @@ final class Ui {
 	public static function render() {
 		$url 		= admin_url('admin-ajax.php');
 		$avife_nonce 		= wp_create_nonce('avife_nonce');
-		$assetPath 	= AVIFE_REL . '/core/app/backend/assets/dist/';
+		$assetPath 	= AVIFE_REL . '/core/app/backend/assets/';
 		$gd = extension_loaded('gd');
 		printf(
 			'<script> 

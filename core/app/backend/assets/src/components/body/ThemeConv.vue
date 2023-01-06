@@ -46,33 +46,43 @@ function convert() {
 	const toast = useToast();
 	toast("Conversion may take time. Once its done, we well notify you!");
 	toWait.toggleWaiting();
-	const data = new FormData();
-	data.append('avife_nonce', avife_nonce);
-	data.append('action', 'ajaxThemeFilesConvert');
-	fetch(avife_ajax_path, {
-		method: 'POST',
-		credentials: 'same-origin',
-		body:data
-	})
+	function innerConvert() {
+		const data = new FormData();
+		data.append('avife_nonce', avife_nonce);
+		data.append('action', 'ajaxThemeFilesConvert');
+		fetch(avife_ajax_path, {
+			method: 'POST',
+			credentials: 'same-origin',
+			body:data
+		})
 		.then(res => res.json())
 		.then(res => {
 			
-			if (res == true) {
+			if (res === true || res === null) {
 				getTheme();
 				const toast = useToast();
 				toast("Converted all Images inside theme directory.");
 				toWait.toggleWaiting();
 			}
 
-			if (res == false) {
+			if (res === false) {
 				getTheme();
 				const toast = useToast();
 				toast.error("Operation failed, Unable to set php execution time limit.");
 				toWait.toggleWaiting();
 			}
+
+			if (res === 'keep-alive') {
+				console.log('keep-alive');
+				innerConvert()
+			}
 			
 		})
 		.catch(err => console.log(err));
+	}
+
+	innerConvert();
+	
 
 }
 
@@ -81,7 +91,7 @@ function deleteImg(){
 		return false;
 	} 
 	const toast = useToast();
-	toast("This may take time. Once its done, we well notify you!");
+	toast("This may take time. Once its done, we will notify you!");
 	toWait.toggleWaiting();
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
