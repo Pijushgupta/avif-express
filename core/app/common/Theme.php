@@ -11,7 +11,7 @@ use App\common\Setting;
 class Theme {
 
 	public static function ajaxGetCurrentTheme() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
 		echo json_encode(self::getCurrentTheme());
 		wp_die();
 	}
@@ -34,7 +34,7 @@ class Theme {
 	}
 
 	public static function ajaxThemeFilesConvert() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
 		echo json_encode(self::themeFilesConvert());
 		wp_die();
 	}
@@ -80,7 +80,7 @@ class Theme {
 	 * @return void
 	 */
 	public static function ajaxThemeFilesDelete() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false || extension_loaded('GD') != 1) wp_die();
 		echo json_encode(self::themeFilesDelete());
 		wp_die();
 	}

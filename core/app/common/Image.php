@@ -8,6 +8,11 @@ use App\common\Options;
 
 class Image {
 
+	/**
+	 * activate
+	 * Adding our methods to wordpress hooks
+	 * @return void
+	 */
 	public static function activate() {
 		/**
 		 * checking if GD extension is enabled 
@@ -23,6 +28,13 @@ class Image {
 		add_action('delete_attachment',  array('App\backend\Image', 'delete'), 10, 3);
 	}
 
+	/**
+	 * beforeConvert
+	 * Finding attachment and all its sizes and converting them, using self::convert method
+	 * @param  mixed $metadata
+	 * @param  mixed $attachment_id
+	 * @return void
+	 */
 	public static function beforeConvert($metadata, $attachment_id) {
 
 		$attachment = get_post($attachment_id);
@@ -75,6 +87,13 @@ class Image {
 		return $metadata;
 	}
 
+	/**
+	 * delete
+	 * finding the converted image and its thumbs and deleting
+	 * @param  mixed $post_id
+	 * @param  mixed $post
+	 * @return void
+	 */
 	public static function delete($post_id, $post) {
 
 		$orginalImageUrl = $post->guid;
@@ -109,8 +128,15 @@ class Image {
 		delete_post_meta($post_id, 'avifexpressconverted', false);
 	}
 
-
-
+	/**
+	 * convert
+	 * This Method actually convert image and save them  
+	 * @param  mixed $src Path of the source file
+	 * @param  mixed $des Path to save converted file 
+	 * @param  mixed $quality Image Quality(0 - 100)
+	 * @param  mixed $speed Conversion speed (0 - 10)
+	 * @return void
+	 */
 	public static function convert($src, $des, $quality, $speed) {
 		if (!$src && !$des && !$quality && !$speed) return false;
 
@@ -130,8 +156,12 @@ class Image {
 		@imagedestroy($sourceGDImg);
 	}
 
-
-
+	/**
+	 * attachmentUrlToPath
+	 * This function converts the url of an Image to actual path of that image 
+	 * @param  string $url url of an Image
+	 * @return string  path of an Image
+	 */
 	public static function attachmentUrlToPath($url) {
 		$parsed_url = parse_url($url);
 		if (empty($parsed_url['path'])) return false;

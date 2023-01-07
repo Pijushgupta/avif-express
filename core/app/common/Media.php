@@ -9,9 +9,22 @@ use App\common\Image;
 
 class Media {
 
+	/**
+	 * ajaxCountMedia
+	 * @return void ajax handle for countMedia
+	 */
 	public static function ajaxCountMedia() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::countMedia());
+		wp_die();
+	}
 
+	/**
+	 * countMedia
+	 *
+	 * @return array in array(number of converted iamges, number of total images, number of various image sizes)
+	 */
+	public static function countMedia() {
 		$allMedia = self::getAttachments(-1);
 		if (gettype($allMedia) == 'array') {
 			$allMedia = count($allMedia);
@@ -21,15 +34,26 @@ class Media {
 		if (gettype($convertedMedia) == 'array') {
 			$convertedMedia = count($convertedMedia);
 		}
-		echo json_encode(array($convertedMedia, $allMedia, count(get_intermediate_image_sizes())));
-		wp_die();
-	}
-	public static function ajaxConvertRemaining() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
 
+		return array($convertedMedia, $allMedia, count(get_intermediate_image_sizes()));
+	}
+
+	/**
+	 * ajaxConvertRemaining
+	 *
+	 * @return void ajax handle for convertRemaining 
+	 */
+	public static function ajaxConvertRemaining() {
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false || extension_loaded('GD') != 1) wp_die();
 		echo json_encode(self::convertRemaining());
 		wp_die();
 	}
+
+	/**
+	 * convertRemaining
+	 *
+	 * @return boolean|null|string true on success. false on error, null on empty source and string 'keep-alive' to let client know to request again. 
+	 */
 	public static function convertRemaining() {
 		$unConvertedAttachments = self::getAttachments(0);
 		if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) return null;
@@ -50,11 +74,23 @@ class Media {
 		}
 		return true;
 	}
+
+	/**
+	 * ajaxDeleteAll
+	 *
+	 * @return void ajax handle for deleteAll
+	 */
 	public static function ajaxDeleteAll() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) return;
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();;
 		echo json_encode(self::deleteAll());
 		wp_die();
 	}
+
+	/**
+	 * deleteAll
+	 * delete All converted Images
+	 * @return true as signal
+	 */
 	public static function deleteAll() {
 		$attachments = self::getAttachments(1);
 		foreach ($attachments as $attachment) {
@@ -62,9 +98,6 @@ class Media {
 		}
 		return true;
 	}
-
-
-
 
 	/**
 	 * getAttachments
