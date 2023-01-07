@@ -48,6 +48,7 @@ class Image {
 		 * converting original image(s)
 		 */
 		$originalImages[0] =  $attachment->guid;
+
 		$uploadDirInfo = wp_upload_dir();
 		$originalImages[1] = $uploadDirInfo['baseurl'] . '/' . $metadata['file'];
 
@@ -55,15 +56,18 @@ class Image {
 			foreach ($originalImages as $originalImage) {
 
 				$srcPath = self::attachmentUrlToPath($originalImage);
-				$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
-
-				self::convert($srcPath, $desPath, $quality, $speed);
+				if ($srcPath != false && $srcPath != '') {
+					$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
+					self::convert($srcPath, $desPath, $quality, $speed);
+				}
 			}
 		} else {
-			$srcPath = self::attachmentUrlToPath($originalImages[0]);
-			$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
 
-			self::convert($srcPath, $desPath, $quality, $speed);
+			$srcPath = self::attachmentUrlToPath($originalImages[0]);
+			if ($srcPath != false && $srcPath != '') {
+				$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
+				self::convert($srcPath, $desPath, $quality, $speed);
+			}
 		}
 		/**
 		 * ends
@@ -75,10 +79,11 @@ class Image {
 		$fileDir = pathinfo(self::attachmentUrlToPath($originalImages[0]), PATHINFO_DIRNAME);
 		$allSizes = $metadata['sizes'];
 		foreach ($allSizes as $size) {
-			$src = $fileDir . '/' . $size['file'];
-			$des = rtrim($src, '.' . pathinfo($src, PATHINFO_EXTENSION)) . '.avif';
-
-			self::convert($src, $des, $quality, $speed);
+			$src = trailingslashit($fileDir) . $size['file'];
+			if (file_exists($src)) {
+				$des = rtrim($src, '.' . pathinfo($src, PATHINFO_EXTENSION)) . '.avif';
+				self::convert($src, $des, $quality, $speed);
+			}
 		}
 		/**
 		 * ends
