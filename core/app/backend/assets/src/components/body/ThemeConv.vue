@@ -40,7 +40,7 @@ function getTheme() {
 getTheme();
 
 function convert() {
-	if (gdstatus !== 1) return false;
+	if (gdstatus != 1 || gdstatus != '1') return false;
 	if (conveted_files.value == total_files.value || total_files.value <= 0) {
 		return false;
 	} 

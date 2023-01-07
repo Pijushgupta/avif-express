@@ -41,7 +41,7 @@ function getAttachemnts(){
 getAttachemnts();
 
 function convert() {
-	if (gdstatus !== 1) return false;
+	if (gdstatus != 1 || gdstatus != '1') return false;
 	if (totalImages.value === convertedImage.value) return false;
 	const toast = useToast();
 	toWait.toggleWaiting();
