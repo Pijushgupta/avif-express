@@ -16,7 +16,7 @@ const convertedImage = ref(null);
 const numberOfthums = ref(null)
 
 const toWait = waitingSatus();
-
+const gdstatus = gd;
 function getAttachemnts(){
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -41,6 +41,7 @@ function getAttachemnts(){
 getAttachemnts();
 
 function convert() {
+	if (gdstatus !== 1) return false;
 	if (totalImages.value === convertedImage.value) return false;
 	const toast = useToast();
 	toWait.toggleWaiting();

@@ -17,7 +17,7 @@ const conveted_files = ref();
 const total_files = ref();
 
 const toWait = waitingSatus();
-
+const gdstatus = gd;
 function getTheme() {
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -40,6 +40,7 @@ function getTheme() {
 getTheme();
 
 function convert() {
+	if (gdstatus !== 1) return false;
 	if (conveted_files.value == total_files.value || total_files.value <= 0) {
 		return false;
 	} 
