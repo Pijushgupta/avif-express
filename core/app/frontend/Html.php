@@ -9,7 +9,7 @@ use voku\helper\HtmlDomParser;
 
 class Html {
 	public static function init() {
-		//TODO: Experiment with priority in case not working
+
 		add_action('template_redirect', array('App\frontend\Html', 'checkConditions'));
 	}
 	public static function checkConditions() {
@@ -18,6 +18,14 @@ class Html {
 	}
 
 	public static function getContent($content) {
+
+		$userAgent = $_SERVER['HTTP_USER_AGENT'];
+		/**
+		 * TODO: Remove after edge start supporting avif
+		 */
+		if (strpos($userAgent, 'Edg')) {
+			return $content;
+		}
 		/**
 		 * if it's not html return the content
 		 */
@@ -53,6 +61,9 @@ class Html {
 			return $imageUrl = rtrim($imageUrl, '.' . pathinfo($imageUrl, PATHINFO_EXTENSION)) . '.avif';
 		}
 	}
+	/**
+	 * replacing srcset urls
+	 */
 	public static function replaceImgSrcSet($srcset) {
 		if (!$srcset) return;
 		$srcset = explode(' ', $srcset);
