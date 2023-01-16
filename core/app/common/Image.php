@@ -1,10 +1,10 @@
 <?php
 
-namespace App\common;
+namespace Avife\common;
 
 if (!defined('ABSPATH')) exit();
 
-use App\common\Options;
+use Avife\common\Options;
 
 class Image {
 
@@ -22,10 +22,10 @@ class Image {
 		 * Checking if auto conversion enabled 
 		 */
 		if (Options::getAutoConvtStatus()) {
-			add_action('wp_generate_attachment_metadata', array('App\backend\Image', 'beforeConvert'), 10, 2);
+			add_action('wp_generate_attachment_metadata', array('Avife\backend\Image', 'beforeConvert'), 10, 2);
 		}
 
-		add_action('delete_attachment',  array('App\backend\Image', 'delete'), 10, 3);
+		add_action('delete_attachment',  array('Avife\backend\Image', 'delete'), 10, 3);
 	}
 
 	/**

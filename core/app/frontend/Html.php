@@ -1,20 +1,20 @@
 <?php
 
-namespace App\frontend;
+namespace Avife\frontend;
 
 if (!defined('ABSPATH')) exit;
 
-use App\common\Options;
+use Avife\common\Options;
 use voku\helper\HtmlDomParser;
 
 class Html {
 	public static function init() {
 
-		add_action('template_redirect', array('App\frontend\Html', 'checkConditions'));
+		add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'));
 	}
 	public static function checkConditions() {
 		if (is_admin() || is_feed() || wp_doing_ajax() || Options::getOperationMode() == 'inactive') return;
-		ob_start('App\frontend\Html::getContent');
+		ob_start('Avife\frontend\Html::getContent');
 	}
 
 	public static function getContent($content) {

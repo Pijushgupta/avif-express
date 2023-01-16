@@ -22,7 +22,7 @@ class ComposerStaticInit717cd024b296725d3c9881f83170a29e
         ),
         'A' => 
         array (
-            'App\\' => 4,
+            'Avife\\' => 6,
         ),
     );
 
@@ -39,7 +39,7 @@ class ComposerStaticInit717cd024b296725d3c9881f83170a29e
         array (
             0 => __DIR__ . '/..' . '/symfony/css-selector',
         ),
-        'App\\' => 
+        'Avife\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
         ),

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\common;
+namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 

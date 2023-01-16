@@ -1,12 +1,12 @@
 <?php
 
-namespace App\backend;
+namespace Avife\backend;
 
 if (!defined('ABSPATH')) exit;
 
 final class Enqueue {
 
-	private static $globalScopeName = 'App\backend\Enqueue';
+	private static $globalScopeName = 'Avife\backend\Enqueue';
 
 	public static function do() {
 		add_action('admin_enqueue_scripts', array(self::$globalScopeName, 'add'));

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\common;
+namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 
-use App\common\Image;
-use App\common\Options;
-use App\common\Setting;
+use Avife\common\Image;
+use Avife\common\Options;
+use Avife\common\Setting;
 
 class Theme {
 

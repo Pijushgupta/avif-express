@@ -1,10 +1,10 @@
 <?php
 
-namespace App\backend;
+namespace Avife\backend;
 
 final class Ui {
 
-	private static $globalScopeName = 'App\backend\Ui';
+	private static $globalScopeName = 'Avife\backend\Ui';
 
 	public static function activate() {
 		if (current_user_can('manage_options')) {

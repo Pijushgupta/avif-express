@@ -1,11 +1,11 @@
 <?php
 
-namespace App\common;
+namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 
-use App\common\Setting;
-use App\common\Image;
+use Avife\common\Setting;
+use Avife\common\Image;
 
 class Media {
 
