@@ -165,7 +165,7 @@ class Image {
 	 * attachmentUrlToPath
 	 * This function converts the url of an Image to actual path of that image 
 	 * @param  string $url url of an Image
-	 * @return string  path of an Image
+	 * @return string|boolean  path of an Image, false on fail
 	 */
 	public static function attachmentUrlToPath($url) {
 		$parsed_url = parse_url($url);

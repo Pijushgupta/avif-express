@@ -5,6 +5,7 @@ namespace Avife\frontend;
 if (!defined('ABSPATH')) exit;
 
 use Avife\common\Options;
+use Avife\common\Image;
 use voku\helper\HtmlDomParser;
 
 class Html {
@@ -56,8 +57,9 @@ class Html {
 	public static function replaceImgSrc($imageUrl) {
 		/**
 		 * Checking if the image source form same domain or not
+		 * and the file really exists
 		 */
-		if (str_contains($imageUrl, get_bloginfo('url'))) {
+		if (str_contains($imageUrl, get_bloginfo('url')) && self::isFileExists($imageUrl)) {
 			return $imageUrl = rtrim($imageUrl, '.' . pathinfo($imageUrl, PATHINFO_EXTENSION)) . '.avif';
 		}
 	}
@@ -69,14 +71,41 @@ class Html {
 		$srcset = explode(' ', $srcset);
 
 		foreach ($srcset as $k => &$v) {
-			if (str_contains($v, get_bloginfo('url'))) {
+			/**
+			 * checking if its a real url belongs to same domain 
+			 * and the file really exists
+			 */
+			if (str_contains($v, get_bloginfo('url')) && self::isFileExists($v)) {
+				/**
+				 * getting the extension
+				 */
 				$ext = pathinfo($v, PATHINFO_EXTENSION);
+				/**
+				 * checking the extension against allowed ones
+				 */
 				if ($ext && in_array($ext, array('jpg', 'jpeg', 'png', 'webp'))) {
+					/**
+					 * finally creating the file url with .avif extension
+					 */
 					$v = rtrim($v, '.' . pathinfo($v, PATHINFO_EXTENSION)) . '.avif';
 				}
 				unset($ext);
 			}
 		}
 		return implode(' ', $srcset);
+	}
+
+
+	/**
+	 * isFileExists
+	 * checks if provided url having real file 
+	 * @param  string $url
+	 * @return boolean true on success and false on fail
+	 */
+	public static function isFileExists($url) {
+		$path = Image::attachmentUrlToPath($url);
+		if ($path === false) return false;
+		if (file_exists($path) === false) return false;
+		return true;
 	}
 }
