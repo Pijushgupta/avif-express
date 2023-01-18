@@ -19,6 +19,10 @@ class Image {
 		 */
 		if (extension_loaded('gd') != 1) return;
 		/**
+		 * checking if imageavif function exists or not, since plesk yet to support imageavif  
+		 */
+		if (!function_exists('imageavif')) return;
+		/**
 		 * Checking if auto conversion enabled 
 		 */
 		if (Options::getAutoConvtStatus()) {

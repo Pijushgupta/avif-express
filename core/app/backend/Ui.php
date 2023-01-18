@@ -31,18 +31,21 @@ final class Ui {
 		$avife_nonce 		= wp_create_nonce('avife_nonce');
 		$assetPath 	= AVIFE_REL . '/core/app/backend/assets/';
 		$gd = extension_loaded('gd');
+		$avifsupport = function_exists('imageavif') ? '1' : '0';
 		printf(
 			'<script> 
 			var avife_ajax_path = "%1$s"; 
 			var avife_nonce = "%2$s"; 
 			var assetPath = "%3$s";
-			var gd = "%4$s"
+			var gd = "%4$s";
+			var avif = "%5$s";
 			</script>
-			<div id="%5$s"></div>',
+			<div id="%6$s"></div>',
 			$url,
 			$avife_nonce,
 			$assetPath,
 			$gd,
+			$avifsupport,
 			AVIFE_VUE_ROOT_ID
 		);
 	}
