@@ -38,7 +38,7 @@ final class Ui {
 			var avife_nonce = "%2$s"; 
 			var assetPath = "%3$s";
 			var gd = "%4$s";
-			var avif = "%5$s";
+			var avifsupport = "%5$s";
 			</script>
 			<div id="%6$s"></div>',
 			$url,
