@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  * Plugin URI: https://www.aavoya.co/avif-express
  * Author: Pijush Gupta
  * Author uri: https://www.linkedin.com/in/pijush-gupta-php/
- * Description: Converts Images to AVIF
- * Version: 2023.01
+ * Description: Converts Images to AVIF and serve them
+ * Version: 2023.01.19
  * Tags: avif, images, performance
  */
 

@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.1.1
 Tested up to: 6.1.1
-Stable tag: 2023.01
+Stable tag: 2023.01.19
 Requires PHP: 8.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -30,11 +30,16 @@ For a more detailed description of options and features of Avif Express, please 
 
 == Frequently Asked Questions ==
 = How to generate avif images from previously uploaded images =
-Go to "Avif Express" on left sidebar menu > Click on the generate button on "Upload directory" row.
+Go to "Avif Express" on the left sidebar menu > On the "Avif express" page > Click on the generate button on "Upload directory" row.
 = How to generate avif images from theme's image =
-Go to "Avif Express" on left sidebar menu > Click on the generate button on "Theme directory" row.
+Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click on the generate button on "Theme directory" row.
 = How to replace web-page's images with avif images =
-Go to "Avif Express" on left sidebar menu > Select the mode from the dropdown on "Rendering" row.
+Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
+
+== Change Log ==
+= 01.19.2023 =
+Updated FAQ section on README.txt.
+Added Additional file checking on frontend. If .avif file exist then only alter the image url.
 
 == Screenshots ==
 1. Admin Page
