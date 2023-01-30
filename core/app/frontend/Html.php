@@ -11,7 +11,7 @@ use voku\helper\HtmlDomParser;
 class Html {
 	public static function init() {
 
-		add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'));
+		add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'), 9999);
 	}
 	public static function checkConditions() {
 		if (is_admin() || is_feed() || wp_doing_ajax() || Options::getOperationMode() == 'inactive') return;
