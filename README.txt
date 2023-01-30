@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.1.1
-Stable tag: 2023.01.20
+Stable tag: 2023.01.30
 Requires PHP: 8.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -48,6 +48,9 @@ Code commenting.
 Added php version checking, require at least 8.1, since imageavif() method only comes with php8.1 or later. 
 Added method checking for imageavif(), it prevent ajax error in case Php GD not having libavif. libavif is library required by GD to convert image to avif image.
 Note: latest Plesk Obsidian(Version 18.0.49) with php 8.2 do not provide libavif to GD. No way around. 
+
+= 01.30.2023 = 
+Conflict with Autoptimize plugin fixed.
 
 == Screenshots ==
 1. Admin Page
