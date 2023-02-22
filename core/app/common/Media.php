@@ -6,8 +6,12 @@ if (!defined('ABSPATH')) exit;
 
 use Avife\common\Setting;
 use Avife\common\Image;
+use Avife\common\Theme;
+use Avife\common\Options;
 
 class Media {
+
+
 
 	/**
 	 * ajaxCountMedia
@@ -25,12 +29,16 @@ class Media {
 	 * @return array in array(number of converted iamges, number of total images, number of various image sizes)
 	 */
 	public static function countMedia() {
-		$allMedia = self::getAttachments(-1);
+		$uploadDirPath = wp_upload_dir()['basedir'];
+
+		$allMedia = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), 0);
 		if (gettype($allMedia) == 'array') {
 			$allMedia = count($allMedia);
 		}
 
-		$convertedMedia = self::getAttachments(1);
+
+		$convertedMedia = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
+
 		if (gettype($convertedMedia) == 'array') {
 			$convertedMedia = count($convertedMedia);
 		}
@@ -55,7 +63,12 @@ class Media {
 	 * @return boolean|null|string true on success. false on error, null on empty source and string 'keep-alive' to let client know to request again. 
 	 */
 	public static function convertRemaining() {
-		$unConvertedAttachments = self::getAttachments(0);
+
+
+		$uploadDirPath = wp_upload_dir()['basedir'];
+
+		$unConvertedAttachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), 1);
+
 		if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) return null;
 
 		/**
@@ -64,9 +77,17 @@ class Media {
 		 */
 		if (Setting::avif_set_time_limit() == false) return false;
 		$counter = 1;
+		$quality = Options::getImageQuality();
+		$speed = Options::getComSpeed();
 		foreach ($unConvertedAttachments as $unConvertedAttachment) {
 
-			Image::beforeConvert(wp_get_attachment_metadata($unConvertedAttachment->ID), $unConvertedAttachment->ID);
+			/**
+			 * creating path for file to delete. Just by removing original extension with .avif 
+			 */
+			$dest = (string)rtrim($unConvertedAttachment, '.' . pathinfo($unConvertedAttachment, PATHINFO_EXTENSION)) . '.avif';
+
+			Image::convert($unConvertedAttachment, $dest, $quality, $speed);
+
 			if ($counter == 2) {
 				return 'keep-alive';
 			}
@@ -92,9 +113,20 @@ class Media {
 	 * @return true as signal
 	 */
 	public static function deleteAll() {
-		$attachments = self::getAttachments(1);
+
+		$uploadDirPath = wp_upload_dir()['basedir'];
+		$attachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
+
 		foreach ($attachments as $attachment) {
-			Image::delete($attachment->ID, $attachment);
+			/**
+			 * creating path for file to delete. Just by removing original extension with .avif 
+			 */
+			$dest = (string)rtrim($attachment, '.' . pathinfo($attachment, PATHINFO_EXTENSION)) . '.avif';
+
+			/**
+			 * Finally deleting the file
+			 */
+			if (file_exists($dest)) wp_delete_file($dest);
 		}
 		return true;
 	}

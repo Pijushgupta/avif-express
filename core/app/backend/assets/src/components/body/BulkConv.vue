@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full flex flex-row justify-between items-center p-4 border-b">
-				<label class="w-1/2 flex flex-col justify-start" for="bulkcnvtbtn"><span>Upload directory <template v-if="totalImages != null && convertedImage != null">({{convertedImage}} / {{totalImages}})</template></span><span class="text-xs" v-if="numberOfthums != null">{{ numberOfthums }} thumbnails sizes x {{ totalImages - convertedImage }} images to be converted</span></label>
+				<label class="w-1/2 flex flex-col justify-start" for="bulkcnvtbtn"><span>Upload directory <template v-if="totalImages != null && convertedImage != null">({{convertedImage}} / {{totalImages}})</template></span></label>
 				<div class="w-1/2 flex justify-end">
 					<button class=" bg-blue-600 text-white px-4 py-2 rounded-full mr-3" id="bulkcnvtbtn" v-on:click="convert">Convert</button>
 					<button class=" bg-gray-600 text-white px-4 py-2 rounded-full" id="delconvimgs" v-on:click="deleteAll" >Delete</button>

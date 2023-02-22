@@ -162,6 +162,9 @@ class Image {
 		}
 		if (gettype($sourceGDImg) == 'boolean') return;
 		@imageavif($sourceGDImg, $des, $quality, $speed);
+		if (filesize($des) % 2 == 1) {
+			file_put_contents($des, "\0", FILE_APPEND);
+		}
 		@imagedestroy($sourceGDImg);
 	}
 
