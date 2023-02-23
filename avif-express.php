@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  * Author: Pijush Gupta
  * Author uri: https://www.linkedin.com/in/pijush-gupta-php/
  * Description: Converts Images to AVIF and serve them
- * Version: 2023.01.30
+ * Version: 2023.02.23
  * Tags: avif, images, performance
  */
 
@@ -16,7 +16,7 @@ function initiate_plugin() {
 	/**
 	 * Normally wordpress will not allow plugin to installed from repo if "Requires PHP" not meet.
 	 * But anyone can download and install the plugin to bypass "Requires PHP"
-	 * Checking php version, since only php 8.1 having imageavif() function
+	 * Checking php version, since only php 8.1 and above having imageavif() function
 	 */
 	if (version_compare(phpversion(), '8.1.0', '>=') == false) return;
 

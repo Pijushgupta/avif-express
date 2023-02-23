@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.1.1
-Stable tag: 2023.01.30
+Stable tag: 2023.02.23
 Requires PHP: 8.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -51,6 +51,11 @@ Note: latest Plesk Obsidian(Version 18.0.49) with php 8.2 do not provide libavif
 
 = 01.30.2023 = 
 Conflict with Autoptimize plugin fixed.
+
+= 02.23.2023 = 
+Issue: Migrated images with post type of attachment were not getting converted. Fixed.  
+Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. Not fixed. #Php_bug 
+
 
 == Screenshots ==
 1. Admin Page
