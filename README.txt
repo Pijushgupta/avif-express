@@ -59,5 +59,9 @@ Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif im
 = 02.25.2023 = 
 Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. #Php_bug. Fixed with Imagick library.  
 
+= 02.26.2023 = 
+ImageMagick version checking. Version '7.0.25' or above required. 
+Issue: Auto convert on upload was not working. Fixed : Typo in namespace.  
+
 == Screenshots ==
 1. Admin Page

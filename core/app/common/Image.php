@@ -24,10 +24,10 @@ class Image {
 		 */
 		if (Options::getAutoConvtStatus()) {
 
-			add_action('wp_generate_attachment_metadata', array('Avife\backend\Image', 'beforeConvert'), 10, 2);
+			add_action('wp_generate_attachment_metadata', array('Avife\common\Image', 'beforeConvert'), 10, 2);
 		}
 
-		add_action('delete_attachment',  array('Avife\backend\Image', 'delete'), 10, 3);
+		add_action('delete_attachment',  array('Avife\common\Image', 'delete'), 10, 3);
 	}
 
 	/**
