@@ -6,19 +6,14 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  * Author: Pijush Gupta
  * Author uri: https://www.linkedin.com/in/pijush-gupta-php/
  * Description: Converts Images to AVIF and serve them
- * Version: 2023.02.23
+ * Version: 2023.02.25
  * Tags: avif, images, performance
  */
 
 if (!file_exists(__DIR__ . '/core/app/app.php')) return;
 
 function initiate_plugin() {
-	/**
-	 * Normally wordpress will not allow plugin to installed from repo if "Requires PHP" not meet.
-	 * But anyone can download and install the plugin to bypass "Requires PHP"
-	 * Checking php version, since only php 8.1 and above having imageavif() function
-	 */
-	if (version_compare(phpversion(), '8.1.0', '>=') == false) return;
+
 
 	/**
 	 * text domain, can be used to translate string. But we are using vue js powered admin page.

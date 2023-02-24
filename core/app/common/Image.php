@@ -150,7 +150,23 @@ class Image {
 		if (!$src && !$des && !$quality && !$speed) return false;
 
 		$fileType = getimagesize($src)['mime'];
+		// Try Imagick First
+		if (class_exists('Imagick')) {
+			$imagick = new \Imagick();
+			$imagick->readImage($src);
+			$imagick->setImageFormat('avif');
+			if ($quality > 0) {
+				$imagick->setCompressionQuality($quality);
+				$imagick->setImageCompressionQuality($quality);
+			} else {
+				$imagick->setCompressionQuality(1);
+				$imagick->setImageCompressionQuality(1);
+			}
 
+			$imagick->writeImage($des);
+			return;
+		}
+		//Try GD
 		if ($fileType == 'image/jpeg' ||  $fileType == 'image/jpg') {
 			$sourceGDImg = @imagecreatefromjpeg($src);
 		}

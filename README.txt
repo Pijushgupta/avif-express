@@ -3,8 +3,8 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.1.1
-Stable tag: 2023.02.23
-Requires PHP: 8.1.0
+Stable tag: 2023.02.25
+Requires PHP: 5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,8 @@ Conflict with Autoptimize plugin fixed.
 Issue: Migrated images with post type of attachment were not getting converted. Fixed.  
 Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. Not fixed. #Php_bug 
 
+= 02.25.2023 = 
+Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. #Php_bug. Fixed with Imagick library.  
 
 == Screenshots ==
 1. Admin Page

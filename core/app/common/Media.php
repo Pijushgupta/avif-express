@@ -52,7 +52,8 @@ class Media {
 	 * @return void ajax handle for convertRemaining 
 	 */
 	public static function ajaxConvertRemaining() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false || extension_loaded('GD') != 1 || function_exists('imageavif') == false) wp_die();
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		if (function_exists('imageavif') == false && class_exists('Imagick') == false) wp_die();
 		echo json_encode(self::convertRemaining());
 		wp_die();
 	}

@@ -18,6 +18,7 @@ const numberOfthums = ref(null)
 const toWait = waitingSatus();
 const gdstatus = gd;
 const avifsupportstatus = avifsupport;
+const hasImagickstatus  = hasImagick;
 function getAttachemnts(){
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -42,7 +43,7 @@ function getAttachemnts(){
 getAttachemnts();
 
 function convert() {
-	if (gdstatus != '1' || avifsupportstatus != '1') return false;
+	if (avifsupportstatus != '1' && hasImagickstatus != '1') return false;
 	if (totalImages.value === convertedImage.value) return false;
 	const toast = useToast();
 	toWait.toggleWaiting();
