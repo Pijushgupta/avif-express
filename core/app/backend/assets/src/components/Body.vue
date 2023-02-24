@@ -2,7 +2,7 @@
 	<div class="bg-white border border-t-0 rounded-b-2xl">
 		<div class="flex flex-col  relative">
 			<div v-if="hasImagickstatus != '1' && avifsupportstatus != '1' " class="p-4 bg-red-700 text-white flex flex-col md:flex-row justify-between items-center">
-				<span class="text-center md:text-left">Php GD with libavif or Imagick is not installed/enabled. Please contact the server admin!</span>
+				<span class="text-center md:text-left">Php GD with libavif or Imagick(ver >= 7.0.25) is not installed/enabled. Please contact the server admin!</span>
 				<a href="https://www.google.com/search?client=firefox-b-d&q=php+gd+extension" target="_blank" class="border border-2 border-white rounded-full px-4 py-2 hover:text-white visited:text-white focus:shadow-none mt-3 md:mt-0" >Know More</a>
 			</div>
 			<div class="absolute inset-0" v-if="toWait.isWaiting == true"  >

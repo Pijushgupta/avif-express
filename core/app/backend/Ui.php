@@ -32,7 +32,7 @@ final class Ui {
 		$assetPath 	= AVIFE_REL . '/core/app/backend/assets/';
 		$gd = extension_loaded('gd');
 		$avifsupport = function_exists('imageavif') ? '1' : '0';
-		$hasImagick = class_exists('Imagick') ? '1' : '0';
+		$hasImagick = AVIFE_IMAGICK_VER <= 0 ? '0' : '1';
 		printf(
 			'<script> 
 			var avife_ajax_path = "%1$s"; 

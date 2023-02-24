@@ -53,6 +53,21 @@ function initiate_plugin() {
 	if (!defined('AVIFE_VUE_ROOT_ID')) define('AVIFE_VUE_ROOT_ID', 'avife-root');
 
 	/**
+	 * storing imageMagick version
+	 */
+	if (!defined('AVIFE_IMAGICK_VER')) {
+		if (class_exists('Imagick')) {
+			$v = Imagick::getVersion();
+			preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $v);
+			if (version_compare($v[1], '7.0.25') >= 0) {
+				define('AVIFE_IMAGICK_VER', $v[1]);
+			}
+		} else {
+			define('AVIFE_IMAGICK_VER', 0);
+		}
+	}
+
+	/**
 	 * loading the main app code 
 	 */
 	require_once __DIR__ . 	'/core/app/app.php';

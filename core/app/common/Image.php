@@ -14,18 +14,16 @@ class Image {
 	 * @return void
 	 */
 	public static function activate() {
-		/**
-		 * checking if GD extension is enabled 
-		 */
-		if (extension_loaded('gd') != 1) return;
+
 		/**
 		 * checking if imageavif function exists or not, since plesk yet to support imageavif  
 		 */
-		if (!function_exists('imageavif')) return;
+		if (!function_exists('imageavif') && AVIFE_IMAGICK_VER <= 0) return;
 		/**
 		 * Checking if auto conversion enabled 
 		 */
 		if (Options::getAutoConvtStatus()) {
+
 			add_action('wp_generate_attachment_metadata', array('Avife\backend\Image', 'beforeConvert'), 10, 2);
 		}
 
@@ -43,7 +41,7 @@ class Image {
 
 		$attachment = get_post($attachment_id);
 		$mimeType = $attachment->post_mime_type;
-		if (!in_array($mimeType, array('image/jpeg', 'image/png', 'image/jpg', 'image/webp',))) return;
+		if (!in_array($mimeType, array('image/jpeg', 'image/png', 'image/jpg', 'image/webp',))) return $metadata;
 
 		$quality = Options::getImageQuality();
 		$speed = Options::getComSpeed();
@@ -151,7 +149,7 @@ class Image {
 
 		$fileType = getimagesize($src)['mime'];
 		// Try Imagick First
-		if (class_exists('Imagick')) {
+		if (AVIFE_IMAGICK_VER > 0) {
 			$imagick = new \Imagick();
 			$imagick->readImage($src);
 			$imagick->setImageFormat('avif');
