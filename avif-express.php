@@ -61,6 +61,8 @@ function initiate_plugin() {
 			preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $v);
 			if (version_compare($v[1], '7.0.25') >= 0) {
 				define('AVIFE_IMAGICK_VER', $v[1]);
+			}else{
+				define('AVIFE_IMAGICK_VER', 0);
 			}
 		} else {
 			define('AVIFE_IMAGICK_VER', 0);
