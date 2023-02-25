@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.1.1
-Stable tag: 2023.02.26
+Stable tag: 2023.02.27
 Requires PHP: 5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -63,5 +63,7 @@ Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif im
 ImageMagick version checking. Version '7.0.25' or above required. 
 Issue: Auto convert on upload was not working. Fixed : Typo in namespace.  
 
+= 02.27.2023 = 
+Issue: Undefined Constatnt. Fixed.  Pointed by [argument](https://wordpress.org/support/users/argument/,"Bug finder"). 
 == Screenshots ==
 1. Admin Page
