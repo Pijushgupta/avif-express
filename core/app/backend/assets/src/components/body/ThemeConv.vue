@@ -1,21 +1,23 @@
 <template>
 <div class="w-full flex flex-row justify-between items-center p-4 border-b">
-				<label class="w-1/2 flex justify-start" for="bulkcnvtbtn">Theme directory ({{ conveted_files }} / {{ total_files }})</label>
+				<label class="w-1/2 flex justify-start" for="bulkcnvtbtn">{{ t('themeDirectory') }} ({{ conveted_files }} / {{ total_files }})</label>
 				<div class="w-1/2 flex justify-end">
-					<button class=" bg-blue-600 text-white px-4 py-2 rounded-full mr-3" v-on:click="convert">Convert</button>
-					<button class=" bg-gray-600 text-white px-4 py-2 rounded-full"  v-on:click="deleteImg">Delete</button>
+					<button class=" bg-blue-600 text-white px-4 py-2 rounded-full mr-3" v-on:click="convert">{{ t('convert') }}</button>
+					<button class=" bg-gray-600 text-white px-4 py-2 rounded-full"  v-on:click="deleteImg">{{ t('delete') }}</button>
 				</div>
 </div>	
 </template>
 <script setup>
 import { waitingSatus } from '../../../stores/state';
 import { useToast } from 'vue-toastification';
+import { useI18n } from 'vue-i18n';
+
 import { ref } from 'vue';
 const theme_name = ref();
 const is_child = ref();
 const conveted_files = ref();
 const total_files = ref();
-
+const { t } = useI18n({});
 const toWait = waitingSatus();
 const gdstatus = gd;
 const avifsupportstatus = avifsupport;
@@ -47,7 +49,7 @@ function convert() {
 		return false;
 	} 
 	const toast = useToast();
-	toast("Conversion may take time. Once its done, we well notify you!");
+	toast(t('conversionMayTakeTimeMsg'));
 	toWait.toggleWaiting();
 	function innerConvert() {
 		const data = new FormData();
@@ -64,14 +66,14 @@ function convert() {
 			if (res === true || res === null) {
 				getTheme();
 				const toast = useToast();
-				toast("Converted all Images inside theme directory.");
+				toast(t('convertedAllImageThemeDir'));
 				toWait.toggleWaiting();
 			}
 
 			if (res === false) {
 				getTheme();
 				const toast = useToast();
-				toast.error("Operation failed, Unable to set php execution time limit.");
+				toast.error(t("operationFailedPhpExeTime"));
 				toWait.toggleWaiting();
 			}
 
@@ -94,7 +96,7 @@ function deleteImg(){
 		return false;
 	} 
 	const toast = useToast();
-	toast("This may take time. Once its done, we will notify you!");
+	toast(t("thisMayTakeTime"));
 	toWait.toggleWaiting();
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -109,7 +111,7 @@ function deleteImg(){
 			if (res == true) {
 				getTheme();
 				const toast = useToast();
-				toast("Deleted all Avif Images inside the Theme directory.");
+				toast(t("deleteImageInTheme"));
 				toWait.toggleWaiting();
 			}
 			

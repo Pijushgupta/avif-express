@@ -26,6 +26,7 @@
 	"dependencies": {
 		"pinia": "^2.0.28",
 		"vue": "^3.2.31",
+		"vue-i18n": "^9.2.2",
 		"vue-toastification": "^2.0.0-rc.5"
 	}
 }

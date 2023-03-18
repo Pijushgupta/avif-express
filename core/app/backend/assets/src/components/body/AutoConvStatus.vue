@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full flex flex-row justify-between items-center p-4 border-b">
-				<label class="w-1/2 flex justify-start" for="autoconvertChk">Automatically convert images to AVIF format on upload.</label>
+				<label class="w-1/2 flex justify-start" for="autoconvertChk">{{$t("autoConvertLabel")}}</label>
 				<div class="w-1/2 flex justify-end"><input id="autoconvertChk" v-model="autoConvStatus" v-on:click="setAutoConvStatus" type="checkbox" name="autoconvertChk"/></div>
 			</div>
 </template>

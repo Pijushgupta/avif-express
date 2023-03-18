@@ -1,20 +1,22 @@
 <template>
 	<div class="w-full flex flex-row justify-between items-center p-4 border-b">
-				<label class="w-1/2 flex flex-col justify-start" for="bulkcnvtbtn"><span>Upload directory <template v-if="totalImages != null && convertedImage != null">({{convertedImage}} / {{totalImages}})</template></span></label>
+				<label class="w-1/2 flex flex-col justify-start" for="bulkcnvtbtn"><span>{{ t('uploadDirectory') }} <template v-if="totalImages != null && convertedImage != null">({{convertedImage}} / {{totalImages}})</template></span></label>
 				<div class="w-1/2 flex justify-end">
-					<button class=" bg-blue-600 text-white px-4 py-2 rounded-full mr-3" id="bulkcnvtbtn" v-on:click="convert">Convert</button>
-					<button class=" bg-gray-600 text-white px-4 py-2 rounded-full" id="delconvimgs" v-on:click="deleteAll" >Delete</button>
+					<button class=" bg-blue-600 text-white px-4 py-2 rounded-full mr-3" id="bulkcnvtbtn" v-on:click="convert">{{ t('convert') }}</button>
+					<button class=" bg-gray-600 text-white px-4 py-2 rounded-full" id="delconvimgs" v-on:click="deleteAll" >{{ t('delete') }}</button>
 				</div>
 			</div>
 </template>
 <script setup>
 import { waitingSatus } from '../../../stores/state';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
 const totalImages = ref(null);
 const convertedImage = ref(null);
 const numberOfthums = ref(null)
 
+const { t } = useI18n({});
 const toWait = waitingSatus();
 const gdstatus = gd;
 const avifsupportstatus = avifsupport;
@@ -47,7 +49,7 @@ function convert() {
 	if (totalImages.value === convertedImage.value) return false;
 	const toast = useToast();
 	toWait.toggleWaiting();
-	toast("Conversion may take time. Once its done, we will notify you!");
+	toast(t('conversionMayTakeTimeMsg'));
 
 	function innerConvert() {
 	const data = new FormData();
@@ -62,13 +64,13 @@ function convert() {
 		.then(res => {
 			if (res === true || res === null) {
 				const toast = useToast();
-				toast("Converted all Images inside upload directory.");
+				toast(t('convertedAllImageUploadDir'));
 				getAttachemnts();
 				toWait.toggleWaiting();
 			}
 			if (res === false) {
 				const toast = useToast();
-				toast.error("Operation failed, Unable to set php execution time limit.");
+				toast.error(t("operationFailedPhpExeTime"));
 				getAttachemnts();
 				toWait.toggleWaiting();
 			}
@@ -86,7 +88,7 @@ function convert() {
 function deleteAll() {
 	if (convertedImage.value < 1) return false;
 	const toast = useToast();
-	toast("This may take time. Once its done, we well notify you!");
+	toast(t('thisMayTakeTime'));
 	toWait.toggleWaiting();
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -100,7 +102,7 @@ function deleteAll() {
 		.then(res => {
 			if (res === true) {
 				const toast = useToast();
-				toast("Deleted all Avif Images inside upload directory.");
+				toast(t("deleteImageInUpload"));
 				convertedImage.value = 0;
 				toWait.toggleWaiting();
 			}
