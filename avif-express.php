@@ -6,8 +6,8 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  * Author: Pijush Gupta
  * Author uri: https://www.linkedin.com/in/pijush-gupta-php/
  * Description: Converts Images to AVIF and serve them
- * Version: 2023.02.27
- * Tags: avif, images, performance
+ * Version: 2023.03.20
+ * Tags: avif, images, performance, avif
  */
 
 if (!file_exists(__DIR__ . '/core/app/app.php')) return;
@@ -61,7 +61,7 @@ function initiate_plugin() {
 			preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $v);
 			if (version_compare($v[1], '7.0.25') >= 0) {
 				define('AVIFE_IMAGICK_VER', $v[1]);
-			}else{
+			} else {
 				define('AVIFE_IMAGICK_VER', 0);
 			}
 		} else {

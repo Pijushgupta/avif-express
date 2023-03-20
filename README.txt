@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.1.1
-Stable tag: 2023.02.27
+Stable tag: 2023.03.20
 Requires PHP: 5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -19,6 +19,7 @@ On upload, images like jpg, png and WebP gets converted to avif format. Converte
 * Bulk convert theme images.
 * Serve Webpage with altered avif images.
 * Fully CDN compatible.
+* Native Language Support for German, Spanish, Russian, French, Hindi and Bengali.
 
 = Official documentation of Avif Express =
 For a more detailed description of options and features of Avif Express, please read the [official documentation](https://www.aavoya.co/avif-express "Avif Express official documentation").
@@ -37,9 +38,26 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
-= 01.19.2023 =
-Updated FAQ section on README.txt.
-Added Additional file checking on frontend. If .avif file exist then only alter the image url.
+
+= 03.20.2023 =
+Added translation for German, Spanish, Russian, French, Hindi and Bengali, for backend Admin dash. 
+
+= 02.27.2023 = 
+Issue: Undefined Constatnt. Fixed.  Pointed by [argument](https://wordpress.org/support/users/argument/,"Bug finder"). 
+
+= 02.26.2023 = 
+ImageMagick version checking. Version '7.0.25' or above required. 
+Issue: Auto convert on upload was not working. Fixed : Typo in namespace.  
+
+= 02.25.2023 = 
+Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. #Php_bug. Fixed with Imagick library.  
+
+= 02.23.2023 = 
+Issue: Migrated images with post type of attachment were not getting converted. Fixed.  
+Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. Not fixed. #Php_bug 
+
+= 01.30.2023 = 
+Conflict with Autoptimize plugin fixed.
 
 = 01.20.2023 = 
 Lowered the "Requires at least" wordpress version.
@@ -49,21 +67,9 @@ Added php version checking, require at least 8.1, since imageavif() method only 
 Added method checking for imageavif(), it prevent ajax error in case Php GD not having libavif. libavif is library required by GD to convert image to avif image.
 Note: latest Plesk Obsidian(Version 18.0.49) with php 8.2 do not provide libavif to GD. No way around. 
 
-= 01.30.2023 = 
-Conflict with Autoptimize plugin fixed.
+= 01.19.2023 =
+Updated FAQ section on README.txt.
+Added Additional file checking on frontend. If .avif file exist then only alter the image url.
 
-= 02.23.2023 = 
-Issue: Migrated images with post type of attachment were not getting converted. Fixed.  
-Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. Not fixed. #Php_bug 
-
-= 02.25.2023 = 
-Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. #Php_bug. Fixed with Imagick library.  
-
-= 02.26.2023 = 
-ImageMagick version checking. Version '7.0.25' or above required. 
-Issue: Auto convert on upload was not working. Fixed : Typo in namespace.  
-
-= 02.27.2023 = 
-Issue: Undefined Constatnt. Fixed.  Pointed by [argument](https://wordpress.org/support/users/argument/,"Bug finder"). 
 == Screenshots ==
 1. Admin Page
