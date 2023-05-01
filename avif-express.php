@@ -37,7 +37,7 @@ function initiate_plugin() {
 	if (!defined('AVIFE_SPA_SLUG')) define('AVIFE_SPA_SLUG', 'avif-express');
 
 	/**
-	 * this to load css and js 
+	 * this to load css and js files
 	 */
 	if (!defined('AVIFE_REL')) define('AVIFE_REL', plugins_url('', __FILE__));
 
