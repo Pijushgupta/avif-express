@@ -183,6 +183,22 @@ class Image {
 	}
 
 	/**
+	 * Converting image(s) to webp
+	 * @param string $src source of the image
+	 * @return bool TRUE|FALSE true on success, false on fail
+	 */
+	public static function webpConvert($src){
+		if(AVIF_WEBP_POSSIBLE == false) return false;
+		$des = dirname($src).DIRECTORY_SEPARATOR.pathinfo($src, PATHINFO_FILENAME).'.webp';
+		$imagick = new \Imagick();
+		$imagick->readImage($src);
+		$imagick->setImageFormat('webp');
+		$imagick->writeImage($des);
+		return true;
+
+	}
+
+	/**
 	 * attachmentUrlToPath
 	 * This function converts the url of an Image to actual path of that image 
 	 * @param  string $url url of an Image

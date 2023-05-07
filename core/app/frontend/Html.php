@@ -20,19 +20,33 @@ class Html {
 
 	public static function getContent($content) {
 
-		$userAgent = $_SERVER['HTTP_USER_AGENT'];
-		/**
-		 * TODO: Remove after edge start supporting avif
-		 */
-		if (strpos($userAgent, 'Edg')) {
-			return $content;
-		}
 		/**
 		 * if it's not html return the content
+		 * simple preg_match 
+		 * # is the delimiter for the regular expression. It can be any character, but "#" is commonly used.
+    	 * ^ is an anchor that matches the beginning of the string.
+    	 * \s* matches zero or more whitespace characters (spaces, tabs, line breaks).
+   		 * < matches the "<" character.
 		 */
 		if (!preg_match("#^\\s*<#", $content)) {
 			return $content;
 		}
+		
+		
+		/**
+		 * Checking if browser supporting Avif image support or not 
+		 * Checking if fallback Webp enabled 
+		 * if both are false returning the content as it is
+		 */
+		$httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT']:'';
+		$isAvifSupported = strpos($httpAccept, 'image/avif');
+		$isFallBackWebpEnabled = AVIF_WEBP_POSSIBLE; 
+		if ( $isAvifSupported == false && $isFallBackWebpEnabled != true) {
+			return $content;
+		}
+
+
+		
 
 		$dom = HtmlDomParser::str_get_html($content);
 
@@ -43,10 +57,19 @@ class Html {
 
 			/**
 			 * changing extension single image url to .avif
+			 * if avif supported by browser
 			 */
-			$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
+			if($isAvifSupported == true):
+				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
+				$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
+			endif;
 
-			$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
+			if($isAvifSupported == false && $isFallBackWebpEnabled == true):
+			
+				$image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
+				$image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
+			endif;
+
 		}
 		return $dom;
 	}
@@ -62,6 +85,7 @@ class Html {
 		if (str_contains($imageUrl, get_bloginfo('url')) && self::isFileExists($imageUrl)) {
 			return $imageUrl = rtrim($imageUrl, '.' . pathinfo($imageUrl, PATHINFO_EXTENSION)) . '.avif';
 		}
+		return $imageUrl;
 	}
 	/**
 	 * replacing srcset urls
@@ -95,6 +119,60 @@ class Html {
 		return implode(' ', $srcset);
 	}
 
+	
+
+	public static function webpReplaceImgSrc($imageUrl){
+		/**
+		 * checking if the url belongs to this site or not
+		 * checking if source file exists in server
+		 * if not return the original image url
+		 */
+		if(!str_contains($imageUrl, get_bloginfo('url')) || !self::isFileExists($imageUrl)) return $imageUrl;
+
+		
+		/**
+		 * checking if the webp file already existing in server or not
+		 * if exist then serve it
+		 */
+		$newImageUrl = dirname($imageUrl).'/'.pathinfo($imageUrl, PATHINFO_FILENAME).'.webp';
+		if(Image::attachmentUrlToPath($newImageUrl) != false) return $newImageUrl;
+
+		/**
+		 * starting conversion
+		 * after the conversion webpConvert() will save the new file 
+		 * in the same location
+		 */
+		$conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($imageUrl));
+
+		/**
+		 * if conversion failed return the original
+		 */
+		if($conversionStatus !== true) return $imageUrl;
+		
+		/**
+		 * finally retuning the converted image url
+		 */
+		return $newImageUrl;
+
+
+	}
+
+	public static function webpReplaceImgSrcSet($srcset){
+		if (!$srcset) return;
+
+		$srcset = explode(' ', $srcset);
+		foreach($srcset as $k => &$v){
+			
+			if(!str_contains($v, get_bloginfo('url')) || self::isFileExists($v) != true) continue;
+			$conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($v));
+			if($conversionStatus !== true) continue;
+			$v = dirname($v).'/'.pathinfo($v, PATHINFO_FILENAME).'.webp';
+		}
+		unset($v);
+		return implode(' ', $srcset);
+	}
+
+	
 
 	/**
 	 * isFileExists

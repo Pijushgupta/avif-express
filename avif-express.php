@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  * Plugin URI: https://www.aavoya.co/avif-express
  * Author: Pijush Gupta
  * Author uri: https://www.linkedin.com/in/pijush-gupta-php/
- * Description: Converts Images to AVIF and serve them
- * Version: 2023.03.20
+ * Description: Convert Images to AVIF and serve them
+ * Version: 2023.05.07
  * Tags: avif, images, performance, avif
  */
 
@@ -69,6 +69,23 @@ function initiate_plugin() {
 		}
 	}
 
+	/**
+	 * setting constant to determine if backup WEBP
+	 * conversion possible or not. Its going to be used as
+	 * fallback browsers that don't support Webp
+	 */
+	if(!defined('AVIF_WEBP_POSSIBLE')){
+		$imagick = new Imagick();
+		$formats = $imagick->queryFormats();
+		if (!in_array('WEBP', $formats)) {
+			define('AVIF_WEBP_POSSIBLE',false);
+			
+		}else{
+			define('AVIF_WEBP_POSSIBLE',true);
+			
+		}
+	}
+	
 	/**
 	 * loading the main app code 
 	 */
