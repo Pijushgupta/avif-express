@@ -45,6 +45,11 @@ class Html {
 			return $content;
 		}
 
+		/**
+		 * Do not remove this, $isAvifSupported only Checking browser not server 
+		 */
+		if(AVIFE_IMAGICK_VER == 0 || AVIFE_IMAGICK_VER == false) return $content;
+
 
 		
 
