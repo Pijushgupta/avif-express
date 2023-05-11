@@ -75,15 +75,20 @@ function initiate_plugin() {
 	 * fallback browsers that don't support Webp
 	 */
 	if(!defined('AVIF_WEBP_POSSIBLE')){
-		$imagick = new Imagick();
-		$formats = $imagick->queryFormats();
-		if (!in_array('WEBP', $formats)) {
-			define('AVIF_WEBP_POSSIBLE',false);
+		if (class_exists('Imagick')) {
+			$imagick = new Imagick();
+			$formats = $imagick->queryFormats();
+			if (!in_array('WEBP', $formats)) {
+				define('AVIF_WEBP_POSSIBLE',false);
 			
+			}else{
+				define('AVIF_WEBP_POSSIBLE',true);
+			
+			}
 		}else{
-			define('AVIF_WEBP_POSSIBLE',true);
-			
+			define('AVIF_WEBP_POSSIBLE',false);
 		}
+		
 	}
 	
 	/**
