@@ -45,13 +45,6 @@ class Html {
 			return $content;
 		}
 
-		/**
-		 * Do not remove this, $isAvifSupported only Checking browser not server 
-		 */
-		if(AVIFE_IMAGICK_VER == 0 || AVIFE_IMAGICK_VER == false) return $content;
-
-
-		
 
 		$dom = HtmlDomParser::str_get_html($content);
 
@@ -65,8 +58,11 @@ class Html {
 			 * if avif supported by browser
 			 */
 			if($isAvifSupported == true):
-				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
-				$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
+				if(AVIFE_IMAGICK_VER != 0 || AVIFE_IMAGICK_VER != false){
+					$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
+					$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
+				}
+				
 			endif;
 
 			if($isAvifSupported == false && $isFallBackWebpEnabled == true):
@@ -84,11 +80,22 @@ class Html {
 	 */
 	public static function replaceImgSrc($imageUrl) {
 		/**
+		 * Checking if the images are already optimized images 
+		 */
+		$flieExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
+		if($flieExtension == 'svg' || 
+		$flieExtension == 'SVG'||
+		$flieExtension == 'webp'||
+		$flieExtension == 'WEBP'
+		){
+			return $imageUrl;
+		}  
+		/**
 		 * Checking if the image source form same domain or not
 		 * and the file really exists
 		 */
 		if (str_contains($imageUrl, get_bloginfo('url')) && self::isFileExists($imageUrl)) {
-			return $imageUrl = rtrim($imageUrl, '.' . pathinfo($imageUrl, PATHINFO_EXTENSION)) . '.avif';
+			return $imageUrl = rtrim($imageUrl, '.' . $flieExtension) . '.avif';
 		}
 		return $imageUrl;
 	}
@@ -112,7 +119,7 @@ class Html {
 				/**
 				 * checking the extension against allowed ones
 				 */
-				if ($ext && in_array($ext, array('jpg', 'jpeg', 'png', 'webp'))) {
+				if ($ext && in_array($ext, array('jpg', 'jpeg', 'png'))) {
 					/**
 					 * finally creating the file url with .avif extension
 					 */
@@ -124,9 +131,19 @@ class Html {
 		return implode(' ', $srcset);
 	}
 
-	
-
 	public static function webpReplaceImgSrc($imageUrl){
+		/**
+		 * Checking if the images are already optimized images 
+		 */
+		$flieExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
+		if($flieExtension == 'svg' || 
+		$flieExtension == 'SVG'||
+		$flieExtension == 'webp'||
+		$flieExtension == 'WEBP'
+		){
+			return $imageUrl;
+		} 
+
 		/**
 		 * checking if the url belongs to this site or not
 		 * checking if source file exists in server
@@ -169,6 +186,10 @@ class Html {
 		foreach($srcset as $k => &$v){
 			
 			if(!str_contains($v, get_bloginfo('url')) || self::isFileExists($v) != true) continue;
+			$ext = pathinfo($v, PATHINFO_EXTENSION);
+			if (!in_array($ext, array('jpg', 'jpeg', 'png'))) {
+				continue;
+			}
 			$conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($v));
 			if($conversionStatus !== true) continue;
 			$v = dirname($v).'/'.pathinfo($v, PATHINFO_FILENAME).'.webp';
