@@ -133,12 +133,39 @@ class Html {
 				$ext = pathinfo($v, PATHINFO_EXTENSION);
 				/**
 				 * checking the extension against allowed ones
+				 * also this will eleminate non file strings
 				 */
 				if ($ext && in_array($ext, array('jpg', 'jpeg', 'png'))) {
+
+					$avifImageUrl = rtrim($v, '.' . pathinfo($v, PATHINFO_EXTENSION)) . '.avif';
+					
 					/**
-					 * finally creating the file url with .avif extension
+					 * checking if file exists or not 
 					 */
-					$v = rtrim($v, '.' . pathinfo($v, PATHINFO_EXTENSION)) . '.avif';
+					if(self::isFileExists($avifImageUrl)){
+						/**
+						 * creating the file url with .avif extension
+						 */
+						$v = $avifImageUrl;
+
+					}else{
+						/**
+						 * creating on the fly if server support that 
+						 * else try webp conversion
+						 */
+						if(AVIFE_IMAGICK_VER != 0 || imageavif()){
+							$imagePathSrc = Image::attachmentUrlToPath($v);
+							$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
+							Image::convert($imagePathSrc,$imagepathDest,Option::getImageQuality(),Option::getComSpeed());
+							$v = $avifImageUrl;
+						}else{
+							$v = self::webpReplaceImgSrc($v);
+						}
+
+					}
+
+					
+					
 				}
 				unset($ext);
 			}
@@ -154,7 +181,9 @@ class Html {
 		if($flieExtension == 'svg' || 
 		$flieExtension == 'SVG'||
 		$flieExtension == 'webp'||
-		$flieExtension == 'WEBP'
+		$flieExtension == 'WEBP'||
+		$flieExtension == 'avif'||
+		$flieExtension == 'AVIF'
 		){
 			return $imageUrl;
 		} 
@@ -205,9 +234,23 @@ class Html {
 			if (!in_array($ext, array('jpg', 'jpeg', 'png'))) {
 				continue;
 			}
-			$conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($v));
-			if($conversionStatus !== true) continue;
-			$v = dirname($v).'/'.pathinfo($v, PATHINFO_FILENAME).'.webp';
+			/**
+			 * checking if the webp file exist or not
+			 */
+			$webpImageUrl = rtrim($v, '.' . pathinfo($v, PATHINFO_EXTENSION)) . '.webp';
+			if(self::isFileExists($webpImageUrl)){
+				$v = $webpImageUrl;
+
+			}else{
+				/**
+				 * if file not existing then create one and change file extension
+				 */
+				$conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($v));
+				if($conversionStatus !== true) continue;
+				$v = $webpImageUrl;
+			}
+
+			
 		}
 		unset($v);
 		return implode(' ', $srcset);
