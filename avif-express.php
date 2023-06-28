@@ -81,9 +81,11 @@ function initiate_plugin() {
 			if (!in_array('WEBP', $formats)) {
 				define('AVIF_WEBP_POSSIBLE',false);
 			
-			}else{
+			}elseif(function_exists('imagewebp')){
 				define('AVIF_WEBP_POSSIBLE',true);
 			
+			}else{
+				define('AVIF_WEBP_POSSIBLE',false);
 			}
 		}else{
 			define('AVIF_WEBP_POSSIBLE',false);

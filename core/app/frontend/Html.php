@@ -10,7 +10,7 @@ use voku\helper\HtmlDomParser;
 
 class Html {
 	public static function init() {
-
+		
 		add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'), 9999);
 	}
 	public static function checkConditions() {
@@ -105,7 +105,7 @@ class Html {
 				if(AVIFE_IMAGICK_VER != 0 || imageavif()){
 					$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
 					$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
-					Image::convert($imagePathSrc,$imagepathDest,Option::getImageQuality(),Option::getComSpeed());
+					Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
 					return $avifImageUrl;
 				}else{
 					return self::webpReplaceImgSrc($imageUrl);
@@ -156,7 +156,7 @@ class Html {
 						if(AVIFE_IMAGICK_VER != 0 || imageavif()){
 							$imagePathSrc = Image::attachmentUrlToPath($v);
 							$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
-							Image::convert($imagePathSrc,$imagepathDest,Option::getImageQuality(),Option::getComSpeed());
+							Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
 							$v = $avifImageUrl;
 						}else{
 							$v = self::webpReplaceImgSrc($v);
@@ -229,7 +229,12 @@ class Html {
 		$srcset = explode(' ', $srcset);
 		foreach($srcset as $k => &$v){
 			
+			/**
+			 * if file do not exists or the url does not belong to our domain
+			 * in any of that situation skip it.
+			 */
 			if(!str_contains($v, get_bloginfo('url')) || self::isFileExists($v) != true) continue;
+
 			$ext = pathinfo($v, PATHINFO_EXTENSION);
 			if (!in_array($ext, array('jpg', 'jpeg', 'png'))) {
 				continue;
@@ -246,8 +251,10 @@ class Html {
 				 * if file not existing then create one and change file extension
 				 */
 				$conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($v));
-				if($conversionStatus !== true) continue;
+				if($conversionStatus != true) continue;
 				$v = $webpImageUrl;
+				
+				
 			}
 
 			

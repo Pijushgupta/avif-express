@@ -188,13 +188,38 @@ class Image {
 	 * @return bool TRUE|FALSE true on success, false on fail
 	 */
 	public static function webpConvert($src){
-		if(AVIF_WEBP_POSSIBLE == false) return false;
+
 		$des = dirname($src).DIRECTORY_SEPARATOR.pathinfo($src, PATHINFO_FILENAME).'.webp';
-		$imagick = new \Imagick();
-		$imagick->readImage($src);
-		$imagick->setImageFormat('webp');
-		$imagick->writeImage($des);
-		return true;
+
+		if(function_exists('imagewebp')){
+			$sourceImageType = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+			switch ($sourceImageType) {
+				case 'jpg':
+				case 'jpeg':
+					$sourceImage = imagecreatefromjpeg($src);
+					break;
+				case 'png':
+					$sourceImage = imagecreatefrompng($src);
+					break;
+				// Add support for additional image types if needed
+				default:
+					// Unsupported image type
+					return false;
+					exit;
+			}
+			return imagewebp($sourceImage,$des);
+		}
+
+		if (class_exists('Imagick')) {
+			$imagick = new Imagick();
+			$formats = $imagick->queryFormats();
+			if (in_array('WEBP', $formats)) {
+				$imagick = new \Imagick();
+				$imagick->readImage($src);
+				$imagick->setImageFormat('webp');
+				return $imagick->writeImage($des);
+			}
+		}
 
 	}
 
