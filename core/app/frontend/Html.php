@@ -22,7 +22,8 @@ class Html {
 		/**
 		 * if rendering inactive return the original content
 		 */
-		if(Options::getOperationMode() === 'inactive') return $content;
+		
+		if(Options::getOperationMode() != 'active') return $content;
 		
 
 		/**
@@ -65,6 +66,9 @@ class Html {
 
 	/**
 	 * replace image url with .avif extension
+	 * if server support exist for avif images it will create that on the fly if file not existing
+	 * else - It will try creating webp and serve it 
+	 * if that is not possible then it will return original 
 	 */
 	public static function replaceImgSrc($imageUrl) {
 		/**
@@ -91,8 +95,8 @@ class Html {
 			 * checking if avif file existing in the server
 			 * then taking decision 
 			 */
-			if(self::isFileExists($avifImageUr)){
-				return $avifImageUr;
+			if(self::isFileExists($avifImageUrl)){
+				return $avifImageUrl;
 			}else{
 				/**
 				 * creating on the fly if server support that 
