@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.2
-Stable tag: 2023.05.11.02
+Stable tag: 2023.06.28
 Requires PHP: 5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -39,6 +39,12 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
+= 28.06.2023 =
+Feature: 
+1. Externally added webp images can be served via this plugin on browser that does not support avif image. note: Image fix name should be same as source.
+Bugfix
+1. If server is capable of generating webp and not avif, then this plugin will generate and serve webp images. In case server is not capable of generating webp and avif both, original image will get served in case no externally added webp image found.
+2. Other small bug fixes. 
 
 = 02.05.11.2023 =
 Bugfix: Image Magic class checking.  

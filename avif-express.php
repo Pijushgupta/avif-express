@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  * Author: Pijush Gupta
  * Author uri: https://www.linkedin.com/in/pijush-gupta-php/
  * Description: Convert Images to AVIF and serve them
- * Version: 2023.05.11.02
+ * Version: 2023.06.28
  * Tags: avif, images, performance, avif
  */
 
