@@ -19,6 +19,11 @@ class Html {
 	}
 
 	public static function getContent($content) {
+		/**
+		 * if rendering inactive return the original content
+		 */
+		if(Options::getOperationMode() === 'inactive') return $content;
+		
 
 		/**
 		 * if it's not html return the content
@@ -40,38 +45,21 @@ class Html {
 		 */
 		$httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT']:'';
 		$isAvifSupported = strpos($httpAccept, 'image/avif');
-		$isFallBackWebpEnabled = AVIF_WEBP_POSSIBLE; 
-		if ( $isAvifSupported == false && $isFallBackWebpEnabled != true) {
-			return $content;
-		}
 
+	
+		
+		$dom  = HtmlDomParser::str_get_html($content);
 
-		$dom = HtmlDomParser::str_get_html($content);
-
-		/**
-		 *  iterating all the img element 
-		 */
 		foreach ($dom->getElementsByTagName('img') as &$image) {
-
-			/**
-			 * changing extension single image url to .avif
-			 * if avif supported by browser
-			 */
-			if($isAvifSupported == true):
-				if(AVIFE_IMAGICK_VER != 0 || AVIFE_IMAGICK_VER != false){
-					$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
-					$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
-				}
-				
-			endif;
-
-			if($isAvifSupported == false && $isFallBackWebpEnabled == true):
-			
+			if($isAvifSupported == true){
+				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
+				$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
+			}else{
 				$image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
 				$image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
-			endif;
-
+			}
 		}
+
 		return $dom;
 	}
 
@@ -86,7 +74,9 @@ class Html {
 		if($flieExtension == 'svg' || 
 		$flieExtension == 'SVG'||
 		$flieExtension == 'webp'||
-		$flieExtension == 'WEBP'
+		$flieExtension == 'WEBP'||
+		$flieExtension == 'avif'||
+		$flieExtension == 'AVIF'
 		){
 			return $imageUrl;
 		}  
@@ -95,7 +85,28 @@ class Html {
 		 * and the file really exists
 		 */
 		if (str_contains($imageUrl, get_bloginfo('url')) && self::isFileExists($imageUrl)) {
-			return $imageUrl = rtrim($imageUrl, '.' . $flieExtension) . '.avif';
+			$avifImageUrl = rtrim($imageUrl, '.' . $flieExtension) . '.avif';
+
+			/**
+			 * checking if avif file existing in the server
+			 * then taking decision 
+			 */
+			if(self::isFileExists($avifImageUr)){
+				return $avifImageUr;
+			}else{
+				/**
+				 * creating on the fly if server support that 
+				 * else try webp conversion
+				 */
+				if(AVIFE_IMAGICK_VER != 0 || imageavif()){
+					$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
+					$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
+					Image::convert($imagePathSrc,$imagepathDest,Option::getImageQuality(),Option::getComSpeed());
+					return $avifImageUrl;
+				}else{
+					return self::webpReplaceImgSrc($imageUrl);
+				}
+			}
 		}
 		return $imageUrl;
 	}
