@@ -11,6 +11,7 @@ use voku\helper\HtmlDomParser;
 class Html {
 	public static function init() {
 		
+		
 		add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'), 9999);
 	}
 	public static function checkConditions() {
@@ -46,7 +47,7 @@ class Html {
 		 */
 		$httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT']:'';
 		$isAvifSupported = strpos($httpAccept, 'image/avif');
-
+		
 	
 		
 		$dom  = HtmlDomParser::str_get_html($content);
@@ -102,7 +103,7 @@ class Html {
 				 * creating on the fly if server support that 
 				 * else try webp conversion
 				 */
-				if(AVIFE_IMAGICK_VER != 0 || imageavif()){
+				if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 					$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
 					$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
 					Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
@@ -153,7 +154,7 @@ class Html {
 						 * creating on the fly if server support that 
 						 * else try webp conversion
 						 */
-						if(AVIFE_IMAGICK_VER != 0 || imageavif()){
+						if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 							$imagePathSrc = Image::attachmentUrlToPath($v);
 							$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
 							Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
