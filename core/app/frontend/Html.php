@@ -11,7 +11,6 @@ use voku\helper\HtmlDomParser;
 class Html {
 	public static function init() {
 		
-		
 		add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'), 9999);
 	}
 	public static function checkConditions() {
@@ -20,6 +19,7 @@ class Html {
 	}
 
 	public static function getContent($content) {
+		
 		/**
 		 * if rendering inactive return the original content
 		 */
@@ -52,6 +52,9 @@ class Html {
 		
 		$dom  = HtmlDomParser::str_get_html($content);
 
+		/**
+		 * for img tags
+		 */
 		foreach ($dom->getElementsByTagName('img') as &$image) {
 			if($isAvifSupported == true){
 				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
@@ -61,7 +64,30 @@ class Html {
 				$image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
 			}
 		}
+		/**
+		 * for background image.
+		 */
+		foreach ($dom->find('[style*=background-image]') as &$element){
 
+			$style = $element->getAttribute('style');
+			$styleParser = new \voku\helper\SimpleHtmlDomStyleAttributeParser($style);
+            $styleParser->parse();
+            $imageUrl = $styleParser->getValue();
+			
+            // preg_match('/url\((.*?)\)/', $style, $matches);
+            // $imageUrl = $matches[1];
+			
+			if($isAvifSupported == true){
+				$updatedImageUrl = self::replaceImgSrc($imageUrl);
+			}else{
+				$updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
+			}
+			
+			$newStyle = str_replace($imageUrl, $updatedImageUrl, $style);
+			$element->setAttribute('style',$newStyle);
+		}
+		
+		
 		return $dom;
 	}
 
