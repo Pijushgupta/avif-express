@@ -56,30 +56,32 @@ class Html {
 		 * for img tags
 		 */
 		foreach ($dom->getElementsByTagName('img') as &$image) {
-			if($isAvifSupported == true){
+			
+			if($isAvifSupported != false ){
 				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
 				$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
-			}else{
+			}
+			if($isAvifSupported == false){
 				$image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
 				$image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
 			}
 		}
+		
 		/**
 		 * for background image.
 		 */
 		foreach ($dom->find('[style*=background-image]') as &$element){
 
 			$style = $element->getAttribute('style');
-			$styleParser = new \voku\helper\SimpleHtmlDomStyleAttributeParser($style);
-            $styleParser->parse();
-            $imageUrl = $styleParser->getValue();
 			
-            // preg_match('/url\((.*?)\)/', $style, $matches);
-            // $imageUrl = $matches[1];
+            preg_match('/url\((.*?)\)/', $style, $matches);
+            $imageUrl = $matches[1];
 			
-			if($isAvifSupported == true){
+			if($isAvifSupported != false){
 				$updatedImageUrl = self::replaceImgSrc($imageUrl);
-			}else{
+			}
+
+			if($isAvifSupported == false){
 				$updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
 			}
 			
@@ -98,49 +100,47 @@ class Html {
 	 * if that is not possible then it will return original 
 	 */
 	public static function replaceImgSrc($imageUrl) {
+		
 		/**
 		 * Checking if the images are already optimized images 
 		 */
 		$flieExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
-		if($flieExtension == 'svg' || 
-		$flieExtension == 'SVG'||
-		$flieExtension == 'webp'||
-		$flieExtension == 'WEBP'||
-		$flieExtension == 'avif'||
-		$flieExtension == 'AVIF'
-		){
+		if(strtolower($flieExtension) == 'svg' || strtolower($flieExtension) == 'webp' || strtolower($flieExtension) == 'avif'){
 			return $imageUrl;
 		}  
+
 		/**
 		 * Checking if the image source form same domain or not
-		 * and the file really exists
 		 */
-		if (str_contains($imageUrl, get_bloginfo('url')) && self::isFileExists($imageUrl)) {
-			$avifImageUrl = rtrim($imageUrl, '.' . $flieExtension) . '.avif';
+		if(strpos($imageUrl, get_bloginfo('url')) === false) return  $imageUrl;
 
-			/**
-			 * checking if avif file existing in the server
-			 * then taking decision 
-			 */
-			if(self::isFileExists($avifImageUrl)){
-				return $avifImageUrl;
-			}else{
-				/**
-				 * creating on the fly if server support that 
-				 * else try webp conversion
-				 */
-				if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
-					$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
-					$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
-					Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
-					return $avifImageUrl;
-				}else{
-					return self::webpReplaceImgSrc($imageUrl);
-				}
-			}
+		/**
+		 * creating the avif iamge url
+		 */
+		$avifImageUrl = rtrim($imageUrl, '.' . $flieExtension) . '.avif';
+
+		/**
+		 * checking if its already existing or not
+		 * if yes then return it.
+		 */
+		if(self::isFileExists($avifImageUrl)) return $avifImageUrl;
+
+		if(self::isFileExists($imageUrl) == false) return $imageUrl;
+		return self::webpReplaceImgSrc($imageUrl);		
+		/**
+		 * creating on the fly if server support that 
+		 * else try webp conversion
+		 */
+		if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
+			$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
+			$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
+			Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
+			return $avifImageUrl;
+		}else{
+			return self::webpReplaceImgSrc($imageUrl);
 		}
-		return $imageUrl;
 	}
+
 	/**
 	 * replacing srcset urls
 	 */
@@ -300,8 +300,8 @@ class Html {
 	 */
 	public static function isFileExists($url) {
 		$path = Image::attachmentUrlToPath($url);
-		if ($path === false) return false;
-		if (file_exists($path) === false) return false;
+		if ($path == false) return false;
+		if (file_exists($path) == false) return false;
 		return true;
 	}
 }
