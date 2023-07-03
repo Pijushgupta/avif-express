@@ -126,12 +126,14 @@ class Html {
 		if(self::isFileExists($avifImageUrl)) return $avifImageUrl;
 
 		if(self::isFileExists($imageUrl) == false) return $imageUrl;
-		return self::webpReplaceImgSrc($imageUrl);		
+		
+		
 		/**
 		 * creating on the fly if server support that 
 		 * else try webp conversion
 		 */
 		if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
+			
 			$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
 			$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
 			Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
@@ -153,7 +155,7 @@ class Html {
 			 * checking if its a real url belongs to same domain 
 			 * and the file really exists
 			 */
-			if (str_contains($v, get_bloginfo('url')) && self::isFileExists($v)) {
+			if (strpos($v, get_bloginfo('url')) !== false && self::isFileExists($v)) {
 				/**
 				 * getting the extension
 				 */
@@ -201,17 +203,12 @@ class Html {
 	}
 
 	public static function webpReplaceImgSrc($imageUrl){
+		
 		/**
 		 * Checking if the images are already optimized images 
 		 */
 		$flieExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
-		if($flieExtension == 'svg' || 
-		$flieExtension == 'SVG'||
-		$flieExtension == 'webp'||
-		$flieExtension == 'WEBP'||
-		$flieExtension == 'avif'||
-		$flieExtension == 'AVIF'
-		){
+		if(strtolower($flieExtension) == 'svg' || strtolower($flieExtension) == 'webp'|| strtolower($flieExtension) == 'avif'){
 			return $imageUrl;
 		} 
 
@@ -220,7 +217,7 @@ class Html {
 		 * checking if source file exists in server
 		 * if not return the original image url
 		 */
-		if(!str_contains($imageUrl, get_bloginfo('url')) || !self::isFileExists($imageUrl)) return $imageUrl;
+		if(strpos($imageUrl, get_bloginfo('url')) === false || !self::isFileExists($imageUrl)) return $imageUrl;
 
 		
 		/**
@@ -260,7 +257,7 @@ class Html {
 			 * if file do not exists or the url does not belong to our domain
 			 * in any of that situation skip it.
 			 */
-			if(!str_contains($v, get_bloginfo('url')) || self::isFileExists($v) != true) continue;
+			if(strpos($v, get_bloginfo('url')) === false || self::isFileExists($v) != true) continue;
 
 			$ext = pathinfo($v, PATHINFO_EXTENSION);
 			if (!in_array($ext, array('jpg', 'jpeg', 'png'))) {
