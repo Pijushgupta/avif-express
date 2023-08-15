@@ -1,7 +1,7 @@
-=== WP Todo by Aavoya ===
-Contributors: Pijush_Gupta
-Tags: avif, images, performance
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+##### WP Todo by Aavoya #####
+#### Contributors: Pijush_Gupta
+#### Tags: avif, images, performance
+#### License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 ##### Description
 
