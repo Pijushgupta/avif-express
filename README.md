@@ -1,3 +1,8 @@
+=== WP Todo by Aavoya ===
+Contributors: Pijush_Gupta
+Tags: avif, images, performance
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
 ##### Description
 
 ###### Wordpress Plugin to Convert Images to AVIF and serve them. Browsers that don't support Avif images will get served with WebP images. 
