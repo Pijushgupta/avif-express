@@ -16,10 +16,14 @@ class Routes {
 		add_action('wp_ajax_ajaxSetImgQuality', array('Avife\common\Options', 'ajaxSetImgQuality'));
 		add_action('wp_ajax_ajaxGetComSpeed', array('Avife\common\Options', 'ajaxGetComSpeed'));
 		add_action('wp_ajax_ajaxSetComSpeed', array('Avife\common\Options', 'ajaxSetComSpeed'));
+		add_action('wp_ajax_ajaxGetConversionEngine', array('Avife\common\Options', 'ajaxGetConversionEngine'));
+		add_action('wp_ajax_ajaxSetConversionEngine', array('Avife\common\Options', 'ajaxSetConversionEngine'));
+
 		add_action('wp_ajax_ajaxConvertRemaining', array('Avife\common\Media', 'ajaxConvertRemaining'));
 		add_action('wp_ajax_ajaxDeleteAll', array('Avife\common\Media', 'ajaxDeleteAll'));
 		add_action('wp_ajax_ajaxGetCurrentTheme', array('Avife\common\Theme', 'ajaxGetCurrentTheme'));
 		add_action('wp_ajax_ajaxThemeFilesConvert', array('Avife\common\Theme', 'ajaxThemeFilesConvert'));
 		add_action('wp_ajax_ajaxThemeFilesDelete', array('Avife\common\Theme', 'ajaxThemeFilesDelete'));
+		
 	}
 }

@@ -86,4 +86,29 @@ class Options {
 		if ($value == '') return;
 		return update_option('avifcompressionspeed', $value);
 	}
+
+	public static function ajaxGetConversionEngine(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::getConversionEngine());
+		wp_die();
+	}
+
+	public static function getConversionEngine(){
+		$engine = get_option('avifconversionengine',false);
+		if($engine == false){
+			update_option('avifconversionengine',sanitize_text_field('cloud'));
+		}
+		return get_option('avifconversionengine');
+	}
+
+	public static function ajaxSetConversionEngine(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::setConversionEngine(sanitize_text_field($_POST['engine'])));
+		wp_die();
+	}
+
+	public static function setConversionEngine($value = ''){
+		if($value == '') return;
+		return update_option('avifconversionengine',$value);
+	}
 }
