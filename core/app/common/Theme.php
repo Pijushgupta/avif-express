@@ -54,23 +54,45 @@ class Theme {
 		}
 		if (empty($filePaths) || gettype($filePaths) != 'array') return null;
 
-		$quality = Options::getImageQuality();
-		$speed = Options::getComSpeed();
 		/**
 		 * Checking if 'set_time_limit' can be set or not 
 		 * if not don't do anything
 		 */
 		if (Setting::avif_set_time_limit() == false) return false;
+		$quality = Options::getImageQuality();
+		$speed = Options::getComSpeed();
+		
 		$counter = 1;
-		foreach ($filePaths as $filePath) {
 
-			$dest = (string)rtrim($filePath, '.' . pathinfo($filePath, PATHINFO_EXTENSION)) . '.avif';
-			Image::convert($filePath, $dest, $quality, $speed);
-			if ($counter == 5) {
-				return 'keep-alive';
+		if(Options::getConversionEngine() == 'local'){
+			foreach ($filePaths as $filePath) {
+
+				$dest = (string)rtrim($filePath, '.' . pathinfo($filePath, PATHINFO_EXTENSION)) . '.avif';
+				Image::convert($filePath, $dest, $quality, $speed);
+				if ($counter == 5) {
+					return 'keep-alive';
+				}
+				$counter++;
 			}
-			$counter++;
 		}
+
+		if(Options::getConversionEngine() == 'cloud'){
+
+			$unConvertedAttachmentUrls = Image::pathToAttachmentUrl($filePaths);
+			$numberOfUrls = count($unConvertedAttachmentUrls);
+			
+
+			// Loop through the original array and split it into smaller arrays
+			for ($i = 0; $i < $numberOfUrls; $i += 10) {
+				// Use array_slice to extract a portion of the original array
+				$smallerArray = array_slice($unConvertedAttachmentUrls, $i, 10);
+				if(Image::cloudConvert($smallerArray) === false) return null;
+				if($counter == 2) return 'keep-alive';
+				$counter++;
+			}
+		}
+
+		
 
 		return true;
 	}

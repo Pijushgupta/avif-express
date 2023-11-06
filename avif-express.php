@@ -92,6 +92,13 @@ function initiate_plugin() {
 		}
 		
 	}
+
+	/**
+	 * Avif cloud engine address 
+	 */
+	if(!defined('AVIF_CLOUD_ADDRESS')){
+		define('AVIF_CLOUD_ADDRESS','http://127.0.0.1:8000/api/convert');
+	}
 	
 	/**
 	 * loading the main app code 

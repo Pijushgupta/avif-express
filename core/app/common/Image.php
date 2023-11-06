@@ -5,6 +5,7 @@ namespace Avife\common;
 if (!defined('ABSPATH')) exit();
 
 use Avife\common\Options;
+use WP_Error;
 
 class Image {
 
@@ -181,6 +182,75 @@ class Image {
 		}
 		@imagedestroy($sourceGDImg);
 	}
+	
+	/**
+	 * function to do cloud image conversion 
+	 * @issue Fix curl timeout 
+	 */
+	public static function cloudConvert(array $urls){
+		//array to string conversion
+		$jsonEncodedUrls = json_encode($urls);
+
+		//actual payload with appended url, GET method
+		$fullRequestUrl = AVIF_CLOUD_ADDRESS . '?urls=' . urlencode($jsonEncodedUrls);
+	
+		//conversion started
+		//1. sending all urls(array of url) to the cloud server
+		$cloudResponse = wp_remote_get($fullRequestUrl);
+		//2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url) 
+		$body = wp_remote_retrieve_body($cloudResponse);
+		
+		//checking for any error and then logging it, if WP_DEBUG is true and then exit
+		if(is_wp_error($cloudResponse)) {
+			if(WP_DEBUG == true) error_log("Error:" . $cloudResponse->get_error_message());
+			return false;
+		}
+
+		//converting json response to array of arrays
+		$imageUrls = json_decode($body, true);
+
+		//using wordpress file system class instead of php native file_get_contents()
+		include_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+
+		//this if condition to prevent to null
+		if(is_array($imageUrls) || is_object($imageUrls)){
+			foreach($imageUrls as $imageUrl){
+			
+				//creating destination file path form the source
+				$srcImagePath = self::attachmentUrlToPath($imageUrl['src']);
+				if($srcImagePath == false ) {
+					if(WP_DEBUG == true) error_log('Unable to create absolute path from relative path of source image');
+					continue;
+				}
+
+				//creating destination path
+				$pathInfo = pathinfo($srcImagePath);
+				$avifFileName = $pathInfo["dirname"] . DIRECTORY_SEPARATOR . $pathInfo["filename"] . '.avif';
+				
+	
+				//getting remote avif file 
+				$response = wp_remote_get($imageUrl['dist']);
+				if(is_wp_error($response)){
+					if(WP_DEBUG == true) error_log("Avif Download Error:".$response->get_error_message());
+					continue;
+				} 
+				//retrieving avif file body content
+				$body = wp_remote_retrieve_body($response);
+				if (WP_Filesystem()) {
+					global $wp_filesystem;
+					if(!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)){
+						if(WP_DEBUG == true) error_log('Unable to write avif file');
+						continue;
+					}
+					return true;
+				}else{
+					if(WP_DEBUG == true) error_log('Unable to initialize the WP_filesystem');
+				}
+			}
+		}
+		
+	}
 
 	/**
 	 * Converting image(s) to webp
@@ -235,5 +305,27 @@ class Image {
 		$file = ABSPATH . ltrim($parsed_url['path'], '/');
 		if (file_exists($file)) return $file;
 		return false;
+	}
+
+	/**
+	 * Convert Absolute Path to Relative Url
+	 * @param String|Array $url
+	 * @return String|Array 
+	 */
+	public static function pathToAttachmentUrl($url = ''){
+		if($url == '') return '';
+		if(is_array($url)){
+			$relativeUrl = [];
+			foreach($url as $link){
+				$relativeUrl[] = self::pathToAttachmentUrl($link);
+			}
+			return $relativeUrl;
+		}
+		$wpContentPosition = strpos($url, 'wp-content');
+		if ($wpContentPosition !== false) {
+			return get_site_url() . '/wp-content'. explode('wp-content',$url)[1];
+		}
+		
+		return '';
 	}
 }

@@ -77,22 +77,45 @@ class Media {
 		 * if not don't do anything
 		 */
 		if (Setting::avif_set_time_limit() == false) return false;
+
 		$counter = 1;
 		$quality = Options::getImageQuality();
 		$speed = Options::getComSpeed();
-		foreach ($unConvertedAttachments as $unConvertedAttachment) {
 
-			/**
-			 * creating path for file to delete. Just by removing original extension with .avif 
-			 */
-			$dest = (string)rtrim($unConvertedAttachment, '.' . pathinfo($unConvertedAttachment, PATHINFO_EXTENSION)) . '.avif';
+		if(Options::getConversionEngine() == 'local'){
+			
+			
+			foreach ($unConvertedAttachments as $unConvertedAttachment) {
 
-			Image::convert($unConvertedAttachment, $dest, $quality, $speed);
+				/**
+				 * creating path for file to delete. Just by removing original extension with .avif 
+				 */
+				$dest = (string)rtrim($unConvertedAttachment, '.' . pathinfo($unConvertedAttachment, PATHINFO_EXTENSION)) . '.avif';
 
-			if ($counter == 2) {
-				return 'keep-alive';
+				Image::convert($unConvertedAttachment, $dest, $quality, $speed);
+
+				if ($counter == 2) {
+					return 'keep-alive';
+				}
+				$counter++;
 			}
-			$counter++;
+		}
+
+		if(Options::getConversionEngine() == 'cloud'){
+			
+			$unConvertedAttachmentUrls = Image::pathToAttachmentUrl($unConvertedAttachments);
+			$numberOfUrls = count($unConvertedAttachmentUrls);
+			
+
+			// Loop through the original array and split it into smaller arrays
+			for ($i = 0; $i < $numberOfUrls; $i += 10) {
+				// Use array_slice to extract a portion of the original array
+				$smallerArray = array_slice($unConvertedAttachmentUrls, $i, 10);
+				if(Image::cloudConvert($smallerArray) === false) return null;
+				if($counter == 2) return 'keep-alive';
+				$counter++;
+			}
+			
 		}
 		return true;
 	}
