@@ -237,7 +237,7 @@ class Html {
 		/**
 		 * if conversion failed return the original
 		 */
-		if($conversionStatus !== true) return $imageUrl;
+		if($conversionStatus == false) return $imageUrl;
 		
 		/**
 		 * finally retuning the converted image url
@@ -275,7 +275,7 @@ class Html {
 				 * if file not existing then create one and change file extension
 				 */
 				$conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($v));
-				if($conversionStatus != true) continue;
+				if($conversionStatus == false) continue;
 				$v = $webpImageUrl;
 				
 				

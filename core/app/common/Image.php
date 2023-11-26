@@ -258,7 +258,7 @@ class Image {
 	 * @return bool TRUE|FALSE true on success, false on fail
 	 */
 	public static function webpConvert($src){
-
+		if (!$src) return false;
 		$des = dirname($src).DIRECTORY_SEPARATOR.pathinfo($src, PATHINFO_FILENAME).'.webp';
 
 		if (class_exists('Imagick')) {
