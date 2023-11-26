@@ -134,6 +134,16 @@ class Theme {
 			 * Finally deleting the file
 			 */
 			if (file_exists($dest)) wp_delete_file($dest);
+
+			/**
+			 * delete fallback webp
+			 */
+			$dest = (string)rtrim($filePath, '.' . pathinfo($filePath, PATHINFO_EXTENSION)) . '.webp';
+
+			/**
+			 * deleting the file
+			 */
+			if (file_exists($dest)) wp_delete_file($dest);
 		}
 		/**
 		 * returning true for positive signal

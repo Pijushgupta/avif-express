@@ -5,6 +5,7 @@ namespace Avife\common;
 if (!defined('ABSPATH')) exit();
 
 use Avife\common\Options;
+use WP;
 use WP_Error;
 
 class Image {
@@ -165,7 +166,7 @@ class Image {
 			$imagick->writeImage($des);
 			return;
 		}
-		//Try GD
+		//Try GD -- going to be deprecated
 		if ($fileType == 'image/jpeg' ||  $fileType == 'image/jpg') {
 			$sourceGDImg = @imagecreatefromjpeg($src);
 		}
@@ -199,6 +200,7 @@ class Image {
 		$cloudResponse = wp_remote_get($fullRequestUrl);
 		//2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url) 
 		$body = wp_remote_retrieve_body($cloudResponse);
+		if(WP_DEBUG == true) error_log('Received First response:'. print_r(json_decode($body, true),true));
 		
 		//checking for any error and then logging it, if WP_DEBUG is true and then exit
 		if(is_wp_error($cloudResponse)) {
@@ -242,8 +244,10 @@ class Image {
 					if(!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)){
 						if(WP_DEBUG == true) error_log('Unable to write avif file');
 						continue;
+					}else{
+						if(WP_DEBUG == true) error_log('Avif file written successfully');
 					}
-					return true;
+					
 				}else{
 					if(WP_DEBUG == true) error_log('Unable to initialize the WP_filesystem');
 				}

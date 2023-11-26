@@ -151,6 +151,16 @@ class Media {
 			 * Finally deleting the file
 			 */
 			if (file_exists($dest)) wp_delete_file($dest);
+
+			/**
+			 * delete fallback webp
+			 */
+			$dest = (string)rtrim($attachment, '.' . pathinfo($attachment, PATHINFO_EXTENSION)) . '.webp';
+
+			/**
+			 * deleting the file
+			 */
+			if (file_exists($dest)) wp_delete_file($dest);
 		}
 		return true;
 	}
