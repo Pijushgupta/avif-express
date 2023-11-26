@@ -261,25 +261,6 @@ class Image {
 
 		$des = dirname($src).DIRECTORY_SEPARATOR.pathinfo($src, PATHINFO_FILENAME).'.webp';
 
-		if(function_exists('imagewebp')){
-			$sourceImageType = strtolower(pathinfo($src, PATHINFO_EXTENSION));
-			switch ($sourceImageType) {
-				case 'jpg':
-				case 'jpeg':
-					$sourceImage = imagecreatefromjpeg($src);
-					break;
-				case 'png':
-					$sourceImage = imagecreatefrompng($src);
-					break;
-				// Add support for additional image types if needed
-				default:
-					// Unsupported image type
-					return false;
-					exit;
-			}
-			return imagewebp($sourceImage,$des);
-		}
-
 		if (class_exists('Imagick')) {
 			$imagick = new Imagick();
 			$formats = $imagick->queryFormats();
@@ -290,6 +271,8 @@ class Image {
 				return $imagick->writeImage($des);
 			}
 		}
+
+		return $src;
 
 	}
 

@@ -63,6 +63,8 @@ class Theme {
 		$speed = Options::getComSpeed();
 		
 		$counter = 1;
+		$keepAlive = 0; 
+		
 
 		if(Options::getConversionEngine() == 'local'){
 			foreach ($filePaths as $filePath) {
@@ -77,19 +79,16 @@ class Theme {
 		}
 
 		if(Options::getConversionEngine() == 'cloud'){
-
-			$unConvertedAttachmentUrls = Image::pathToAttachmentUrl($filePaths);
-			$numberOfUrls = count($unConvertedAttachmentUrls);
-			
-
-			// Loop through the original array and split it into smaller arrays
-			for ($i = 0; $i < $numberOfUrls; $i += 10) {
-				// Use array_slice to extract a portion of the original array
-				$smallerArray = array_slice($unConvertedAttachmentUrls, $i, 10);
-				if(Image::cloudConvert($smallerArray) === false) return null;
-				if($counter == 2) return 'keep-alive';
-				$counter++;
+			//only allow 20 images per batch
+			if(count($filePaths) > 20){
+				$filePaths = array_slice($filePaths,0,20);
+				$keepAlive = 1;
 			}
+			$unConvertedAttachmentUrls = Image::pathToAttachmentUrl($filePaths);
+
+			if(Image::cloudConvert($unConvertedAttachmentUrls) === false) return null;
+			if($keepAlive == 1) return 'keep-alive';
+	
 		}
 
 		

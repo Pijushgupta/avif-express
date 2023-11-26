@@ -78,9 +78,13 @@ class Media {
 		 */
 		if (Setting::avif_set_time_limit() == false) return false;
 
+		
+		$keepAlive = 0; 
 		$counter = 1;
 		$quality = Options::getImageQuality();
 		$speed = Options::getComSpeed();
+
+		
 
 		if(Options::getConversionEngine() == 'local'){
 			
@@ -102,19 +106,15 @@ class Media {
 		}
 
 		if(Options::getConversionEngine() == 'cloud'){
-			
-			$unConvertedAttachmentUrls = Image::pathToAttachmentUrl($unConvertedAttachments);
-			$numberOfUrls = count($unConvertedAttachmentUrls);
-			
-
-			// Loop through the original array and split it into smaller arrays
-			for ($i = 0; $i < $numberOfUrls; $i += 10) {
-				// Use array_slice to extract a portion of the original array
-				$smallerArray = array_slice($unConvertedAttachmentUrls, $i, 10);
-				if(Image::cloudConvert($smallerArray) === false) return null;
-				if($counter == 2) return 'keep-alive';
-				$counter++;
+			//only allow 20 images per batch
+			if(count($unConvertedAttachments) > 20){
+				$unConvertedAttachments = array_slice($unConvertedAttachments,0,20);
+				$keepAlive = 1;
 			}
+			$unConvertedAttachmentUrls = Image::pathToAttachmentUrl($unConvertedAttachments);
+			
+			if(Image::cloudConvert($unConvertedAttachmentUrls) === false) return null;
+			if($keepAlive == 1) return 'keep-alive';
 			
 		}
 		return true;
