@@ -269,10 +269,10 @@ class Image {
 		};
 
 		$des = dirname($src).DIRECTORY_SEPARATOR.pathinfo($src, PATHINFO_FILENAME).'.webp';
-		error_log($des);
+		
 		//check if the file already exists or not 
 		if(file_exists($des)){
-
+			return true;
 		}
 
 		if (class_exists('Imagick')) {
@@ -286,7 +286,7 @@ class Image {
 			}
 		}
 
-		return $src;
+		return false;
 
 	}
 
