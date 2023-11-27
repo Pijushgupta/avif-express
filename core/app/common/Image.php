@@ -4,9 +4,8 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit();
 
-use Avife\common\Options;
-use WP;
 use WP_Error;
+use Avife\common\Options;
 
 class Image {
 
@@ -151,7 +150,7 @@ class Image {
 
 		$fileType = getimagesize($src)['mime'];
 		// Try Imagick First
-		if (AVIFE_IMAGICK_VER > 0) {
+		if (extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0) {
 			$imagick = new \Imagick();
 			$imagick->readImage($src);
 			$imagick->setImageFormat('avif');
@@ -200,7 +199,7 @@ class Image {
 		$cloudResponse = wp_remote_get($fullRequestUrl);
 		//2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url) 
 		$body = wp_remote_retrieve_body($cloudResponse);
-		if(WP_DEBUG == true) error_log('Received First response:'. print_r(json_decode($body, true),true));
+		//if(WP_DEBUG == true) error_log('Received First response:'. print_r(json_decode($body, true),true));
 		
 		//checking for any error and then logging it, if WP_DEBUG is true and then exit
 		if(is_wp_error($cloudResponse)) {
@@ -263,10 +262,21 @@ class Image {
 	 */
 	public static function webpConvert($src){
 		if (!$src) return false;
+
+		if(!extension_loaded('imagick')){
+			if(WP_DEBUG == true) error_log('Imagick extension not loaded');
+			return $src;
+		};
+
 		$des = dirname($src).DIRECTORY_SEPARATOR.pathinfo($src, PATHINFO_FILENAME).'.webp';
+		error_log($des);
+		//check if the file already exists or not 
+		if(file_exists($des)){
+
+		}
 
 		if (class_exists('Imagick')) {
-			$imagick = new Imagick();
+			$imagick = new \Imagick();
 			$formats = $imagick->queryFormats();
 			if (in_array('WEBP', $formats)) {
 				$imagick = new \Imagick();
