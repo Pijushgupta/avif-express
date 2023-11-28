@@ -152,35 +152,44 @@ class Image {
 		// Try Imagick First
 		if (extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0) {
 			$imagick = new \Imagick();
-			$imagick->readImage($src);
-			$imagick->setImageFormat('avif');
-			if ($quality > 0) {
-				$imagick->setCompressionQuality($quality);
-				$imagick->setImageCompressionQuality($quality);
-			} else {
-				$imagick->setCompressionQuality(1);
-				$imagick->setImageCompressionQuality(1);
-			}
+			$formats = $imagick->queryFormats();
+			if (in_array('AVIF', $formats)) {
+				$imagick->readImage($src);
+				$imagick->setImageFormat('avif');
+				if ($quality > 0) {
+					$imagick->setCompressionQuality($quality);
+					$imagick->setImageCompressionQuality($quality);
+				} else {
+					$imagick->setCompressionQuality(1);
+					$imagick->setImageCompressionQuality(1);
+				}
 
-			$imagick->writeImage($des);
+				$imagick->writeImage($des);
+				return;
+			}
+		}
+
+		//Try GD -- going to be deprecated
+		if(function_exists('imageavif') &&  function_exists('gd_info') && gd_info()['AVIF Support'] != '') {
+			if ($fileType == 'image/jpeg' ||  $fileType == 'image/jpg') {
+				$sourceGDImg = @imagecreatefromjpeg($src);
+			}
+			if ($fileType == 'image/png') {
+				$sourceGDImg = @imagecreatefrompng($src);
+			}
+			if ($fileType == 'image/webp') {
+				$sourceGDImg = @imagecreatefromwebp($src);
+			}
+			if (gettype($sourceGDImg) == 'boolean') return;
+			@imageavif($sourceGDImg, $des, $quality, $speed);
+			if (filesize($des) % 2 == 1) {
+				file_put_contents($des, "\0", FILE_APPEND);
+			}
+			@imagedestroy($sourceGDImg);
 			return;
 		}
-		//Try GD -- going to be deprecated
-		if ($fileType == 'image/jpeg' ||  $fileType == 'image/jpg') {
-			$sourceGDImg = @imagecreatefromjpeg($src);
-		}
-		if ($fileType == 'image/png') {
-			$sourceGDImg = @imagecreatefrompng($src);
-		}
-		if ($fileType == 'image/webp') {
-			$sourceGDImg = @imagecreatefromwebp($src);
-		}
-		if (gettype($sourceGDImg) == 'boolean') return;
-		@imageavif($sourceGDImg, $des, $quality, $speed);
-		if (filesize($des) % 2 == 1) {
-			file_put_contents($des, "\0", FILE_APPEND);
-		}
-		@imagedestroy($sourceGDImg);
+		
+		
 	}
 	
 	/**
