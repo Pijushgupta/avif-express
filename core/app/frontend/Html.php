@@ -111,21 +111,21 @@ class Html {
 
 		/**
 		 * Checking if the image source form same domain or not
+		 * checking if the source file existing on the server or not
+		 * if domain is different or file not existing return the original image url
 		 */
-		if(strpos($imageUrl, get_bloginfo('url')) === false) return  $imageUrl;
+		if(strpos($imageUrl, get_bloginfo('url')) === false || self::isFileExists($imageUrl) == false) return  $imageUrl;
 
 		/**
-		 * creating the avif iamge url
+		 * creating the avif image url
 		 */
-		$avifImageUrl = rtrim($imageUrl, '.' . $flieExtension) . '.avif';
+		$avifImageUrl = dirname($imageUrl).DIRECTORY_SEPARATOR.pathinfo($imageUrl, PATHINFO_FILENAME).'.avif';
 
 		/**
 		 * checking if its already existing or not
 		 * if yes then return it.
 		 */
-		if(self::isFileExists($avifImageUrl)) return $avifImageUrl;
-
-		if(self::isFileExists($imageUrl) == false) return $imageUrl;
+		if(self::isFileExists($avifImageUrl) == true) return $avifImageUrl;
 		
 		
 		/**
@@ -137,10 +137,23 @@ class Html {
 			$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
 			$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
 			Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
-			return $avifImageUrl;
-		}else{
-			return self::webpReplaceImgSrc($imageUrl);
+
+			/**
+			 * checking if the created file is valid or not
+			 * due to GD bug sometimes it creates a file with 0 byte
+			 */
+
+			if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
+				return $avifImageUrl;
+			}
+			
 		}
+
+		/**
+		 * if server capable of generating webp then return that else return original
+		 */
+		return self::webpReplaceImgSrc($imageUrl);
+		
 	}
 
 	/**
@@ -186,15 +199,20 @@ class Html {
 							$imagePathSrc = Image::attachmentUrlToPath($v);
 							$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
 							Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
-							$v = $avifImageUrl;
+							/**
+							 * checking if the created file is valid or not
+							 * due GD bug sometimes it creates a file with 0 byte
+							 */
+							if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
+								$v = $avifImageUrl;
+							}else{
+								$v = self::webpReplaceImgSrc($v);
+							}
+							
 						}else{
 							$v = self::webpReplaceImgSrc($v);
 						}
-
 					}
-
-					
-					
 				}
 				unset($ext);
 			}
@@ -202,6 +220,9 @@ class Html {
 		return implode(' ', $srcset);
 	}
 
+	/**
+	 * to replace src urls with .webp extension
+	 */
 	public static function webpReplaceImgSrc($imageUrl){
 		
 		/**
@@ -217,18 +238,23 @@ class Html {
 		 * checking if source file exists in server
 		 * if not return the original image url
 		 */
-		if(strpos($imageUrl, get_bloginfo('url')) === false || !self::isFileExists($imageUrl)) return $imageUrl;
+		if(strpos($imageUrl, get_bloginfo('url')) === false || self::isFileExists($imageUrl) == false) return $imageUrl;
 
 		
 		/**
 		 * checking if the webp file already existing in server or not
 		 * if exist then serve it
 		 */
-		$newImageUrl = dirname($imageUrl).'/'.pathinfo($imageUrl, PATHINFO_FILENAME).'.webp';
-		if(Image::attachmentUrlToPath($newImageUrl) != false) return $newImageUrl;
+		$newImageUrl = dirname($imageUrl).DIRECTORY_SEPARATOR.pathinfo($imageUrl, PATHINFO_FILENAME).'.webp';
 
 		/**
-		 * starting conversion
+		 * checking if the file already existing or not
+		 * if yes then return it.
+		 */
+		if(self::isFileExists($newImageUrl) == true) return $newImageUrl;
+
+		/**
+		 * starting conversion(on the fly)
 		 * after the conversion webpConvert() will save the new file 
 		 * in the same location
 		 */
@@ -246,7 +272,10 @@ class Html {
 
 
 	}
-
+	
+	/**
+	 * to replace srcset urls with .webp extension
+	 */
 	public static function webpReplaceImgSrcSet($srcset){
 		if (!$srcset) return;
 
@@ -263,10 +292,15 @@ class Html {
 			if (!in_array($ext, array('jpg', 'jpeg', 'png'))) {
 				continue;
 			}
+
+			/**
+			 * creating the webp file url
+			 */
+			$webpImageUrl = rtrim($v, '.' . pathinfo($v, PATHINFO_EXTENSION)) . '.webp';
+			
 			/**
 			 * checking if the webp file exist or not
 			 */
-			$webpImageUrl = rtrim($v, '.' . pathinfo($v, PATHINFO_EXTENSION)) . '.webp';
 			if(self::isFileExists($webpImageUrl)){
 				$v = $webpImageUrl;
 
@@ -275,7 +309,16 @@ class Html {
 				 * if file not existing then create one and change file extension
 				 */
 				$conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($v));
-				if($conversionStatus == false) continue;
+				
+				/**
+				 * checking if webp conversion failed or not OR after conversion file not existing
+				 * in above case skip the url replacement and continue with next one
+				 */
+				if($conversionStatus == false || self::isFileExists($v) == false) continue;
+				
+				/**
+				 * finally replacing the url with webp url
+				 */
 				$v = $webpImageUrl;
 				
 				
@@ -286,8 +329,6 @@ class Html {
 		unset($v);
 		return implode(' ', $srcset);
 	}
-
-	
 
 	/**
 	 * isFileExists
