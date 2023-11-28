@@ -279,7 +279,6 @@ class Image {
 			$imagick = new \Imagick();
 			$formats = $imagick->queryFormats();
 			if (in_array('WEBP', $formats)) {
-				$imagick = new \Imagick();
 				$imagick->readImage($src);
 				$imagick->setImageFormat('webp');
 				return $imagick->writeImage($des);
