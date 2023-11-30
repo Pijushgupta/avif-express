@@ -119,7 +119,7 @@ class Html {
 		/**
 		 * creating the avif image url
 		 */
-		$avifImageUrl = dirname($imageUrl).DIRECTORY_SEPARATOR.pathinfo($imageUrl, PATHINFO_FILENAME).'.avif';
+		$avifImageUrl = dirname($imageUrl).'/'.pathinfo($imageUrl, PATHINFO_FILENAME).'.avif';
 
 		/**
 		 * checking if its already existing or not
@@ -135,7 +135,8 @@ class Html {
 		if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 			
 			$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
-			$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
+			$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
+
 			Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
 
 			/**
@@ -197,7 +198,7 @@ class Html {
 						 */
 						if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 							$imagePathSrc = Image::attachmentUrlToPath($v);
-							$imagepathDest = Image::attachmentUrlToPath($avifImageUrl);
+							$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
 							Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
 							/**
 							 * checking if the created file is valid or not
