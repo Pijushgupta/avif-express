@@ -53,7 +53,24 @@ class Media {
 	 */
 	public static function ajaxConvertRemaining() {
 		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
-		if (function_exists('imageavif') == false && AVIFE_IMAGICK_VER <= 0) wp_die();
+
+		$avifsupport = '0';
+		if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
+		
+		$hasImagick = '0';
+		if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
+			$imagick = new \Imagick();
+			$formats = $imagick->queryFormats();
+			if (in_array('AVIF', $formats)) {
+				$hasImagick = '1';
+			}
+		}
+
+		$isCloudEngine = '0';
+		if(Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
+
+		if($avifsupport == '0' && $hasImagick == '0' && $isCloudEngine == '0') wp_die();
+
 		echo json_encode(self::convertRemaining());
 		wp_die();
 	}

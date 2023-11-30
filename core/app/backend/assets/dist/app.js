@@ -21122,11 +21122,13 @@ __webpack_require__.r(__webpack_exports__);
     var gdstatus = gd;
     var avifsupportstatus = avifsupport;
     var hasImagickstatus = hasImagick;
+    var isEnabledCloud = isCloudEngine;
     var __returned__ = {
       toWait: toWait,
       gdstatus: gdstatus,
       avifsupportstatus: avifsupportstatus,
       hasImagickstatus: hasImagickstatus,
+      isEnabledCloud: isEnabledCloud,
       waitingSatus: _stores_state__WEBPACK_IMPORTED_MODULE_0__.waitingSatus,
       AutoConvStatus: _body_AutoConvStatus_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
       OperationMode: _body_OperationMode_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -21276,6 +21278,7 @@ __webpack_require__.r(__webpack_exports__);
     var gdstatus = gd;
     var avifsupportstatus = avifsupport;
     var hasImagickstatus = hasImagick;
+    var isEnabledCloud = isCloudEngine;
 
     function getAttachemnts() {
       var data = new FormData();
@@ -21299,7 +21302,7 @@ __webpack_require__.r(__webpack_exports__);
     getAttachemnts();
 
     function convert() {
-      if (avifsupportstatus != '1' && hasImagickstatus != '1') return false;
+      if (avifsupportstatus != '1' && hasImagickstatus != '1' && isEnabledCloud != '1') return false;
       if (totalImages.value === convertedImage.value) return false;
       var toast = (0,vue_toastification__WEBPACK_IMPORTED_MODULE_2__.useToast)();
       toWait.toggleWaiting();
@@ -21383,6 +21386,7 @@ __webpack_require__.r(__webpack_exports__);
       gdstatus: gdstatus,
       avifsupportstatus: avifsupportstatus,
       hasImagickstatus: hasImagickstatus,
+      isEnabledCloud: isEnabledCloud,
       getAttachemnts: getAttachemnts,
       convert: convert,
       deleteAll: deleteAll,
@@ -21449,7 +21453,9 @@ __webpack_require__.r(__webpack_exports__);
         body: data
       }).then(function (res) {
         return res.json();
-      }).then(function (res) {})["catch"](function (err) {
+      }).then(function (res) {
+        window.location.reload();
+      })["catch"](function (err) {
         return console.log(err);
       });
     };
@@ -21711,6 +21717,7 @@ __webpack_require__.r(__webpack_exports__);
     var gdstatus = gd;
     var avifsupportstatus = avifsupport;
     var hasImagickstatus = hasImagick;
+    var isEnabledCloud = isCloudEngine;
 
     function getTheme() {
       var data = new FormData();
@@ -21735,7 +21742,7 @@ __webpack_require__.r(__webpack_exports__);
     getTheme();
 
     function convert() {
-      if (avifsupportstatus != '1' && hasImagickstatus != '1') return false;
+      if (avifsupportstatus != '1' && hasImagickstatus != '1' && isEnabledCloud != '1') return false;
 
       if (conveted_files.value == total_files.value || total_files.value <= 0) {
         return false;
@@ -21830,6 +21837,7 @@ __webpack_require__.r(__webpack_exports__);
       gdstatus: gdstatus,
       avifsupportstatus: avifsupportstatus,
       hasImagickstatus: hasImagickstatus,
+      isEnabledCloud: isEnabledCloud,
       getTheme: getTheme,
       convert: convert,
       deleteImg: deleteImg,
@@ -21905,25 +21913,17 @@ var _hoisted_3 = {
 
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-center md:text-left"
-}, "Php GD with libavif or Imagick(ver >= 7.0.25) is not installed/enabled. Please contact the server admin!", -1
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Php GD with libavif or Imagick(ver >= 7.0.25) is not installed/enabled. Please contact the server admin or use "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "cloud engine")], -1
 /* HOISTED */
 );
 
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
-  href: "https://www.google.com/search?client=firefox-b-d&q=php+gd+extension",
-  target: "_blank",
-  "class": "border border-2 border-white rounded-full px-4 py-2 hover:text-white visited:text-white focus:shadow-none mt-3 md:mt-0"
-}, "Know More", -1
-/* HOISTED */
-);
-
-var _hoisted_6 = [_hoisted_4, _hoisted_5];
-var _hoisted_7 = {
+var _hoisted_5 = [_hoisted_4];
+var _hoisted_6 = {
   key: 1,
   "class": "absolute inset-0"
 };
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "flex w-full h-full justify-center items-center backdrop-blur-sm rounded-b-2xl"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
   "xmlns:svg": "http://www.w3.org/2000/svg",
@@ -21948,9 +21948,9 @@ var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_9 = [_hoisted_8];
+var _hoisted_8 = [_hoisted_7];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [$setup.hasImagickstatus != '1' && $setup.avifsupportstatus != '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, _hoisted_6)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.toWait.isWaiting == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, _hoisted_9)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CloudSwitcher"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["AutoConvStatus"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["OperationMode"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ImageQuality"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ImageCompression"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BulkConv"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ThemeConvVue"])])]);
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [$setup.hasImagickstatus != '1' && $setup.avifsupportstatus != '1' && $setup.isEnabledCloud != '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, _hoisted_5)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.toWait.isWaiting == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, _hoisted_8)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CloudSwitcher"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["AutoConvStatus"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["OperationMode"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ImageQuality"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ImageCompression"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BulkConv"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ThemeConvVue"])])]);
 }
 
 /***/ }),

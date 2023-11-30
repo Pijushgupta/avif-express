@@ -43,7 +43,7 @@ const setConversionEngine = () =>{
 	})
 		.then(res => res.json())
 		.then(res => {
-			
+			window.location.reload();
 		})
 		.catch(err => console.log(err));
 }

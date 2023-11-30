@@ -2,6 +2,8 @@
 
 namespace Avife\backend;
 
+use Avife\common\Options;
+
 final class Ui {
 
 	private static $globalScopeName = 'Avife\backend\Ui';
@@ -31,8 +33,23 @@ final class Ui {
 		$avife_nonce 		= wp_create_nonce('avife_nonce');
 		$assetPath 	= AVIFE_REL . '/core/app/backend/assets/';
 		$gd = extension_loaded('gd');
-		$avifsupport = function_exists('imageavif') ? '1' : '0';
-		$hasImagick = AVIFE_IMAGICK_VER <= 0 ? '0' : '1';
+		
+		$avifsupport = '0';
+		if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
+		
+		$hasImagick = '0';
+		if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
+			$imagick = new \Imagick();
+			$formats = $imagick->queryFormats();
+			if (in_array('AVIF', $formats)) {
+				$hasImagick = '1';
+			}
+		}
+
+		$isCloudEngine = '0';
+		if(Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
+		
+		
 		$dashboardLang = explode('_', get_locale())[0];
 
 		printf(
@@ -44,6 +61,7 @@ final class Ui {
 			var avifsupport = "%5$s";
 			var hasImagick = "%6$s";
 			var adminLocale = "%7$s";
+			var isCloudEngine = "%9$s";
 			</script>
 			<div id="%8$s"></div>',
 			$url,
@@ -53,7 +71,8 @@ final class Ui {
 			$avifsupport,
 			$hasImagick,
 			$dashboardLang,
-			AVIFE_VUE_ROOT_ID
+			AVIFE_VUE_ROOT_ID,
+			$isCloudEngine
 		);
 	}
 }

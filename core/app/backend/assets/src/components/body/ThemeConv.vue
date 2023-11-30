@@ -22,6 +22,7 @@ const toWait = waitingSatus();
 const gdstatus = gd;
 const avifsupportstatus = avifsupport;
 const hasImagickstatus  = hasImagick;
+const isEnabledCloud = isCloudEngine;
 function getTheme() {
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -44,7 +45,8 @@ function getTheme() {
 getTheme();
 
 function convert() {
-	if (avifsupportstatus != '1' && hasImagickstatus != '1') return false;
+	
+	if (avifsupportstatus != '1' && hasImagickstatus != '1' && isEnabledCloud != '1') return false;
 	if (conveted_files.value == total_files.value || total_files.value <= 0) {
 		return false;
 	} 

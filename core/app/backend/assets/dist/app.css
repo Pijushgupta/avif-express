@@ -500,9 +500,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: auto;
   margin-right: auto;
 }
-.mt-3 {
-  margin-top: 0.75rem;
-}
 .mt-5 {
   margin-top: 1.25rem;
 }
@@ -593,18 +590,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .border {
   border-width: 1px;
 }
-.border-2 {
-  border-width: 2px;
+.border-0 {
+  border-width: 0px;
 }
 .border-t-0 {
   border-top-width: 0px;
 }
 .border-b {
   border-bottom-width: 1px;
-}
-.border-white {
-  --tw-border-opacity: 1;
-  border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 .bg-white {
   --tw-bg-opacity: 1;
@@ -642,13 +635,13 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-left: 1rem;
   padding-right: 1rem;
 }
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 .text-center {
   text-align: center;
@@ -689,6 +682,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .outline {
   outline-style: solid;
+}
+.outline-0 {
+  outline-width: 0px;
 }
 .blur {
   --tw-blur: blur(8px);
@@ -786,55 +782,32 @@ Ensure the default browser behavior of the `hidden` attribute.
 	#wpcontent {
     padding-left: 0px;
   }
-}
-.visited\:text-white:visited {
-  color: rgb(255 255 255 );
-}
-.hover\:text-white:hover {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-.focus\:shadow-none:focus {
-  --tw-shadow: 0 0 #0000;
-  --tw-shadow-colored: 0 0 #0000;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-@media (min-width: 768px) {
-
-  .md\:mt-0 {
+	.md\:mt-0 {
     margin-top: 0px;
   }
-
-  .md\:mb-0 {
+	.md\:mb-0 {
     margin-bottom: 0px;
   }
-
-  .md\:w-1\/2 {
+	.md\:w-1\/2 {
     width: 50%;
   }
-
-  .md\:w-auto {
+	.md\:w-auto {
     width: auto;
   }
-
-  .md\:flex-row {
+	.md\:flex-row {
     flex-direction: row;
   }
-
-  .md\:justify-end {
+	.md\:justify-end {
     justify-content: flex-end;
   }
-
-  .md\:justify-between {
+	.md\:justify-between {
     justify-content: space-between;
   }
-
-  .md\:px-5 {
+	.md\:px-5 {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   }
-
-  .md\:text-left {
+	.md\:text-left {
     text-align: left;
   }
 }

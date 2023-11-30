@@ -21,6 +21,7 @@ const toWait = waitingSatus();
 const gdstatus = gd;
 const avifsupportstatus = avifsupport;
 const hasImagickstatus  = hasImagick;
+const isEnabledCloud = isCloudEngine;
 function getAttachemnts(){
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -45,7 +46,7 @@ function getAttachemnts(){
 getAttachemnts();
 
 function convert() {
-	if (avifsupportstatus != '1' && hasImagickstatus != '1') return false;
+	if (avifsupportstatus != '1' && hasImagickstatus != '1' && isEnabledCloud != '1') return false;
 	if (totalImages.value === convertedImage.value) return false;
 	const toast = useToast();
 	toWait.toggleWaiting();

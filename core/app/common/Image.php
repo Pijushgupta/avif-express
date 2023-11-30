@@ -16,10 +16,7 @@ class Image {
 	 */
 	public static function activate() {
 
-		/**
-		 * checking if imageavif function exists or not, since plesk yet to support imageavif  
-		 */
-		if (!function_exists('imageavif') && AVIFE_IMAGICK_VER <= 0) return;
+		
 		/**
 		 * Checking if auto conversion enabled 
 		 */
@@ -53,23 +50,73 @@ class Image {
 		$originalImages[0] =  $attachment->guid;
 
 		$uploadDirInfo = wp_upload_dir();
-		$originalImages[1] = $uploadDirInfo['baseurl'] . '/' . $metadata['file'];
+		$originalImages[1] = $uploadDirInfo['baseurl'] . DIRECTORY_SEPARATOR . $metadata['file'];
 
 		if ($originalImages[0] != $originalImages[1]) {
 			foreach ($originalImages as $originalImage) {
 
 				$srcPath = self::attachmentUrlToPath($originalImage);
+
 				if ($srcPath != false && $srcPath != '') {
 					$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
-					self::convert($srcPath, $desPath, $quality, $speed);
+
+					if(Options::getConversionEngine() == 'local'){
+						$avifsupport = '0';
+						if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
+		
+						$hasImagick = '0';
+						if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
+							$imagick = new \Imagick();
+							$formats = $imagick->queryFormats();
+							if (in_array('AVIF', $formats)) {
+								$hasImagick = '1';
+							}
+						}
+						if($avifsupport == '0' && $hasImagick == '0'){
+							if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+							return $metadata;
+						} 
+						self::convert($srcPath, $desPath, $quality, $speed);
+					}
+
+					if(Options::getConversionEngine() == 'cloud'){
+						$unConvertedAttachmentUrls[] = $originalImage;
+						self::cloudConvert($unConvertedAttachmentUrls);
+					}
+					
+
 				}
 			}
+
 		} else {
 
 			$srcPath = self::attachmentUrlToPath($originalImages[0]);
 			if ($srcPath != false && $srcPath != '') {
 				$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
-				self::convert($srcPath, $desPath, $quality, $speed);
+
+				if(Options::getConversionEngine() == 'local'){
+					$avifsupport = '0';
+					if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
+		
+					$hasImagick = '0';
+					if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
+						$imagick = new \Imagick();
+						$formats = $imagick->queryFormats();
+						if (in_array('AVIF', $formats)) {
+							$hasImagick = '1';
+						}
+					}
+					if($avifsupport == '0' && $hasImagick == '0'){
+						if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+						return $metadata;
+					} 
+					self::convert($srcPath, $desPath, $quality, $speed);
+				}
+
+				if(Options::getConversionEngine() == 'cloud'){
+					$unConvertedAttachmentUrls[] = $originalImages[0];
+					self::cloudConvert($unConvertedAttachmentUrls);
+				}
 			}
 		}
 		/**
@@ -85,7 +132,31 @@ class Image {
 			$src = trailingslashit($fileDir) . $size['file'];
 			if (file_exists($src)) {
 				$des = rtrim($src, '.' . pathinfo($src, PATHINFO_EXTENSION)) . '.avif';
-				self::convert($src, $des, $quality, $speed);
+
+				if(Options::getConversionEngine() == 'local'){
+					$avifsupport = '0';
+					if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
+	
+					$hasImagick = '0';
+					if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
+						$imagick = new \Imagick();
+						$formats = $imagick->queryFormats();
+						if (in_array('AVIF', $formats)) {
+							$hasImagick = '1';
+						}
+					}
+					if($avifsupport == '0' && $hasImagick == '0'){
+						if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+						return $metadata;
+					} 
+					self::convert($src, $des, $quality, $speed);
+				}
+
+				if(Options::getConversionEngine() == 'cloud'){
+					$unConvertedAttachmentUrls[] = self::pathToAttachmentUrl($src);
+					self::cloudConvert($unConvertedAttachmentUrls);
+				}
+
 			}
 		}
 		/**
@@ -194,7 +265,7 @@ class Image {
 	
 	/**
 	 * function to do cloud image conversion 
-	 * @issue Fix curl timeout 
+	 * @param array $urls array of urls
 	 */
 	public static function cloudConvert(array $urls){
 		//array to string conversion
@@ -252,8 +323,6 @@ class Image {
 					if(!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)){
 						if(WP_DEBUG == true) error_log('Unable to write avif file');
 						continue;
-					}else{
-						if(WP_DEBUG == true) error_log('Avif file written successfully');
 					}
 					
 				}else{
