@@ -12,6 +12,7 @@
 			<CloudSwitcher/>
 			<AutoConvStatus/>
 			<OperationMode/>
+			<AvifOnTheFly/>
 			<ImageQuality />
 			<ImageCompression/>
 			<BulkConv/>
@@ -31,6 +32,7 @@ import ImageCompression from './body/ImageCompression.vue';
 import BulkConv from './body/BulkConv.vue';
 import ThemeConvVue from './body/ThemeConv.vue';
 import CloudSwitcher from './body/CloudSwitcher.vue';
+import AvifOnTheFly from './body/AvifOnTheFly.vue';
 
 const toWait = waitingSatus();
 

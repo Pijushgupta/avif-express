@@ -20890,6 +20890,7 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       pluginName: "Avif express",
       tagline: "Converts existing and newly uploaded Images to lite-weight AVIF format.",
       hireMe: "hire me",
+      disableOnTheFlyLabel: "Disable on the fly avif conversion(recommended)",
       autoConvertLabel: "Automatically convert images to AVIF format on upload.",
       rendering: "Rendering",
       iamgeQuality: "Image Quality",
@@ -20914,6 +20915,7 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       pluginName: "Avif expreso",
       tagline: "Convierta imágenes existentes y recién cargadas al formato AVIF ligero.",
       hireMe: "contratame",
+      disableOnTheFlyLabel: "Deshabilitar la conversión avif sobre la marcha(recomendado)",
       autoConvertLabel: "Convierta automáticamente las imágenes al formato AVIF al cargarlas.",
       rendering: "Mostrar en el sitio web",
       iamgeQuality: "Calidad de la imagen",
@@ -20938,6 +20940,7 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       pluginName: "এভিআইএফ এক্সপ্রেস",
       tagline: "বিদ্যমান এবং নতুন আপলোড করা ছবিকে লাইট-ওয়েট AVIF ফরম্যাটে রূপান্তর করে।",
       hireMe: "যোগযোগ",
+      disableOnTheFlyLabel: "অন দ্য ফ্লাই এভিআইএফ রূপান্তর অক্ষম করুন(প্রস্তাবিত)",
       autoConvertLabel: "আপলোড করার সময় স্বয়ংক্রিয়ভাবে ছবিগুলিকে AVIF ফর্ম্যাটে রূপান্তর করুন৷",
       rendering: "ওয়েব পেজে দেখান",
       iamgeQuality: "ছবির মান",
@@ -20962,6 +20965,7 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       pluginName: "Avif-Express",
       tagline: "Konvertiert vorhandene und neu hochgeladene Bilder in das leichte AVIF-Format.",
       hireMe: "stellt mich ein",
+      disableOnTheFlyLabel: "Deaktivieren Sie die AviF-Konvertierung im laufenden Betrieb(empfohlen)",
       autoConvertLabel: "Konvertieren Sie Bilder beim Hochladen automatisch in das AVIF-Format.",
       rendering: "Rendern",
       iamgeQuality: "Bildqualität",
@@ -20986,6 +20990,7 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       pluginName: "एवीआईएफ एक्सप्रेस",
       tagline: "मौजूदा और नई अपलोड की गई छवियों को लाइट-वेट एवीआईएफ प्रारूप में परिवर्तित करता है।",
       hireMe: "मुझे चुनिएँ",
+      disableOnTheFlyLabel: "on the fly एवीआईएफ रूपांतरण पर अक्षम करें(recommended)",
       autoConvertLabel: "अपलोड होने पर स्वचालित रूप से छवियों को एवीआईएफ प्रारूप में परिवर्तित करें।",
       rendering: "प्रतिपादन",
       iamgeQuality: "छवि के गुणवत्ता",
@@ -21010,6 +21015,7 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       pluginName: "Avif express",
       tagline: "Convertit les images existantes et nouvellement upload au format AVIF léger.",
       hireMe: "engagez moi",
+      disableOnTheFlyLabel: "Désactiver la conversion avif à la volée(recommandé)",
       autoConvertLabel: "Convertissez automatiquement les images au format AVIF lors du upload.",
       rendering: "Le rendu",
       iamgeQuality: "Qualité d'image",
@@ -21034,6 +21040,7 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       pluginName: "Авиф Экспресс",
       tagline: "Преобразует существующие и недавно загруженные изображения в облегченный формат AVIF.",
       hireMe: "найми меня",
+      disableOnTheFlyLabel: "Отключить конвертацию avif на лету(рекомендуемые)",
       autoConvertLabel: "Автоматически конвертировать изображения в формат AVIF при загрузке.",
       rendering: "Рендеринг",
       iamgeQuality: "Качество изображения",
@@ -21106,6 +21113,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _body_BulkConv_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./body/BulkConv.vue */ "./assets/src/components/body/BulkConv.vue");
 /* harmony import */ var _body_ThemeConv_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./body/ThemeConv.vue */ "./assets/src/components/body/ThemeConv.vue");
 /* harmony import */ var _body_CloudSwitcher_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./body/CloudSwitcher.vue */ "./assets/src/components/body/CloudSwitcher.vue");
+/* harmony import */ var _body_AvifOnTheFly_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./body/AvifOnTheFly.vue */ "./assets/src/components/body/AvifOnTheFly.vue");
+
 
 
 
@@ -21136,7 +21145,8 @@ __webpack_require__.r(__webpack_exports__);
       ImageCompression: _body_ImageCompression_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
       BulkConv: _body_BulkConv_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
       ThemeConvVue: _body_ThemeConv_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
-      CloudSwitcher: _body_CloudSwitcher_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
+      CloudSwitcher: _body_CloudSwitcher_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+      AvifOnTheFly: _body_AvifOnTheFly_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -21233,6 +21243,75 @@ __webpack_require__.r(__webpack_exports__);
       autoConvStatus: autoConvStatus,
       getAutoConvStatus: getAutoConvStatus,
       setAutoConvStatus: setAutoConvStatus,
+      ref: vue__WEBPACK_IMPORTED_MODULE_0__.ref
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./assets/src/components/body/AvifOnTheFly.vue?vue&type=script&setup=true&lang=js":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./assets/src/components/body/AvifOnTheFly.vue?vue&type=script&setup=true&lang=js ***!
+  \********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var onTheFlyAvif = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
+
+    function getonTheFlyAvif() {
+      var data = new FormData();
+      data.append('avife_nonce', avife_nonce);
+      data.append('action', 'ajaxGetOnTheFlyAvif');
+      fetch(avife_ajax_path, {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: data
+      }).then(function (res) {
+        return res.json();
+      }).then(function (res) {
+        onTheFlyAvif.value = res;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+
+    getonTheFlyAvif();
+
+    function setonTheFlyAvif() {
+      var data = new FormData();
+      data.append('avife_nonce', avife_nonce);
+      data.append('action', 'ajaxSetOnTheFlyAvif');
+      fetch(avife_ajax_path, {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: data
+      }).then(function (res) {
+        return res.json();
+      }).then(function (res) {//console.log(res);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+
+    var __returned__ = {
+      onTheFlyAvif: onTheFlyAvif,
+      getonTheFlyAvif: getonTheFlyAvif,
+      setonTheFlyAvif: setonTheFlyAvif,
       ref: vue__WEBPACK_IMPORTED_MODULE_0__.ref
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
@@ -21950,7 +22029,7 @@ var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 
 var _hoisted_8 = [_hoisted_7];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [$setup.hasImagickstatus != '1' && $setup.avifsupportstatus != '1' && $setup.isEnabledCloud != '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, _hoisted_5)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.toWait.isWaiting == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, _hoisted_8)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CloudSwitcher"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["AutoConvStatus"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["OperationMode"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ImageQuality"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ImageCompression"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BulkConv"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ThemeConvVue"])])]);
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [$setup.hasImagickstatus != '1' && $setup.avifsupportstatus != '1' && $setup.isEnabledCloud != '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, _hoisted_5)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.toWait.isWaiting == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, _hoisted_8)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CloudSwitcher"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["AutoConvStatus"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["OperationMode"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["AvifOnTheFly"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ImageQuality"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ImageCompression"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BulkConv"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ThemeConvVue"])])]);
 }
 
 /***/ }),
@@ -22040,6 +22119,46 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 512
   /* NEED_PATCH */
   ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.autoConvStatus]])])]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./assets/src/components/body/AvifOnTheFly.vue?vue&type=template&id=6950f9c0":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./assets/src/components/body/AvifOnTheFly.vue?vue&type=template&id=6950f9c0 ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = {
+  "class": "w-full flex flex-row justify-between items-center p-4 border-b"
+};
+var _hoisted_2 = {
+  "class": "w-1/2 flex justify-start",
+  "for": "avifonthefly"
+};
+var _hoisted_3 = {
+  "class": "w-1/2 flex justify-end"
+};
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$t("disableOnTheFlyLabel")), 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "avifonthefly",
+    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+      return $setup.onTheFlyAvif = $event;
+    }),
+    onClick: $setup.setonTheFlyAvif,
+    type: "checkbox",
+    name: "avifonthefly"
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.onTheFlyAvif]])])]);
 }
 
 /***/ }),
@@ -25732,6 +25851,33 @@ if (false) {}
 
 /***/ }),
 
+/***/ "./assets/src/components/body/AvifOnTheFly.vue":
+/*!*****************************************************!*\
+  !*** ./assets/src/components/body/AvifOnTheFly.vue ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _AvifOnTheFly_vue_vue_type_template_id_6950f9c0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AvifOnTheFly.vue?vue&type=template&id=6950f9c0 */ "./assets/src/components/body/AvifOnTheFly.vue?vue&type=template&id=6950f9c0");
+/* harmony import */ var _AvifOnTheFly_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AvifOnTheFly.vue?vue&type=script&setup=true&lang=js */ "./assets/src/components/body/AvifOnTheFly.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var _Users_pijush_Local_Sites_avif_express_app_public_wp_content_plugins_avif_express_core_app_backend_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,_Users_pijush_Local_Sites_avif_express_app_public_wp_content_plugins_avif_express_core_app_backend_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_AvifOnTheFly_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AvifOnTheFly_vue_vue_type_template_id_6950f9c0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"assets/src/components/body/AvifOnTheFly.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
 /***/ "./assets/src/components/body/BulkConv.vue":
 /*!*************************************************!*\
   !*** ./assets/src/components/body/BulkConv.vue ***!
@@ -25966,6 +26112,21 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./assets/src/components/body/AvifOnTheFly.vue?vue&type=script&setup=true&lang=js":
+/*!****************************************************************************************!*\
+  !*** ./assets/src/components/body/AvifOnTheFly.vue?vue&type=script&setup=true&lang=js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AvifOnTheFly_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AvifOnTheFly_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AvifOnTheFly.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./assets/src/components/body/AvifOnTheFly.vue?vue&type=script&setup=true&lang=js");
+ 
+
+/***/ }),
+
 /***/ "./assets/src/components/body/BulkConv.vue?vue&type=script&setup=true&lang=js":
 /*!************************************************************************************!*\
   !*** ./assets/src/components/body/BulkConv.vue?vue&type=script&setup=true&lang=js ***!
@@ -26112,6 +26273,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AutoConvStatus_vue_vue_type_template_id_db5af5fc__WEBPACK_IMPORTED_MODULE_0__.render)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AutoConvStatus_vue_vue_type_template_id_db5af5fc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AutoConvStatus.vue?vue&type=template&id=db5af5fc */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./assets/src/components/body/AutoConvStatus.vue?vue&type=template&id=db5af5fc");
+
+
+/***/ }),
+
+/***/ "./assets/src/components/body/AvifOnTheFly.vue?vue&type=template&id=6950f9c0":
+/*!***********************************************************************************!*\
+  !*** ./assets/src/components/body/AvifOnTheFly.vue?vue&type=template&id=6950f9c0 ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AvifOnTheFly_vue_vue_type_template_id_6950f9c0__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AvifOnTheFly_vue_vue_type_template_id_6950f9c0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AvifOnTheFly.vue?vue&type=template&id=6950f9c0 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./assets/src/components/body/AvifOnTheFly.vue?vue&type=template&id=6950f9c0");
 
 
 /***/ }),

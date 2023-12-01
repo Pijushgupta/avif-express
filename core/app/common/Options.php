@@ -111,4 +111,24 @@ class Options {
 		if($value == '') return;
 		return update_option('avifconversionengine',$value);
 	}
+
+	public static function ajaxGetOnTheFlyAvif(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::getOnTheFlyAvif());
+		wp_die();
+	}
+	public static function getOnTheFlyAvif(){
+		return (bool)get_option('avifontheflyavif',false);
+	}
+
+	public static function ajaxSetOnTheFlyAvif(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::setOnTheFlyAvif());
+		wp_die();
+	}
+	public static function setOnTheFlyAvif(){
+		$onTheFlyAvif = self::getOnTheFlyAvif();
+		return update_option('avifontheflyavif',!$onTheFlyAvif);
+	}
+
 }

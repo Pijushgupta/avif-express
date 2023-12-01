@@ -18,6 +18,8 @@ class Routes {
 		add_action('wp_ajax_ajaxSetComSpeed', array('Avife\common\Options', 'ajaxSetComSpeed'));
 		add_action('wp_ajax_ajaxGetConversionEngine', array('Avife\common\Options', 'ajaxGetConversionEngine'));
 		add_action('wp_ajax_ajaxSetConversionEngine', array('Avife\common\Options', 'ajaxSetConversionEngine'));
+		add_action('wp_ajax_ajaxGetOnTheFlyAvif', array('Avife\common\Options', 'ajaxGetOnTheFlyAvif'));
+		add_action('wp_ajax_ajaxSetOnTheFlyAvif', array('Avife\common\Options', 'ajaxSetOnTheFlyAvif'));
 
 		add_action('wp_ajax_ajaxConvertRemaining', array('Avife\common\Media', 'ajaxConvertRemaining'));
 		add_action('wp_ajax_ajaxDeleteAll', array('Avife\common\Media', 'ajaxDeleteAll'));

@@ -132,24 +132,25 @@ class Html {
 		 * creating on the fly if server support that 
 		 * else try webp conversion
 		 */
-		if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
-			
-			$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
-			$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
+		if(Options::getOnTheFlyAvif() == true){
+			if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
+				
+				$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
+				$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
 
-			Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
+				Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
 
-			/**
-			 * checking if the created file is valid or not
-			 * due to GD bug sometimes it creates a file with 0 byte
-			 */
+				/**
+				 * checking if the created file is valid or not
+				 * due to GD bug sometimes it creates a file with 0 byte
+				 */
 
-			if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
-				return $avifImageUrl;
+				if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
+					return $avifImageUrl;
+				}
+				
 			}
-			
 		}
-
 		/**
 		 * if server capable of generating webp then return that else return original
 		 */
@@ -196,21 +197,26 @@ class Html {
 						 * creating on the fly if server support that 
 						 * else try webp conversion
 						 */
-						if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
-							$imagePathSrc = Image::attachmentUrlToPath($v);
-							$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
-							Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
-							/**
-							 * checking if the created file is valid or not
-							 * due GD bug sometimes it creates a file with 0 byte
-							 */
-							if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
-								$v = $avifImageUrl;
+						if(Options::getOnTheFlyAvif() == true){
+							if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
+								$imagePathSrc = Image::attachmentUrlToPath($v);
+								$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
+								Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
+								/**
+								 * checking if the created file is valid or not
+								 * due GD bug sometimes it creates a file with 0 byte
+								 */
+								if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
+									$v = $avifImageUrl;
+								}else{
+									$v = self::webpReplaceImgSrc($v);
+								}
+								
 							}else{
 								$v = self::webpReplaceImgSrc($v);
 							}
-							
-						}else{
+						}
+						else{
 							$v = self::webpReplaceImgSrc($v);
 						}
 					}

@@ -13,6 +13,7 @@ const i18n = createI18n({
 			tagline:
 				"Converts existing and newly uploaded Images to lite-weight AVIF format.",
 			hireMe: "hire me",
+			disableOnTheFlyLabel: "Disable on the fly avif conversion(recommended)",
 			autoConvertLabel:
 				"Automatically convert images to AVIF format on upload.",
 			rendering: "Rendering",
@@ -44,6 +45,7 @@ const i18n = createI18n({
 			tagline:
 				"Convierta imágenes existentes y recién cargadas al formato AVIF ligero.",
 			hireMe: "contratame",
+			disableOnTheFlyLabel: "Deshabilitar la conversión avif sobre la marcha(recomendado)",
 			autoConvertLabel:
 				"Convierta automáticamente las imágenes al formato AVIF al cargarlas.",
 			rendering: "Mostrar en el sitio web",
@@ -79,6 +81,7 @@ const i18n = createI18n({
 			tagline:
 				"বিদ্যমান এবং নতুন আপলোড করা ছবিকে লাইট-ওয়েট AVIF ফরম্যাটে রূপান্তর করে।",
 			hireMe: "যোগযোগ",
+			disableOnTheFlyLabel: "অন দ্য ফ্লাই এভিআইএফ রূপান্তর অক্ষম করুন(প্রস্তাবিত)",
 			autoConvertLabel:
 				"আপলোড করার সময় স্বয়ংক্রিয়ভাবে ছবিগুলিকে AVIF ফর্ম্যাটে রূপান্তর করুন৷",
 			rendering: "ওয়েব পেজে দেখান",
@@ -112,6 +115,7 @@ const i18n = createI18n({
 			tagline:
 				"Konvertiert vorhandene und neu hochgeladene Bilder in das leichte AVIF-Format.",
 			hireMe: "stellt mich ein",
+			disableOnTheFlyLabel: "Deaktivieren Sie die AviF-Konvertierung im laufenden Betrieb(empfohlen)",
 			autoConvertLabel:
 				"Konvertieren Sie Bilder beim Hochladen automatisch in das AVIF-Format.",
 			rendering: "Rendern",
@@ -145,6 +149,7 @@ const i18n = createI18n({
 			tagline:
 				"मौजूदा और नई अपलोड की गई छवियों को लाइट-वेट एवीआईएफ प्रारूप में परिवर्तित करता है।",
 			hireMe: "मुझे चुनिएँ",
+			disableOnTheFlyLabel: "on the fly एवीआईएफ रूपांतरण पर अक्षम करें(recommended)",
 			autoConvertLabel:
 				"अपलोड होने पर स्वचालित रूप से छवियों को एवीआईएफ प्रारूप में परिवर्तित करें।",
 			rendering: "प्रतिपादन",
@@ -178,6 +183,7 @@ const i18n = createI18n({
 			tagline:
 				"Convertit les images existantes et nouvellement upload au format AVIF léger.",
 			hireMe: "engagez moi",
+			disableOnTheFlyLabel: "Désactiver la conversion avif à la volée(recommandé)",
 			autoConvertLabel:
 				"Convertissez automatiquement les images au format AVIF lors du upload.",
 			rendering: "Le rendu",
@@ -213,6 +219,7 @@ const i18n = createI18n({
 			tagline:
 				"Преобразует существующие и недавно загруженные изображения в облегченный формат AVIF.",
 			hireMe: "найми меня",
+			disableOnTheFlyLabel: "Отключить конвертацию avif на лету(рекомендуемые)",
 			autoConvertLabel:
 				"Автоматически конвертировать изображения в формат AVIF при загрузке.",
 			rendering: "Рендеринг",
