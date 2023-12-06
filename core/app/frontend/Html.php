@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 use Avife\common\Options;
 use Avife\common\Image;
 use voku\helper\HtmlDomParser;
+use Avife\common\Aviflog;
 
 class Html {
 	public static function init() {
@@ -58,10 +59,12 @@ class Html {
 		foreach ($dom->getElementsByTagName('img') as &$image) {
 			
 			if($isAvifSupported != false ){
+				if(Options::getEnableLogging()) new Aviflog('Avif express','notice', 'Avif images supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
 				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
 				$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
 			}
 			if($isAvifSupported == false){
+				if(Options::getEnableLogging()) new Aviflog('Avif express','notice', 'Avif images not supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
 				$image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
 				$image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
 			}
@@ -132,7 +135,7 @@ class Html {
 		 * creating on the fly if server support that 
 		 * else try webp conversion
 		 */
-		if(Options::getOnTheFlyAvif() == true){
+		if(Options::getOnTheFlyAvif() != true){
 			if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 				
 				$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
@@ -150,6 +153,12 @@ class Html {
 				}
 				
 			}
+			/**
+			 * If on the fly failed then log it
+			 */
+			if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Avif on the fly conversion failed',['file'=>__FILE__,'Line'=>__LINE__]);
+			
+			
 		}
 		/**
 		 * if server capable of generating webp then return that else return original
@@ -197,7 +206,7 @@ class Html {
 						 * creating on the fly if server support that 
 						 * else try webp conversion
 						 */
-						if(Options::getOnTheFlyAvif() == true){
+						if(Options::getOnTheFlyAvif() != true){
 							if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 								$imagePathSrc = Image::attachmentUrlToPath($v);
 								$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
@@ -209,6 +218,7 @@ class Html {
 								if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
 									$v = $avifImageUrl;
 								}else{
+									if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Avif on the fly conversion failed',['file'=>__FILE__,'Line'=>__LINE__]);
 									$v = self::webpReplaceImgSrc($v);
 								}
 								

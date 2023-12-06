@@ -99,6 +99,13 @@ function initiate_plugin() {
 	if(!defined('AVIF_CLOUD_ADDRESS')){
 		define('AVIF_CLOUD_ADDRESS','http://127.0.0.1:8000/api/convert');
 	}
+
+	/**
+	 * Monolog log file path
+	 */
+	if(!defined('AVIF_LOG_FILE')){
+		define('AVIF_LOG_FILE',__DIR__.'/logs/avif.log');
+	}
 	
 	/**
 	 * loading the main app code 

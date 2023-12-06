@@ -131,4 +131,25 @@ class Options {
 		return update_option('avifontheflyavif',!$onTheFlyAvif);
 	}
 
+	public static function ajaxGetEnableLogging(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::getEnableLogging());
+		wp_die();
+	}
+
+	public static function getEnableLogging(){
+		return (bool)get_option('avifenablelogging',false);
+	}
+
+	public static function ajaxSetEnableLogging(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::setEnableLogging());
+		wp_die();
+	}
+
+	public static function setEnableLogging(){
+		$enableLogging = self::getEnableLogging();
+		return update_option('avifenablelogging',!$enableLogging);
+	}
+
 }

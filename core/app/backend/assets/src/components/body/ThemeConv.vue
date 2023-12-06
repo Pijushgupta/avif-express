@@ -1,5 +1,5 @@
 <template>
-<div class="w-full flex flex-row justify-between items-center p-4 border-b">
+<div class="w-full flex flex-row justify-between items-center p-4 border-b last:border-b-0">
 				<label class="w-1/2 flex justify-start" for="bulkcnvtbtn">{{ t('themeDirectory') }} ({{ conveted_files }} / {{ total_files }})</label>
 				<div class="w-1/2 flex justify-end">
 					<button class=" bg-blue-600 text-white px-4 py-2 rounded-full mr-3" v-on:click="convert">{{ t('convert') }}</button>

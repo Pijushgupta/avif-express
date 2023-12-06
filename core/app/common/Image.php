@@ -74,6 +74,7 @@ class Image {
 						}
 						if($avifsupport == '0' && $hasImagick == '0'){
 							if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+							if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Convert on Upload: Local avif support not found',['file'=>__FILE__,'Line'=>__LINE__]);
 							return $metadata;
 						} 
 						self::convert($srcPath, $desPath, $quality, $speed);
@@ -108,6 +109,7 @@ class Image {
 					}
 					if($avifsupport == '0' && $hasImagick == '0'){
 						if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+						if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Convert on Upload: Local avif support not found',['file'=>__FILE__,'Line'=>__LINE__]);
 						return $metadata;
 					} 
 					self::convert($srcPath, $desPath, $quality, $speed);
@@ -147,6 +149,7 @@ class Image {
 					}
 					if($avifsupport == '0' && $hasImagick == '0'){
 						if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+						if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Convert on Upload: Local avif support not found',['file'=>__FILE__,'Line'=>__LINE__]);
 						return $metadata;
 					} 
 					self::convert($src, $des, $quality, $speed);
@@ -259,6 +262,9 @@ class Image {
 			@imagedestroy($sourceGDImg);
 			return;
 		}
+
+		if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Local avif support not found',['file'=>__FILE__,'Line'=>__LINE__]);
+		return;
 		
 		
 	}
@@ -279,11 +285,11 @@ class Image {
 		$cloudResponse = wp_remote_get($fullRequestUrl);
 		//2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url) 
 		$body = wp_remote_retrieve_body($cloudResponse);
-		//if(WP_DEBUG == true) error_log('Received First response:'. print_r(json_decode($body, true),true));
 		
 		//checking for any error and then logging it, if WP_DEBUG is true and then exit
 		if(is_wp_error($cloudResponse)) {
 			if(WP_DEBUG == true) error_log("Error:" . $cloudResponse->get_error_message());
+			if(Options::getEnableLogging()) new Aviflog('Avif express','error', $cloudResponse->get_error_message() ,['file'=>__FILE__,'Line'=>__LINE__]);
 			return false;
 		}
 
@@ -302,6 +308,7 @@ class Image {
 				$srcImagePath = self::attachmentUrlToPath($imageUrl['src']);
 				if($srcImagePath == false ) {
 					if(WP_DEBUG == true) error_log('Unable to create absolute path from relative path of source image');
+					if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Unable to create absolute path from relative path of source image' ,['file'=>__FILE__,'Line'=>__LINE__]);
 					continue;
 				}
 
@@ -314,6 +321,7 @@ class Image {
 				$response = wp_remote_get($imageUrl['dist']);
 				if(is_wp_error($response)){
 					if(WP_DEBUG == true) error_log("Avif Download Error:".$response->get_error_message());
+					if(Options::getEnableLogging()) new Aviflog('Avif express','error', $response->get_error_message() ,['file'=>__FILE__,'Line'=>__LINE__]);
 					continue;
 				} 
 				//retrieving avif file body content
@@ -322,11 +330,13 @@ class Image {
 					global $wp_filesystem;
 					if(!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)){
 						if(WP_DEBUG == true) error_log('Unable to write avif file');
+						if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Unable to write avif file' ,['file'=>__FILE__,'Line'=>__LINE__]);
 						continue;
 					}
 					
 				}else{
 					if(WP_DEBUG == true) error_log('Unable to initialize the WP_filesystem');
+					if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Unable to initialize the WP_filesystem' ,['file'=>__FILE__,'Line'=>__LINE__]);
 				}
 			}
 		}
@@ -343,6 +353,7 @@ class Image {
 
 		if(!extension_loaded('imagick')){
 			if(WP_DEBUG == true) error_log('Imagick extension not loaded');
+			if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Imagick extension not loaded' ,['file'=>__FILE__,'Line'=>__LINE__]);
 			return $src;
 		};
 

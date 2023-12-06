@@ -1,4 +1,7 @@
-##### WP Todo by Aavoya #####
+##### Avif Express #####
+
+![Avif Express](https://github.com/Pijushgupta/avif-express/avif-express.png?raw=true)
+
 #### Contributors: Pijush_Gupta
 #### Tags: avif, images, performance
 #### License URI: https://www.gnu.org/licenses/gpl-2.0.html
