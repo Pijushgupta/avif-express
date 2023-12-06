@@ -1,6 +1,6 @@
 ##### Avif Express #####
 
-![Avif Express](https://github.com/Pijushgupta/avif-express/avif-express.png?raw=true)
+![Avif Express](https://github.com/Pijushgupta/avif-express/avif-express.png)
 
 #### Contributors: Pijush_Gupta
 #### Tags: avif, images, performance
