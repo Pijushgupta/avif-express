@@ -1,10 +1,10 @@
-##### Avif Express #####
+#### Avif Express #####
 
 ![Avif Express](https://github.com/Pijushgupta/avif-express/blob/main/avif-express.png)
 
-#### Contributors: Pijush_Gupta
-#### Tags: avif, images, performance
-#### License URI: https://www.gnu.org/licenses/gpl-2.0.html
+##### Contributors: Pijush Gupta
+##### Tags: avif, images, performance, wordpress, local conversion, cloud Conversion 
+##### License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 ##### Description
 
