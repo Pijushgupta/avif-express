@@ -3,7 +3,7 @@
 ![Avif Express](https://github.com/Pijushgupta/avif-express/blob/main/avif-express.png)
 
 ##### Contributors: Pijush Gupta
-##### Tags: avif, images, performance, wordpress, local conversion, cloud Conversion
+##### Tags: avif, images, performance, wordpress, local conversion, cloud conversion
 ##### License URI: https://www.gnu.org/licenses/gpl-2.0.html
 ##### Language: English, Hindi, German, French, Spanish, Bengali and Russian. 
 
@@ -13,7 +13,7 @@
 ##### System/Server Requirement 
 ###### Wordpress 6.0 or Above
 ###### Php 7.3 or Above
-###### Image Magic Extension 7.0.25 or Above
+###### Image Magic Extension 7.0.25 or Above (for local avif conversion)
 
 ##### Installation
 
