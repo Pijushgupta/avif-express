@@ -1,11 +1,14 @@
 <template>
 	<div class="w-full flex flex-row justify-between items-center p-4 border-b">
-				<label class="w-1/2 flex justify-start" for="enableLogging">Enable Logging</label>
+				<label class="w-1/2 flex justify-start" for="enableLogging">{{t('enableLogging')}}</label>
 				<div class="w-1/2 flex justify-end"><input id="enableLogging" v-model="enableLogging" v-on:click="setEnableLogging" type="checkbox" name="enableLogging"/></div>
 			</div>
 </template>
 <script setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({});
 const enableLogging = ref(false);
 function getEnableLogging(){
 	const data = new FormData();

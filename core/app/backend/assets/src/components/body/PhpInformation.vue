@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full flex flex-col justify-between items-center p-4 border-b">
-				<label class="w-full flex justify-start mb-2" for="">Php Information</label>
+				<label class="w-full flex justify-start mb-2" for="">{{t('phpInformation')}}</label>
 				<div class="w-full bg-gray-100 p-2 rounded-lg">
 					<div class="w-full flex flex-col justify-end mt-2" v-if="gdInfo != false">
 						<div class="flex flex-row justify-between items-center" v-if="'GD Version' in gdInfo">
@@ -9,11 +9,11 @@
 						</div>
 						<div class="flex flex-row justify-between items-center" v-if="'AVIF Support' in gdInfo">
 							<span>AVIF Support</span>
-							<span>{{ gdInfo['AVIF Support'] == false ? "No":"Yes" }}</span>
+							<span>{{ gdInfo['AVIF Support'] == false ? t('no'):t('yes') }}</span>
 						</div>
 						<div class="flex flex-row justify-between items-center" v-if="'WBMP Support' in gdInfo">
 							<span>WEBP Support</span>
-							<span>{{ gdInfo['WBMP Support'] == false ? "No":"Yes" }}</span>
+							<span>{{ gdInfo['WBMP Support'] == false ? t('no'):t('yes') }}</span>
 						</div>
 
 					</div>
@@ -24,11 +24,11 @@
 						</div>
 						<div class="flex flex-row justify-between items-center" >
 							<span>AVIF Support</span>
-							<span>{{ imagickInfo['formats'].indexOf('AVIF') !== -1 ? 'Yes':'No' }}</span>
+							<span>{{ imagickInfo['formats'].indexOf('AVIF') !== -1 ? t('yes'):t('no') }}</span>
 						</div>
 						<div class="flex flex-row justify-between items-center" v-if="'WBMP Support' in gdInfo">
 							<span>WEBP Support</span>
-							<span>{{ imagickInfo['formats'].indexOf('WEBP') !== -1 ? 'Yes':'No' }}</span>
+							<span>{{ imagickInfo['formats'].indexOf('WEBP') !== -1 ? t('yes'):t('no') }}</span>
 						</div>
 
 					</div>
@@ -50,7 +50,9 @@
 </template>
 <script setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n({});
 const phpInfo = ref(false);
 const gdInfo = ref(false);
 const imagickInfo = ref(false);

@@ -1,10 +1,10 @@
 <template>
 <div class="w-full flex md:flex-row flex-col justify-between items-center p-4 border-b last:border-b-0">	
-	<label class="w-full md:w-1/2 flex justify-start mb-2 md:mb-0" for="opengine">Conversion Engine</label>
+	<label class="w-full md:w-1/2 flex justify-start mb-2 md:mb-0" for="opengine">{{t('conversionEngine')}}</label>
 	<div class="w-full md:w-1/2 flex justify-start md:justify-end">
 		<select id="opengine" class="w-full md:w-auto" v-model="conversionEngine" v-on:change="setConversionEngine">
-			<option value="cloud">Cloud</option>
-			<option value="local">Local</option>
+			<option value="cloud">{{t('cloud')}}</option>
+			<option value="local">{{t('local')}}</option>
 		</select>
 	</div>
 </div>
@@ -12,6 +12,8 @@
 <script setup>
 import {ref} from 'vue';
 const conversionEngine = ref();
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({});
 
 const getConversionEngine = () =>{
 	const data = new FormData();

@@ -12,4 +12,53 @@ class Setting {
 		}
 		return false;
 	}
+
+	/**
+	 * ajax handle deleteLogFile
+	 */
+	public static function ajaxDeleteLogFile() {
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		if(self::deleteLogFile()){
+			echo json_encode(array('status' => 'success'));
+		}else{
+			echo json_encode(array('status' => 'error'));
+		}
+		wp_die();
+	}
+
+	/**
+	 * deleteLogFile
+	 */
+	public static function deleteLogFile() {
+		if (file_exists(AVIF_LOG_FILE)) {
+			@unlink(AVIF_LOG_FILE);
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * ajax handle isLogFileExists
+	 */
+	public static function ajaxIsLogFileExists() {
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		if(self::isLogFileExists()){
+			echo json_encode(array('status' => 'success'));
+		}else{
+			echo json_encode(array('status' => 'error'));
+		}
+		wp_die();
+	}
+
+	/**
+	 * isLogFileExists
+	 */
+	public static function isLogFileExists() {
+		if (file_exists(AVIF_LOG_FILE)) {
+			return true;
+		}
+		return false;
+	}
+
 }

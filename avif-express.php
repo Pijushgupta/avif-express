@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  * Description: Convert Images to AVIF and serve them
  * Version: 2023.06.28
  * Tags: avif, images, performance, avif
+ * text-domain: avif-express
  */
 
 if (!file_exists(__DIR__ . '/core/app/app.php')) return;
@@ -19,7 +20,7 @@ function initiate_plugin() {
 	 * text domain, can be used to translate string. But we are using vue js powered admin page.
 	 * So it little to no use. Keeping it for future.
 	 */
-	if (!defined('AVIFE_TEXT_DOMAIN')) define('AVIFE_TEXT_DOMAIN', 'avif_text_domain');
+	if (!defined('AVIFE_TEXT_DOMAIN')) define('AVIFE_TEXT_DOMAIN', 'avif-express');
 
 	/**
 	 * plugin's admin page html title
@@ -105,6 +106,14 @@ function initiate_plugin() {
 	 */
 	if(!defined('AVIF_LOG_FILE')){
 		define('AVIF_LOG_FILE',__DIR__.'/logs/avif.log');
+	}
+
+	/**
+	 * Monolog relative path
+	 * siteurl/wp-content/plugins/avif-express/logs/avif.log
+	 */
+	if(!defined('AVIF_LOG_FILE_REL')){
+		define('AVIF_LOG_FILE_REL',plugin_dir_url(__FILE__).'logs/avif.log');
 	}
 	
 	/**

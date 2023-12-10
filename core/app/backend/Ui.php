@@ -29,7 +29,7 @@ final class Ui {
 	}
 
 	public static function render() {
-		$url 		= admin_url('admin-ajax.php');
+		$url 				= admin_url('admin-ajax.php');
 		$avife_nonce 		= wp_create_nonce('avife_nonce');
 		$assetPath 	= AVIFE_REL . '/core/app/backend/assets/';
 		$gd = extension_loaded('gd');
@@ -62,6 +62,7 @@ final class Ui {
 			var hasImagick = "%6$s";
 			var adminLocale = "%7$s";
 			var isCloudEngine = "%9$s";
+			var avifLogFile = "%10$s";
 			</script>
 			<div id="%8$s"></div>',
 			$url,
@@ -72,7 +73,8 @@ final class Ui {
 			$hasImagick,
 			$dashboardLang,
 			AVIFE_VUE_ROOT_ID,
-			$isCloudEngine
+			$isCloudEngine,
+			AVIF_LOG_FILE_REL
 		);
 	}
 }

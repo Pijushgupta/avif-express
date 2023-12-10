@@ -34,5 +34,8 @@ class Routes {
 		add_action('wp_ajax_ajaxGetImagickInfo', array('Avife\common\PhpInfo', 'ajaxGetImagickInfo'));
 		add_action('wp_ajax_ajaxGetPhpInfo', array('Avife\common\PhpInfo', 'ajaxGetPhpInfo'));
 
+
+		add_action('wp_ajax_ajaxDeleteLogFile',array('Avife\common\Setting','ajaxDeleteLogFile'));
+		add_action('wp_ajax_ajaxIsLogFileExists',array('Avife\common\Setting','ajaxIsLogFileExists'));
 	}
 }
