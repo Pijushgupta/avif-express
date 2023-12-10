@@ -38,6 +38,7 @@
 					<template v-if="tab == 1">
 						<EnableLogging/>
 						<ViewLog/>
+						<Api/>
 						<PhpInformation/>
 					</template>
 					<template v-if="tab == 2">
@@ -66,6 +67,7 @@ import AvifOnTheFly from './body/AvifOnTheFly.vue';
 import {ref} from 'vue';
 import EnableLogging from './body/EnableLogging.vue';
 import ViewLog from './body/ViewLog.vue';
+import Api from './body/Api.vue';
 import PhpInformation from './body/PhpInformation.vue';
 
 const toWait = waitingSatus();

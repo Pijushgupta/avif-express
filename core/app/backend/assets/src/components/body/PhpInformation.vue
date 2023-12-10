@@ -1,52 +1,59 @@
 <template>
-	<div class="w-full flex flex-col justify-between items-center p-4 border-b">
-				<label class="w-full flex justify-start mb-2" for="">{{t('phpInformation')}}</label>
-				<div class="w-full bg-gray-100 p-2 rounded-lg">
-					<div class="w-full flex flex-col justify-end mt-2" v-if="gdInfo != false">
-						<div class="flex flex-row justify-between items-center" v-if="'GD Version' in gdInfo">
-							<span>GD Version</span>
-							<span>{{ gdInfo['GD Version'] }}</span>
-						</div>
-						<div class="flex flex-row justify-between items-center" v-if="'AVIF Support' in gdInfo">
-							<span>AVIF Support</span>
-							<span>{{ gdInfo['AVIF Support'] == false ? t('no'):t('yes') }}</span>
-						</div>
-						<div class="flex flex-row justify-between items-center" v-if="'WBMP Support' in gdInfo">
-							<span>WEBP Support</span>
-							<span>{{ gdInfo['WBMP Support'] == false ? t('no'):t('yes') }}</span>
-						</div>
+	<div class="w-full flex flex-col justify-between items-center  border-b">
+		<div class="w-full flex flex-row justify-between items-center p-4">
+			<label class="w-full flex justify-start  " for="phpinfoarea">{{t('phpInformation')}}</label>
+			<button id="phpinfoarea" @click="showPhpInfo = !showPhpInfo">
+				<svg v-show="showPhpInfo == false" xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"> <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" /> </svg>
+				<svg v-show="showPhpInfo == true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" /> </svg>
 
-					</div>
-					<div class="w-full flex flex-col justify-end mt-2" v-if="imagickInfo != false">
-						<div class="flex flex-row justify-between items-center" v-if="imagickInfo['version']['versionString']">
-							<span>Imagick Version</span>
-							<span>{{ imagickInfo['version']['versionString'] }}</span>
-						</div>
-						<div class="flex flex-row justify-between items-center" >
-							<span>AVIF Support</span>
-							<span>{{ imagickInfo['formats'].indexOf('AVIF') !== -1 ? t('yes'):t('no') }}</span>
-						</div>
-						<div class="flex flex-row justify-between items-center" v-if="'WBMP Support' in gdInfo">
-							<span>WEBP Support</span>
-							<span>{{ imagickInfo['formats'].indexOf('WEBP') !== -1 ? t('yes'):t('no') }}</span>
-						</div>
+			</button>
+		</div>
+		<div class="w-full p-4 pt-0" v-show="showPhpInfo == true">
+			<div class="w-full flex flex-col justify-end mt-2" v-if="gdInfo != false">
+				<div class="flex flex-row justify-between items-center" v-if="'GD Version' in gdInfo">
+					<span>GD Version</span>
+					<span>{{ gdInfo['GD Version'] }}</span>
+				</div>
+				<div class="flex flex-row justify-between items-center" v-if="'AVIF Support' in gdInfo">
+					<span>AVIF Support</span>
+					<span>{{ gdInfo['AVIF Support'] == false ? t('no'):t('yes') }}</span>
+				</div>
+				<div class="flex flex-row justify-between items-center" v-if="'WBMP Support' in gdInfo">
+					<span>WEBP Support</span>
+					<span>{{ gdInfo['WBMP Support'] == false ? t('no'):t('yes') }}</span>
+				</div>
 
-					</div>
-					<div class="w-full flex flex-col justify-end mt-2" v-if="phpInfo != false">
-						<div class="flex flex-row justify-between items-center" v-if="phpInfo['version']">
-							<span>Php Version</span>
-							<span>{{ phpInfo['version'] }}</span>
-						</div>
-						<div class="flex flex-row justify-between items-center" v-if="phpInfo['curl'] != false">
-							<span>cUrl Version</span>
-							<span>{{ phpInfo['curl']['version'] ? phpInfo['curl']['version']:'Unable to find version' }}</span>
-						</div>
-						
+			</div>
+			<div class="w-full flex flex-col justify-end mt-2" v-if="imagickInfo != false">
+				<div class="flex flex-row justify-between items-center" v-if="imagickInfo['version']['versionString']">
+					<span>Imagick Version</span>
+					<span>{{ imagickInfo['version']['versionString'] }}</span>
+				</div>
+				<div class="flex flex-row justify-between items-center" >
+					<span>AVIF Support</span>
+					<span>{{ imagickInfo['formats'].indexOf('AVIF') !== -1 ? t('yes'):t('no') }}</span>
+				</div>
+				<div class="flex flex-row justify-between items-center" v-if="'WBMP Support' in gdInfo">
+					<span>WEBP Support</span>
+					<span>{{ imagickInfo['formats'].indexOf('WEBP') !== -1 ? t('yes'):t('no') }}</span>
+				</div>
 
-					</div>
+			</div>
+			<div class="w-full flex flex-col justify-end mt-2" v-if="phpInfo != false">
+				<div class="flex flex-row justify-between items-center" v-if="phpInfo['version']">
+					<span>Php Version</span>
+					<span>{{ phpInfo['version'] }}</span>
+				</div>
+				<div class="flex flex-row justify-between items-center" v-if="phpInfo['curl'] != false">
+					<span>cUrl Version</span>
+					<span>{{ phpInfo['curl']['version'] ? phpInfo['curl']['version']:'Unable to find version' }}</span>
 				</div>
 				
+
 			</div>
+		</div>
+				
+	</div>
 </template>
 <script setup>
 import { ref } from 'vue';
@@ -56,9 +63,7 @@ const { t } = useI18n({});
 const phpInfo = ref(false);
 const gdInfo = ref(false);
 const imagickInfo = ref(false);
-
-const tabId = ref(0);
-
+const showPhpInfo = ref(false);
 
 function getGetGdInfo(){
 	const data = new FormData();
@@ -129,7 +134,4 @@ getGetGdInfo();
 
 
 </script>
-<style scoped>
 
-
-</style>

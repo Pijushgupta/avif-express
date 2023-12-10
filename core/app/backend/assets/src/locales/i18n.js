@@ -33,6 +33,7 @@ const i18n = createI18n({
 			phpInformation: "PHP Information",
 			yes: "Yes",
 			no: "No",
+			api: "API",
 			active: "Active",
 			inactive: "Inactive",
 			conversionMayTakeTimeMsg:
@@ -75,6 +76,7 @@ const i18n = createI18n({
 			phpInformation: "Información de PHP",
 			yes: "Sí",
 			no: "No",
+			api: "API",
 			active: "Activo",
 			inactive: "Inactivo",
 			conversionMayTakeTimeMsg:
@@ -121,6 +123,7 @@ const i18n = createI18n({
 			phpInformation: "পিএইচপি তথ্য",
 			yes: "হ্যাঁ",
 			no: "না",
+			api: "এপিআই",
 			active: "সক্রিয়",
 			inactive: "নিষ্ক্রিয়",
 			conversionMayTakeTimeMsg:
@@ -165,6 +168,7 @@ const i18n = createI18n({
 			phpInformation: "PHP-Informationen",
 			yes: "Ja",
 			no: "Nein",
+			api: "API",
 			active: "Aktiv",
 			inactive: "Inaktiv",
 			conversionMayTakeTimeMsg:
@@ -209,6 +213,7 @@ const i18n = createI18n({
 			phpInformation: "PHP जानकारी",
 			yes: "हाँ",
 			no: "नहीं",
+			api: "एपीआई",
 			active: "सक्रिय",
 			inactive: "निष्क्रिय",
 			conversionMayTakeTimeMsg:
@@ -253,6 +258,7 @@ const i18n = createI18n({
 			phpInformation: "Informations PHP",
 			yes: "Oui",
 			no: "Non",
+			api: "API",
 			active: "Actif",
 			inactive: "Inactif",
 			conversionMayTakeTimeMsg:
@@ -299,6 +305,7 @@ const i18n = createI18n({
 			phpInformation: "Информация о PHP",
 			yes: "Да",
 			no: "Нет",
+			api: "API",
 			active: "Активный",
 			inactive: "Неактивный",
 			conversionMayTakeTimeMsg:
