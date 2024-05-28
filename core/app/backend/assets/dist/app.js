@@ -22434,7 +22434,10 @@ var _hoisted_3 = {
 };
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-center md:text-left"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Php GD with libavif or Imagick with avif support is not installed/enabled. Please contact the server admin or use "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "cloud engine")], -1 /* HOISTED */);
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Php GD with libavif or Imagick with avif support is not installed/enabled. Please contact the server admin or use "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  href: "https://avifexpress.aavoya.co",
+  target: "_blank"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "cloud engine")])], -1 /* HOISTED */);
 var _hoisted_5 = [_hoisted_4];
 var _hoisted_6 = {
   "class": "relative control-area flex flex-row w-full"
