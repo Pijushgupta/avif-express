@@ -34,6 +34,8 @@ const i18n = createI18n({
 			yes: "Yes",
 			no: "No",
 			api: "API",
+			update: "Update",
+			ccfail: "Conversion failed, Please check the logs.",
 			active: "Active",
 			inactive: "Inactive",
 			conversionMayTakeTimeMsg:
@@ -77,6 +79,8 @@ const i18n = createI18n({
 			yes: "Sí",
 			no: "No",
 			api: "API",
+			update: "Actualizar",
+			ccfail: "La conversión falló. Verifique los registros.",
 			active: "Activo",
 			inactive: "Inactivo",
 			conversionMayTakeTimeMsg:
@@ -124,6 +128,8 @@ const i18n = createI18n({
 			yes: "হ্যাঁ",
 			no: "না",
 			api: "এপিআই",
+			update: "আপডেট",
+			ccfail: "রূপান্তর ব্যর্থ হয়েছে, লগ চেক করুন।",
 			active: "সক্রিয়",
 			inactive: "নিষ্ক্রিয়",
 			conversionMayTakeTimeMsg:
@@ -169,6 +175,8 @@ const i18n = createI18n({
 			yes: "Ja",
 			no: "Nein",
 			api: "API",
+			update: "Aktualisieren",
+			ccfail: "Konvertierung fehlgeschlagen. Bitte überprüfen Sie die Protokolle.",
 			active: "Aktiv",
 			inactive: "Inaktiv",
 			conversionMayTakeTimeMsg:
@@ -214,6 +222,8 @@ const i18n = createI18n({
 			yes: "हाँ",
 			no: "नहीं",
 			api: "एपीआई",
+			update: "अद्यतन",
+			ccfail: "रूपांतरण विफल, कृपया लॉग जाँचें।",
 			active: "सक्रिय",
 			inactive: "निष्क्रिय",
 			conversionMayTakeTimeMsg:
@@ -259,6 +269,8 @@ const i18n = createI18n({
 			yes: "Oui",
 			no: "Non",
 			api: "API",
+			update: "Mettre à jour",
+			ccfail: "La conversion a échoué. Veuillez vérifier les journaux.",
 			active: "Actif",
 			inactive: "Inactif",
 			conversionMayTakeTimeMsg:
@@ -306,6 +318,8 @@ const i18n = createI18n({
 			yes: "Да",
 			no: "Нет",
 			api: "API",
+			update: "Обновить",
+			ccfail: "Преобразование не удалось. Проверьте журналы.",
 			active: "Активный",
 			inactive: "Неактивный",
 			conversionMayTakeTimeMsg:

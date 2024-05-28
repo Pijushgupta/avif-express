@@ -63,6 +63,13 @@ function convert() {
 	})
 		.then(res => res.json())
 		.then(res => {
+			if(res === 'ccfail'){
+				const toast = useToast();
+				toast.error(t('ccfail'));
+				getAttachemnts();
+				toWait.toggleWaiting();
+				
+			}
 			if (res === true || res === null) {
 				const toast = useToast();
 				toast(t('convertedAllImageUploadDir'));

@@ -64,7 +64,13 @@ function convert() {
 		})
 		.then(res => res.json())
 		.then(res => {
-			
+			if(res === 'ccfail'){
+				getTheme();
+				const toast = useToast();
+				toast.error(t('ccfail'));
+				toWait.toggleWaiting();
+				
+			}
 			if (res === true || res === null) {
 				getTheme();
 				const toast = useToast();

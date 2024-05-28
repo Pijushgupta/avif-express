@@ -68,3 +68,9 @@
 		@apply pl-0;
 	}
 }
+#siteurl, #apikey{
+	
+	border: 1px solid #e2e8f0 !important;
+	padding-top: .50rem !important;
+	padding-bottom: .50rem !important;
+}

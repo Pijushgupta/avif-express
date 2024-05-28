@@ -98,7 +98,7 @@ function initiate_plugin() {
 	 * Avif cloud engine address 
 	 */
 	if(!defined('AVIF_CLOUD_ADDRESS')){
-		define('AVIF_CLOUD_ADDRESS','http://127.0.0.1:8000/api/convert');
+		define('AVIF_CLOUD_ADDRESS','http://localhost:8080/convert');
 	}
 
 	/**
@@ -110,7 +110,7 @@ function initiate_plugin() {
 
 	/**
 	 * Monolog relative path
-	 * siteurl/wp-content/plugins/avif-express/logs/avif.log
+	 * /wp-content/plugins/avif-express/logs/avif.log
 	 */
 	if(!defined('AVIF_LOG_FILE_REL')){
 		define('AVIF_LOG_FILE_REL',plugin_dir_url(__FILE__).'logs/avif.log');

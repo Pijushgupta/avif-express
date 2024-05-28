@@ -274,15 +274,36 @@ class Image {
 	 * @param array $urls array of urls
 	 */
 	public static function cloudConvert(array $urls){
+		
+		//get the api key from option table 
+		$apiKey = Options::getApiKey();
+
+		//if api key is not set then return false
+		if($apiKey == false) return false;
+
 		//array to string conversion
 		$jsonEncodedUrls = json_encode($urls);
 
 		//actual payload with appended url, GET method
 		$fullRequestUrl = AVIF_CLOUD_ADDRESS . '?urls=' . urlencode($jsonEncodedUrls);
-	
+		
+		//add origin to the request header
+		$origin = str_replace(['https://','http://'],'',strtolower(get_site_url()));
+
+		
+		//add origin and api key to the request header
+		$requestHeader = array(
+			'Origin' => $origin,
+			'Api-key' => $apiKey,
+			'Content-Type' => 'application/json',
+			'Accept' => 'application/json'
+		);		
+
+
 		//conversion started
 		//1. sending all urls(array of url) to the cloud server
-		$cloudResponse = wp_remote_get($fullRequestUrl);
+		$cloudResponse = wp_remote_get($fullRequestUrl , array('headers' => $requestHeader));
+		
 		//2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url) 
 		$body = wp_remote_retrieve_body($cloudResponse);
 		
@@ -293,8 +314,18 @@ class Image {
 			return false;
 		}
 
+		
 		//converting json response to array of arrays
 		$imageUrls = json_decode($body, true);
+		
+		//check server status code for any issue
+		if($imageUrls['status'] !== 200){
+			if(WP_DEBUG == true) error_log("Error:" . $imageUrls['msg']? $imageUrls['msg'] : $imageUrls['status']);
+			if(Options::getEnableLogging()) new Aviflog('Avif express','error', $imageUrls['msg']? $imageUrls['msg'] : $imageUrls['status'] ,['file'=>__FILE__,'Line'=>__LINE__]);
+			return false;
+		}
+		
+		$imageUrls = $imageUrls['data'];
 
 		//using wordpress file system class instead of php native file_get_contents()
 		include_once ABSPATH . 'wp-admin/includes/file.php';

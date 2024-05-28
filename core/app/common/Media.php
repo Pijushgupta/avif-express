@@ -130,7 +130,7 @@ class Media {
 			}
 			$unConvertedAttachmentUrls = Image::pathToAttachmentUrl($unConvertedAttachments);
 			
-			if(Image::cloudConvert($unConvertedAttachmentUrls) === false) return null;
+			if(Image::cloudConvert($unConvertedAttachmentUrls) === false) return 'ccfail';
 			if($keepAlive == 1) return 'keep-alive';
 			
 		}

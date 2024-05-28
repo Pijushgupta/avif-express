@@ -63,6 +63,7 @@ final class Ui {
 			var adminLocale = "%7$s";
 			var isCloudEngine = "%9$s";
 			var avifLogFile = "%10$s";
+			var siteUrl = "%11$s";
 			</script>
 			<div id="%8$s"></div>',
 			$url,
@@ -74,7 +75,8 @@ final class Ui {
 			$dashboardLang,
 			AVIFE_VUE_ROOT_ID,
 			$isCloudEngine,
-			AVIF_LOG_FILE_REL
+			AVIF_LOG_FILE_REL,
+			str_replace(['https://','http://'],'',strtolower(site_url()))
 		);
 	}
 }

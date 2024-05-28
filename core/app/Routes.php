@@ -22,6 +22,8 @@ class Routes {
 		add_action('wp_ajax_ajaxSetOnTheFlyAvif', array('Avife\common\Options', 'ajaxSetOnTheFlyAvif'));
 		add_action('wp_ajax_ajaxGetEnableLogging', array('Avife\common\Options', 'ajaxGetEnableLogging'));
 		add_action('wp_ajax_ajaxSetEnableLogging', array('Avife\common\Options', 'ajaxSetEnableLogging'));
+		add_action('wp_ajax_ajaxGetApiKey',array('Avife\common\Options','ajaxGetApiKey'));
+		add_action('wp_ajax_ajaxSetApiKey',array('Avife\common\Options','ajaxSetApiKey'));
 
 		add_action('wp_ajax_ajaxCountMedia', array('Avife\common\Media', 'ajaxCountMedia'));
 		add_action('wp_ajax_ajaxConvertRemaining', array('Avife\common\Media', 'ajaxConvertRemaining'));

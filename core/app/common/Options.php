@@ -152,4 +152,25 @@ class Options {
 		return update_option('avifenablelogging',!$enableLogging);
 	}
 
+	public static function ajaxGetApiKey(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::getApiKey());
+		wp_die();
+	}
+
+	public static function getApiKey(){
+		return get_option('avifapikey',false);
+	}
+
+	public static function ajaxSetApiKey(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::setApiKey(sanitize_text_field($_POST['apiKey'])));
+		wp_die();
+	}
+
+	public static function setApiKey($value = ''){
+		if($value == '') return;
+		return update_option('avifapikey',$value);
+	}
+
 }
