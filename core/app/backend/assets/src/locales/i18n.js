@@ -52,6 +52,9 @@ const i18n = createI18n({
 			qualityWarning:
 				"0 - Worst, 100 - Best. High quality will increase the file size.",
 			speedWarning: "0 - Super slow, smaller file. 10 - Fast, larger file.",
+			fallbackText:"Fallback Image type",
+			original:"Original",
+			webp:"WebP",
 		},
 		es: {
 			pluginName: "Avif expreso",
@@ -101,6 +104,9 @@ const i18n = createI18n({
 				"0 - Peor, 100 - Mejor. La alta calidad aumentará el tamaño del archivo.",
 			speedWarning:
 				"0 - Súper lento, archivo más pequeño. 10 - Archivo rápido y más grande.",
+			fallbackText:"Tipo de imagen alternativa",
+			original:"Original",
+			webp:"WebP",
 		},
 		bn: {
 			pluginName: "এভিআইএফ এক্সপ্রেস",
@@ -148,6 +154,9 @@ const i18n = createI18n({
 			qualityWarning:
 				"০ - সবচেয়ে খারাপ, ১০০ - সেরা। উচ্চ মানের ফাইল আকার বৃদ্ধি হবে.",
 			speedWarning: "০ - অতি ধীর, ছোট ফাইল। ১০ - দ্রুত, বড় ফাইল।",
+			fallbackText:"ফলব্যাক ছবির ধরন",
+			original:"আসল",
+			webp:"ওয়েবপি",
 		},
 		de: {
 			pluginName: "Avif-Express",
@@ -179,8 +188,7 @@ const i18n = createI18n({
 			ccfail: "Konvertierung fehlgeschlagen. Bitte überprüfen Sie die Protokolle.",
 			active: "Aktiv",
 			inactive: "Inaktiv",
-			conversionMayTakeTimeMsg:
-				"Die Konvertierung kann einige Zeit in Anspruch nehmen. Sobald es fertig ist, werden wir Sie benachrichtigen!",
+			conversionMayTakeTimeMsg: "Die Konvertierung kann einige Zeit in Anspruch nehmen. Sobald es fertig ist, werden wir Sie benachrichtigen!",
 			convertedAllImageUploadDir:
 				"Alle Bilder im Upload-Verzeichnis konvertiert.",
 			convertedAllImageThemeDir:
@@ -193,8 +201,10 @@ const i18n = createI18n({
 			deleteImageInTheme: "Alle Avif-Bilder im Theme-Verzeichnis gelöscht.",
 			qualityWarning:
 				"0 - Am schlechtesten, 100 - Am besten. Hohe Qualität erhöht die Dateigröße.",
-			speedWarning:
-				"0 - Super langsame, kleinere Datei. 10 - Schnelle, größere Datei.",
+			speedWarning:"0 - Super langsame, kleinere Datei. 10 - Schnelle, größere Datei.",
+			fallbackText:"Fallback-Bildtyp",
+			original:"Original",
+			webp:"WebP",
 		},
 		hi: {
 			pluginName: "एवीआईएफ एक्सप्रेस",
@@ -242,6 +252,9 @@ const i18n = createI18n({
 			qualityWarning:
 				"० - सबसे खराब, १०० - सबसे अच्छा। उच्च गुणवत्ता फ़ाइल का आकार बढ़ाएगी।",
 			speedWarning: "० - अत्यंत धीमी, छोटी फ़ाइल। १० - तेज़, बड़ी फ़ाइल।",
+			fallbackText:"फ़ॉलबैक छवि प्रकार",
+			original:"मूल",
+			webp:"वेबपे",
 		},
 		fr: {
 			pluginName: "Avif express",
@@ -291,6 +304,9 @@ const i18n = createI18n({
 				"0 - Pire, 100 - Meilleur. La haute qualité augmentera la taille du fichier.",
 			speedWarning:
 				"0 - Fichier super lent et plus petit. 10 - Fichier rapide et plus volumineux.",
+			fallbackText:"Type d'image de secours",
+			original:"Original",
+			webp:"WebP",
 		},
 		ru: {
 			pluginName: "Авиф Экспресс",
@@ -339,6 +355,9 @@ const i18n = createI18n({
 				"0 - Худший, 100 - Лучший. Высокое качество увеличит размер файла.",
 			speedWarning:
 				"0 - очень медленный, файл меньшего размера. 10 - Быстрый файл большего размера.",
+			fallbackText:"Тип изображения по умолчанию",
+			original:"оригинальный",
+			webp:"webP",
 		},
 	},
 });

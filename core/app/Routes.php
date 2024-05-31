@@ -24,10 +24,13 @@ class Routes {
 		add_action('wp_ajax_ajaxSetEnableLogging', array('Avife\common\Options', 'ajaxSetEnableLogging'));
 		add_action('wp_ajax_ajaxGetApiKey',array('Avife\common\Options','ajaxGetApiKey'));
 		add_action('wp_ajax_ajaxSetApiKey',array('Avife\common\Options','ajaxSetApiKey'));
+		add_action('wp_ajax_ajaxGetFallbackMode',array('Avife\common\Options','ajaxGetFallbackMode'));
+		add_action('wp_ajax_ajaxSetFallbackMode',array('Avife\common\Options','ajaxSetFallbackMode'));
 
 		add_action('wp_ajax_ajaxCountMedia', array('Avife\common\Media', 'ajaxCountMedia'));
 		add_action('wp_ajax_ajaxConvertRemaining', array('Avife\common\Media', 'ajaxConvertRemaining'));
 		add_action('wp_ajax_ajaxDeleteAll', array('Avife\common\Media', 'ajaxDeleteAll'));
+		
 		add_action('wp_ajax_ajaxGetCurrentTheme', array('Avife\common\Theme', 'ajaxGetCurrentTheme'));
 		add_action('wp_ajax_ajaxThemeFilesConvert', array('Avife\common\Theme', 'ajaxThemeFilesConvert'));
 		add_action('wp_ajax_ajaxThemeFilesDelete', array('Avife\common\Theme', 'ajaxThemeFilesDelete'));
@@ -39,5 +42,7 @@ class Routes {
 
 		add_action('wp_ajax_ajaxDeleteLogFile',array('Avife\common\Setting','ajaxDeleteLogFile'));
 		add_action('wp_ajax_ajaxIsLogFileExists',array('Avife\common\Setting','ajaxIsLogFileExists'));
+
+		
 	}
 }

@@ -2,7 +2,7 @@
 	<div class="bg-white border border-t-0 rounded-b-2xl overflow-hidden avif-body">
 		<div class="flex flex-col  relative">
 			<div v-if="hasImagickstatus != '1' && avifsupportstatus != '1' && isEnabledCloud !='1'" class="p-4 bg-red-700 text-white flex flex-col md:flex-row justify-between items-center">
-				<span class="text-center md:text-left">Php GD with libavif or Imagick with avif support is not installed/enabled. Please contact the server admin or use <a href="https://avifexpress.aavoya.co" target="_blank"><b>cloud engine</b></a></span>
+				<span class="text-center md:text-left">Php GD with libavif or Imagick with avif support is not installed/enabled. Please contact the server admin or use <a class="hover:text-white" href="https://avifexpress.aavoya.co" target="_blank"><b>cloud engine</b></a></span>
 			</div>
 			<div class="relative control-area flex flex-row w-full">
 				<div class="border-r flex flex-col p-2">
@@ -26,6 +26,7 @@
 						<CloudSwitcher/>
 						<AutoConvStatus/>
 						<OperationMode/>
+						<FallbackSetting/>
 						<AvifOnTheFly/>
 						<ImageQuality />
 						<ImageCompression/>
@@ -55,6 +56,7 @@
 import { waitingSatus } from '../../stores/state';
 import AutoConvStatus from './body/AutoConvStatus.vue';
 import OperationMode from './body/OperationMode.vue';
+import FallbackSetting from './body/FallBackSetting.vue';
 import ImageQuality from './body/ImageQuality.vue';
 import ImageCompression from './body/ImageCompression.vue';
 import BulkConv from './body/BulkConv.vue';

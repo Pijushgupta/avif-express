@@ -173,4 +173,27 @@ class Options {
 		return update_option('avifapikey',$value);
 	}
 
+	public static function ajaxGetFallbackMode(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(esc_html(self::getFallbackMode()));
+		wp_die();
+	}
+
+	public static function getFallbackMode(){
+		if(get_option('aviffallbackmode', false) == false){
+			self::setFallbackMode();
+		}
+		return esc_html(get_option('aviffallbackmode'));
+	}
+
+	public static function ajaxSetFallbackMode(){
+		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+		echo json_encode(self::setFallbackMode(sanitize_text_field($_POST['fallbackMode'])));
+		wp_die();
+	}
+
+	public static function setFallbackMode($value = 'original'){
+		return update_option('aviffallbackmode',$value);
+	}
+
 }

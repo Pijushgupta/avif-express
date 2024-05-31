@@ -870,6 +870,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .last\:pb-0:last-child {
   padding-bottom: 0px;
 }
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
 .disabled\:bg-red-300:disabled {
   --tw-bg-opacity: 1;
   background-color: rgb(252 165 165 / var(--tw-bg-opacity));
