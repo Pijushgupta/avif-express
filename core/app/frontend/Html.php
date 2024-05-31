@@ -49,9 +49,14 @@ class Html {
 		$httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT']:'';
 		$isAvifSupported = strpos($httpAccept, 'image/avif');
 		
-	
 		
 		$dom  = HtmlDomParser::str_get_html($content);
+		
+		/**
+		 * this to compliment for very old browser that don't support avif 
+		 * then either switch to 'original' or 'webp' defined by user
+		 */
+		$fallbackType = strtolower(Options::getFallbackMode());
 
 		/**
 		 * for img tags
@@ -59,32 +64,41 @@ class Html {
 		foreach ($dom->getElementsByTagName('img') as &$image) {
 			
 			if($isAvifSupported != false ){
-				if(Options::getEnableLogging()) new Aviflog('Avif express','notice', 'Avif images supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
+
+				if(Options::getEnableLogging()) {
+					new Aviflog('Avif express','notice', 'Avif images supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
+				}
+
 				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
 				$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
 			}
-			if($isAvifSupported == false){
-				if(Options::getEnableLogging()) new Aviflog('Avif express','notice', 'Avif images not supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
+			if($isAvifSupported == false &&  $fallbackType == 'webp'){
+
+				if(Options::getEnableLogging()) {
+					new Aviflog('Avif express','notice', 'Avif images not supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
+				}
+
 				$image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
 				$image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
+				
 			}
 		}
 		
 		/**
-		 * for background image.
+		 * for background images.
 		 */
 		foreach ($dom->find('[style*=background-image]') as &$element){
 
 			$style = $element->getAttribute('style');
 			
             preg_match('/url\((.*?)\)/', $style, $matches);
-            $imageUrl = $matches[1];
+            $imageUrl = $updatedImageUrl = $matches[1];
 			
 			if($isAvifSupported != false){
 				$updatedImageUrl = self::replaceImgSrc($imageUrl);
 			}
 
-			if($isAvifSupported == false){
+			if($isAvifSupported == false && $fallbackType == 'webp'){
 				$updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
 			}
 			
