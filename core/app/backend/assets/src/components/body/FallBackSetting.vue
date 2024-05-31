@@ -1,6 +1,10 @@
 <template>
 	<div class="w-full flex md:flex-row flex-col justify-between items-center p-4 border-b">
-				<label class="w-full md:w-1/2 flex justify-start mb-2 md:mb-0" for="fallbackmode">{{$t("fallbackText")}}</label>
+				<label class="w-full md:w-1/2 flex flex-col justify-start" for="fallbackmode">
+                    <span class="mb-1">{{$t("fallbackText")}}</span>
+			        <span class="text-xs">{{ $t('fallbackDescription') }}</span>
+                   
+                </label>
 				<div class="w-full md:w-1/2 flex justify-start md:justify-end">
                     <select 
                     id="fallbackmode" class="w-full md:w-auto" v-model="fallbackMode" v-on:change="setFallbackMode">

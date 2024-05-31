@@ -20924,7 +20924,8 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       speedWarning: "0 - Super slow, smaller file. 10 - Fast, larger file.",
       fallbackText: "Fallback Image type",
       original: "Original",
-      webp: "WebP"
+      webp: "WebP",
+      fallbackDescription: "For browsers that do not support avif images"
     },
     es: {
       pluginName: "Avif expreso",
@@ -20965,7 +20966,8 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       speedWarning: "0 - Súper lento, archivo más pequeño. 10 - Archivo rápido y más grande.",
       fallbackText: "Tipo de imagen alternativa",
       original: "Original",
-      webp: "WebP"
+      webp: "WebP",
+      fallbackDescription: "Para navegadores que no soportan imágenes avif"
     },
     bn: {
       pluginName: "এভিআইএফ এক্সপ্রেস",
@@ -21006,7 +21008,8 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       speedWarning: "০ - অতি ধীর, ছোট ফাইল। ১০ - দ্রুত, বড় ফাইল।",
       fallbackText: "ফলব্যাক ছবির ধরন",
       original: "আসল",
-      webp: "ওয়েবপি"
+      webp: "ওয়েবপি",
+      fallbackDescription: "যে ব্রাউজারগুলি AVIF ছবি সমর্থন করে না তাদের জন্য"
     },
     de: {
       pluginName: "Avif-Express",
@@ -21047,7 +21050,8 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       speedWarning: "0 - Super langsame, kleinere Datei. 10 - Schnelle, größere Datei.",
       fallbackText: "Fallback-Bildtyp",
       original: "Original",
-      webp: "WebP"
+      webp: "WebP",
+      fallbackDescription: "Für Browser, die keine AviF-Bilder unterstützen"
     },
     hi: {
       pluginName: "एवीआईएफ एक्सप्रेस",
@@ -21088,7 +21092,8 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       speedWarning: "० - अत्यंत धीमी, छोटी फ़ाइल। १० - तेज़, बड़ी फ़ाइल।",
       fallbackText: "फ़ॉलबैक छवि प्रकार",
       original: "मूल",
-      webp: "वेबपे"
+      webp: "वेबपे",
+      fallbackDescription: "उन ब्राउज़रों के लिए जो एवीआईएफ छवियों का समर्थन नहीं करते हैं"
     },
     fr: {
       pluginName: "Avif express",
@@ -21129,7 +21134,8 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       speedWarning: "0 - Fichier super lent et plus petit. 10 - Fichier rapide et plus volumineux.",
       fallbackText: "Type d'image de secours",
       original: "Original",
-      webp: "WebP"
+      webp: "WebP",
+      fallbackDescription: "Pour les navigateurs qui ne prennent pas en charge les images avif"
     },
     ru: {
       pluginName: "Авиф Экспресс",
@@ -21170,7 +21176,8 @@ var i18n = (0,vue_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)({
       speedWarning: "0 - очень медленный, файл меньшего размера. 10 - Быстрый файл большего размера.",
       fallbackText: "Тип изображения по умолчанию",
       original: "оригинальный",
-      webp: "webP"
+      webp: "webP",
+      fallbackDescription: "Для браузеров, не поддерживающих изображения в формате AVIF"
     }
   }
 });
@@ -22988,27 +22995,33 @@ var _hoisted_1 = {
   "class": "w-full flex md:flex-row flex-col justify-between items-center p-4 border-b"
 };
 var _hoisted_2 = {
-  "class": "w-full md:w-1/2 flex justify-start mb-2 md:mb-0",
+  "class": "w-full md:w-1/2 flex flex-col justify-start",
   "for": "fallbackmode"
 };
 var _hoisted_3 = {
-  "class": "w-full md:w-1/2 flex justify-start md:justify-end"
+  "class": "mb-1"
 };
 var _hoisted_4 = {
-  value: "original"
+  "class": "text-xs"
 };
 var _hoisted_5 = {
+  "class": "w-full md:w-1/2 flex justify-start md:justify-end"
+};
+var _hoisted_6 = {
+  value: "original"
+};
+var _hoisted_7 = {
   value: "webp"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$t("fallbackText")), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$t("fallbackText")), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$t('fallbackDescription')), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     id: "fallbackmode",
     "class": "w-full md:w-auto",
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $setup.fallbackMode = $event;
     }),
     onChange: $setup.setFallbackMode
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$t('original')), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$t('webp')), 1 /* TEXT */)], 544 /* HYDRATE_EVENTS, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $setup.fallbackMode]])])]);
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$t('original')), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$t('webp')), 1 /* TEXT */)], 544 /* HYDRATE_EVENTS, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $setup.fallbackMode]])])]);
 }
 
 /***/ }),
