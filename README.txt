@@ -2,7 +2,7 @@
 Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
-Tested up to: 6.2
+Tested up to: 6.5.3
 Stable tag: 2023.06.28
 Requires PHP: 5
 License: GPLv2 or later

@@ -39,16 +39,23 @@ class Html {
 	}
 
 	public static function avifCookie(){
-		if (!isset($_COOKIE['browser-avif-support'])) {
+		
 			
 			if (self::$isAvifSupported !== false) {
-				setcookie('browser-avif-support', 'true', time() + 86400 ); //24 hours
+
+				unset($_COOKIE['browser_avif_support_false']);
+				setcookie('browser_avif_support_false', '', time() - (15 * 60) ); 
+				setcookie('browser_avif_support_true', 'true', time() + 86400 ); //24 hours
+		
 				return true;
 			}
+		
+			unset($_COOKIE['browser_avif_support_true']);
+			setcookie('browser_avif_support_true', '', time() - (15 * 60));
+			setcookie('browser_avif_support_false', 'true', time() + 86400 ); //24 hours
 
-			setcookie('browser-avif-support', 'false', time() + 86400 ); //24 hours
 			return false;
-		}
+		
 	}
 
 	public static function getContent($content) {
