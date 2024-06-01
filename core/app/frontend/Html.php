@@ -10,13 +10,45 @@ use voku\helper\HtmlDomParser;
 use Avife\common\Aviflog;
 
 class Html {
+
+	public static $isAvifSupported = false;
+
 	public static function init() {
 		
 		add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'), 9999);
 	}
 	public static function checkConditions() {
 		if (is_admin() || is_feed() || wp_doing_ajax() || Options::getOperationMode() == 'inactive') return;
+		/**
+		 * checking and storing, if the browser support avif format 
+		 */
+		$httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT']:'';
+		self::$isAvifSupported = strpos($httpAccept, 'image/avif');
+
+		/**
+		 * creating cookie regarding avif support
+		 * for: nginx, apache2, liteSpeed and etc
+		 * based on this cookie value server can decide to cache or not to cache
+		 */
+		self::avifCookie();
+
+		/**
+		 * starting content replacement work
+		 */
 		ob_start('Avife\frontend\Html::getContent');
+	}
+
+	public static function avifCookie(){
+		if (!isset($_COOKIE['browser-avif-support'])) {
+			
+			if (self::$isAvifSupported !== false) {
+				setcookie('browser-avif-support', 'true', time() + 86400 ); //24 hours
+				return true;
+			}
+
+			setcookie('browser-avif-support', 'false', time() + 86400 ); //24 hours
+			return false;
+		}
 	}
 
 	public static function getContent($content) {
@@ -41,13 +73,7 @@ class Html {
 		}
 		
 		
-		/**
-		 * Checking if browser supporting Avif image support or not 
-		 * Checking if fallback Webp enabled 
-		 * if both are false returning the content as it is
-		 */
-		$httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT']:'';
-		$isAvifSupported = strpos($httpAccept, 'image/avif');
+		
 		
 		
 		$dom  = HtmlDomParser::str_get_html($content);
@@ -63,7 +89,7 @@ class Html {
 		 */
 		foreach ($dom->getElementsByTagName('img') as &$image) {
 			
-			if($isAvifSupported != false ){
+			if(self::$isAvifSupported != false ){
 
 				if(Options::getEnableLogging()) {
 					new Aviflog('Avif express','notice', 'Avif images supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
@@ -72,7 +98,7 @@ class Html {
 				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
 				$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
 			}
-			if($isAvifSupported == false &&  $fallbackType == 'webp'){
+			if(self::$isAvifSupported == false &&  $fallbackType == 'webp'){
 
 				if(Options::getEnableLogging()) {
 					new Aviflog('Avif express','notice', 'Avif images not supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
@@ -94,11 +120,11 @@ class Html {
             preg_match('/url\((.*?)\)/', $style, $matches);
             $imageUrl = $updatedImageUrl = $matches[1];
 			
-			if($isAvifSupported != false){
+			if(self::$isAvifSupported != false){
 				$updatedImageUrl = self::replaceImgSrc($imageUrl);
 			}
 
-			if($isAvifSupported == false && $fallbackType == 'webp'){
+			if(self::$isAvifSupported == false && $fallbackType == 'webp'){
 				$updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
 			}
 			
