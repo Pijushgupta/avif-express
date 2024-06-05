@@ -98,7 +98,7 @@ function initiate_plugin() {
 	 * Avif cloud engine address 
 	 */
 	if(!defined('AVIF_CLOUD_ADDRESS')){
-		define('AVIF_CLOUD_ADDRESS','https://avifexpress.aavoya.co/convert');
+		define('AVIF_CLOUD_ADDRESS','https://avif-express.p.rapidapi.com/convert');
 	}
 
 	/**
