@@ -4,6 +4,8 @@
 /core/app/backend/package-lock.js
 # plugin logs - dynamic
 /logs/
+# main.js
+/core/app/backend/main.js
 
 # General
 .DS_Store
