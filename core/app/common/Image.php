@@ -325,14 +325,14 @@ class Image {
 			}
 
 			if($imageUrls['status'] == 'success'){
-				//converting json response to array of arrays
+				
 				
 				$avifServerImageData[] = $imageUrls['data'];
 			}
 			
 		}
 		
-		//error_log(print_r($avifServerImageData,true));
+		
 		
 		//using wordpress file system class instead of php native file_get_contents()
 		include_once ABSPATH . 'wp-admin/includes/file.php';
