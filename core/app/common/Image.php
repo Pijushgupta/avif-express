@@ -275,68 +275,75 @@ class Image {
 	 */
 	public static function cloudConvert(array $urls){
 		
+		
 		//get the api key from option table 
 		$apiKey = Options::getApiKey();
 
 		//if api key is not set then return false
 		if($apiKey == false) return false;
 
-		//array to string conversion
-		$jsonEncodedUrls = json_encode($urls);
-
-		//actual payload with appended url, GET method
-		$fullRequestUrl = AVIF_CLOUD_ADDRESS . '?urls=' . urlencode($jsonEncodedUrls);
-		
-		//add origin to the request header
-		$origin = str_replace(['https://','http://'],'',strtolower(get_site_url()));
-
-		
 		//add origin and api key to the request header
 		$requestHeader = array(
-			'Origin' => $origin,
-			'Api-key' => $apiKey,
+			
+			'X-RapidAPI-Key' => $apiKey,
 			'Content-Type' => 'application/json',
 			'Accept' => 'application/json'
-		);		
+		);	
 
+		$avifServerImageData = [];
 
-		//conversion started
-		//1. sending all urls(array of url) to the cloud server
-		$cloudResponse = wp_remote_get($fullRequestUrl , array('headers' => $requestHeader));
-		
-		//2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url) 
-		$body = wp_remote_retrieve_body($cloudResponse);
-		
-		//checking for any error and then logging it, if WP_DEBUG is true and then exit
-		if(is_wp_error($cloudResponse)) {
-			if(WP_DEBUG == true) error_log("Error:" . $cloudResponse->get_error_message());
-			if(Options::getEnableLogging()) new Aviflog('Avif express','error', $cloudResponse->get_error_message() ,['file'=>__FILE__,'Line'=>__LINE__]);
-			return false;
+		foreach($urls as $url){
+			
+
+			//actual payload with appended url, GET method
+			$fullRequestUrl = AVIF_CLOUD_ADDRESS . '?url=' . urlencode($url);
+
+			//add origin to the request header
+			$origin = str_replace(['https://','http://'],'',strtolower(get_site_url()));
+
+			//conversion started
+			//1. sending all urls(array of url) to the cloud server
+			$cloudResponse = wp_remote_get($fullRequestUrl , array('headers' => $requestHeader));
+
+			//2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url) 
+			$body = wp_remote_retrieve_body($cloudResponse);
+
+			//checking for any error and then logging it, if WP_DEBUG is true and then exit
+			if(is_wp_error($cloudResponse)) {
+				if(WP_DEBUG == true) error_log("Error:" . $cloudResponse->get_error_message());
+				if(Options::getEnableLogging()) new Aviflog('Avif express','error', $cloudResponse->get_error_message() ,['file'=>__FILE__,'Line'=>__LINE__]);
+				
+			}
+
+			$imageUrls = json_decode($body, true);
+
+			//check server status code for any issue
+			if($imageUrls['status'] !== 'success'){
+				if(WP_DEBUG == true) error_log("Error:" . print_r($imageUrls));
+				if(Options::getEnableLogging()) new Aviflog('Avif express','error', print_r($imageUrls) ,['file'=>__FILE__,'Line'=>__LINE__]);
+				
+			}
+
+			if($imageUrls['status'] == 'success'){
+				//converting json response to array of arrays
+				
+				$avifServerImageData[] = $imageUrls['data'];
+			}
+			
 		}
-
 		
-		//converting json response to array of arrays
-		$imageUrls = json_decode($body, true);
+		//error_log(print_r($avifServerImageData,true));
 		
-		//check server status code for any issue
-		if($imageUrls['status'] !== 200){
-			if(WP_DEBUG == true) error_log("Error:" . $imageUrls['msg']? $imageUrls['msg'] : $imageUrls['status']);
-			if(Options::getEnableLogging()) new Aviflog('Avif express','error', $imageUrls['msg']? $imageUrls['msg'] : $imageUrls['status'] ,['file'=>__FILE__,'Line'=>__LINE__]);
-			return false;
-		}
-		
-		$imageUrls = $imageUrls['data'];
-
 		//using wordpress file system class instead of php native file_get_contents()
 		include_once ABSPATH . 'wp-admin/includes/file.php';
 		WP_Filesystem();
 
 		//this if condition to prevent to null
-		if(is_array($imageUrls) || is_object($imageUrls)){
-			foreach($imageUrls as $imageUrl){
+		if(is_array($avifServerImageData) || is_object($avifServerImageData)){
+			foreach($avifServerImageData as $imageUrl){
 			
 				//creating destination file path form the source
-				$srcImagePath = self::attachmentUrlToPath($imageUrl['src']);
+				$srcImagePath = self::attachmentUrlToPath($imageUrl[0]);
 				if($srcImagePath == false ) {
 					if(WP_DEBUG == true) error_log('Unable to create absolute path from relative path of source image');
 					if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Unable to create absolute path from relative path of source image' ,['file'=>__FILE__,'Line'=>__LINE__]);
@@ -349,7 +356,7 @@ class Image {
 				
 	
 				//getting remote avif file 
-				$response = wp_remote_get($imageUrl['dist']);
+				$response = wp_remote_get($imageUrl[1]);
 				if(is_wp_error($response)){
 					if(WP_DEBUG == true) error_log("Avif Download Error:".$response->get_error_message());
 					if(Options::getEnableLogging()) new Aviflog('Avif express','error', $response->get_error_message() ,['file'=>__FILE__,'Line'=>__LINE__]);
@@ -373,7 +380,6 @@ class Image {
 		}
 		
 	}
-
 	/**
 	 * Converting image(s) to webp
 	 * @param string $src source of the image
