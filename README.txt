@@ -2,8 +2,8 @@
 Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
-Tested up to: 6.5.3
-Stable tag: 2023.06.28
+Tested up to: 6.5.4
+Stable tag: 2024.06.19
 Requires PHP: 5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -19,7 +19,7 @@ On upload, images like jpg, png and WebP gets converted to avif format. Converte
 * Bulk convert theme images.
 * Serve Webpage with altered avif images.
 * Fully CDN compatible.
-* Backward compatibility - Browsers that don't support Avif images will get WebP images served on the fly. 
+* Backward compatibility - Browsers that don't support Avif images will get WebP/Original images served on the fly. 
 * Native Language Support for German, Spanish, Russian, French, Hindi and Bengali.
 
 = Official documentation of Avif Express =
@@ -46,6 +46,7 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select 
 4. Implemented a logging system.
 5. Added system information to display local server capabilities to the end user.
 6. Added on-the-fly AVIF conversion if the server supports it. 
+
 = 28.06.2023 =
 Feature: 
 1. Externally added webp images can be served via this plugin on browser that does not support avif image. note: Image fix name should be same as source.

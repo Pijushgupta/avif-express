@@ -14,6 +14,7 @@
 ###### Wordpress 6.0 or Above
 ###### Php 7.3 or Above
 ###### Image Magic Extension 7.0.25 or Above (for local avif conversion)
+###### Dom extension for php 
 
 ##### Installation
 
