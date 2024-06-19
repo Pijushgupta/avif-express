@@ -39,6 +39,13 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
+= 19.06.2024 = 
+1. Added cloud conversion for ease of use in case the server doesn't support AVIF conversion.
+2. Added an option for a fallback image type (WebP/original) for older browsers/webviews.
+3. Added a cookie to notify the server whether to catch pages for browsers that don't support AVIF. (Cookies: browser_avif_support_true, browser_avif_support_false)
+4. Implemented a logging system.
+5. Added system information to display local server capabilities to the end user.
+6. Added on-the-fly AVIF conversion if the server supports it. 
 = 28.06.2023 =
 Feature: 
 1. Externally added webp images can be served via this plugin on browser that does not support avif image. note: Image fix name should be same as source.
