@@ -57,9 +57,25 @@ function initiate_plugin() {
 	 * storing imageMagick version
 	 */
 	if (!defined('AVIFE_IMAGICK_VER')) {
+		/**
+		 * checking if imagick is present or not
+		 * */
 		if (class_exists('Imagick')) {
+			
+			/**
+			 * getting the imagick version
+			 */
 			$v = Imagick::getVersion();
+
+			/**
+			 * storing the version number 
+			 */
 			preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $v);
+
+			/**
+			 * checking if the version is greater than or equal to 7.0.25
+			 * see https://www.php.net/manual/en/function.version-compare.php
+			*/
 			if (version_compare($v[1], '7.0.25') >= 0) {
 				define('AVIFE_IMAGICK_VER', $v[1]);
 			} else {
