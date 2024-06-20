@@ -33,6 +33,8 @@ For a more detailed description of options and features of Avif Express, please 
 3. Activate `Avif Express` from plugin page.
 
 == Frequently Asked Questions ==
+= How to obtain API key =
+You can obtain API key from [Avif Express API](https://rapidapi.com/aavoya-aavoya-default/api/avif-express)
 = How to generate avif images from previously uploaded images =
 Go to "Avif Express" on the left sidebar menu > On the "Avif express" page > Click on the generate button on "Upload directory" row.
 = How to generate avif images from theme's image =
@@ -70,7 +72,7 @@ Bugfix: Images that don't belongs to the same domain no logger getting skipped.
 Added translation for German, Spanish, Russian, French, Hindi and Bengali, for backend Admin dash. 
 
 = 02.27.2023 = 
-Issue: Undefined Constatnt. Fixed.  Pointed by [argument](https://wordpress.org/support/users/argument/,"Bug finder"). 
+Issue: Undefined Constant. Fixed.  Pointed by [argument](https://wordpress.org/support/users/argument/,"Bug finder"). 
 
 = 02.26.2023 = 
 ImageMagick version checking. Version '7.0.25' or above required. 
