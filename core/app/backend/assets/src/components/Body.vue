@@ -36,8 +36,8 @@
 					<template v-if="tab == 1">
 						<Api/>
 						<PhpInformation/>
-						<EnableLogging/>
-						<ViewLog/>
+						<!-- <EnableLogging/> -->
+						<!-- <ViewLog/> -->
 					</template>
 					<template v-if="tab == 2">
 						<span>Tab 2</span>

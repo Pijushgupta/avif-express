@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) exit;
 use Avife\common\Options;
 use Avife\common\Image;
 use voku\helper\HtmlDomParser;
-use Avife\common\Aviflog;
+
 
 class Html {
 
@@ -98,8 +98,10 @@ class Html {
 			
 			if(self::$isAvifSupported != false ){
 
-				if(Options::getEnableLogging()) {
-					new Aviflog('Avif express','notice', 'Avif images supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
+				
+
+				if(WP_DEBUG == true){
+					error_log('Avif express: Avif images supported on the browser');
 				}
 
 				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
@@ -107,8 +109,9 @@ class Html {
 			}
 			if(self::$isAvifSupported == false &&  $fallbackType == 'webp'){
 
-				if(Options::getEnableLogging()) {
-					new Aviflog('Avif express','notice', 'Avif images not supported on the browser',['file'=>__FILE__,'Line'=>__LINE__]);
+				
+				if(WP_DEBUG == true){
+					error_log('Avif express:Avif images not supported on the browser');
 				}
 
 				$image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
@@ -203,9 +206,11 @@ class Html {
 			/**
 			 * If on the fly failed then log it
 			 */
-			if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Avif on the fly conversion failed',['file'=>__FILE__,'Line'=>__LINE__]);
+		
 			
-			
+			if(WP_DEBUG == true){
+				error_log('Avif on the fly conversion failed');
+			}
 		}
 		/**
 		 * if server capable of generating webp then return that else return original
@@ -265,7 +270,10 @@ class Html {
 								if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
 									$v = $avifImageUrl;
 								}else{
-									if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Avif on the fly conversion failed',['file'=>__FILE__,'Line'=>__LINE__]);
+									
+									if(WP_DEBUG == true){
+										trigger_error('Avif express:Avif on the fly conversion failed');
+									}
 									$v = self::webpReplaceImgSrc($v);
 								}
 								

@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.5.4
-Stable tag: 2024.06.19
+Stable tag: 2024.06.20.01
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -43,6 +43,9 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
+= 01.20.06.2024 =
+1. Removed aviflog(wrapper of monolog), due to php version issue. 
+
 = 19.06.2024 = 
 1. Added cloud conversion for ease of use in case the server doesn't support AVIF conversion.
 2. Added an option for a fallback image type (WebP/original) for older browsers/webviews.

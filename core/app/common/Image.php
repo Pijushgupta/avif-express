@@ -74,7 +74,7 @@ class Image {
 						}
 						if($avifsupport == '0' && $hasImagick == '0'){
 							if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
-							if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Convert on Upload: Local avif support not found',['file'=>__FILE__,'Line'=>__LINE__]);
+							
 							return $metadata;
 						} 
 						self::convert($srcPath, $desPath, $quality, $speed);
@@ -109,7 +109,7 @@ class Image {
 					}
 					if($avifsupport == '0' && $hasImagick == '0'){
 						if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
-						if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Convert on Upload: Local avif support not found',['file'=>__FILE__,'Line'=>__LINE__]);
+						
 						return $metadata;
 					} 
 					self::convert($srcPath, $desPath, $quality, $speed);
@@ -149,7 +149,7 @@ class Image {
 					}
 					if($avifsupport == '0' && $hasImagick == '0'){
 						if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
-						if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Convert on Upload: Local avif support not found',['file'=>__FILE__,'Line'=>__LINE__]);
+					
 						return $metadata;
 					} 
 					self::convert($src, $des, $quality, $speed);
@@ -263,7 +263,10 @@ class Image {
 			return;
 		}
 
-		if(Options::getEnableLogging()) new Aviflog('Avif express','warning', 'Local avif support not found',['file'=>__FILE__,'Line'=>__LINE__]);
+		
+		if(WP_DEBUG == true){
+			trigger_error('Avif Express: Local avif support not found');
+		}
 		return;
 		
 		
@@ -311,7 +314,7 @@ class Image {
 			//checking for any error and then logging it, if WP_DEBUG is true and then exit
 			if(is_wp_error($cloudResponse)) {
 				if(WP_DEBUG == true) error_log("Error:" . $cloudResponse->get_error_message());
-				if(Options::getEnableLogging()) new Aviflog('Avif express','error', $cloudResponse->get_error_message() ,['file'=>__FILE__,'Line'=>__LINE__]);
+				
 				
 			}
 
@@ -320,7 +323,7 @@ class Image {
 			//check server status code for any issue
 			if($imageUrls['status'] !== 'success'){
 				if(WP_DEBUG == true) error_log("Error:" . print_r($imageUrls));
-				if(Options::getEnableLogging()) new Aviflog('Avif express','error', print_r($imageUrls) ,['file'=>__FILE__,'Line'=>__LINE__]);
+			
 				
 			}
 
@@ -346,7 +349,7 @@ class Image {
 				$srcImagePath = self::attachmentUrlToPath($imageUrl[0]);
 				if($srcImagePath == false ) {
 					if(WP_DEBUG == true) error_log('Unable to create absolute path from relative path of source image');
-					if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Unable to create absolute path from relative path of source image' ,['file'=>__FILE__,'Line'=>__LINE__]);
+				
 					continue;
 				}
 
@@ -359,7 +362,7 @@ class Image {
 				$response = wp_remote_get($imageUrl[1]);
 				if(is_wp_error($response)){
 					if(WP_DEBUG == true) error_log("Avif Download Error:".$response->get_error_message());
-					if(Options::getEnableLogging()) new Aviflog('Avif express','error', $response->get_error_message() ,['file'=>__FILE__,'Line'=>__LINE__]);
+			
 					continue;
 				} 
 				//retrieving avif file body content
@@ -368,13 +371,13 @@ class Image {
 					global $wp_filesystem;
 					if(!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)){
 						if(WP_DEBUG == true) error_log('Unable to write avif file');
-						if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Unable to write avif file' ,['file'=>__FILE__,'Line'=>__LINE__]);
+					
 						continue;
 					}
 					
 				}else{
 					if(WP_DEBUG == true) error_log('Unable to initialize the WP_filesystem');
-					if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Unable to initialize the WP_filesystem' ,['file'=>__FILE__,'Line'=>__LINE__]);
+				
 				}
 			}
 		}
@@ -390,7 +393,7 @@ class Image {
 
 		if(!extension_loaded('imagick')){
 			if(WP_DEBUG == true) error_log('Imagick extension not loaded');
-			if(Options::getEnableLogging()) new Aviflog('Avif express','error', 'Imagick extension not loaded' ,['file'=>__FILE__,'Line'=>__LINE__]);
+		
 			return $src;
 		};
 

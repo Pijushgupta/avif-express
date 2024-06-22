@@ -5,7 +5,6 @@
 		}
 	},
 	"require": {
-		"voku/simple_html_dom": "^4.8",
-		"monolog/monolog": "^3.5"
+		"voku/simple_html_dom": "^4.8"
 	}
 }
