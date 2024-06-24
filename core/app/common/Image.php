@@ -52,31 +52,64 @@ class Image {
 		$uploadDirInfo = wp_upload_dir();
 		$originalImages[1] = $uploadDirInfo['baseurl'] . DIRECTORY_SEPARATOR . $metadata['file'];
 
-		if ($originalImages[0] != $originalImages[1]) {
-			foreach ($originalImages as $originalImage) {
+		/**
+		 * checking if GD can create avif image or not,
+		 * based on that setting flag avifsupport,
+		 * 0 = not capable , 1 = capable 
+		 */
+		$avifsupport = '0';
+		if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != ''){
+			$avifsupport = '1';
+		} 
 
+		/**
+		 * checking if Imagick can create avif image or not,
+		 * based on that setting flag hasImagick,
+		 * 0 = not capable, 1 = capable 
+		 */
+		$hasImagick = '0';
+		if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
+			$imagick = new \Imagick();
+			$formats = $imagick->queryFormats();
+			if (in_array('AVIF', $formats)) {
+				$hasImagick = '1';
+			}
+		}
+
+
+
+		if ($originalImages[0] != $originalImages[1]) {
+
+			foreach ($originalImages as $originalImage) {
+				
+				/**
+				 * creating Path form image url
+				 */
 				$srcPath = self::attachmentUrlToPath($originalImage);
 
 				if ($srcPath != false && $srcPath != '') {
+					/**
+					 * creating destination file path
+					 */
 					$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
 
 					if(Options::getConversionEngine() == 'local'){
-						$avifsupport = '0';
-						if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
-		
-						$hasImagick = '0';
-						if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
-							$imagick = new \Imagick();
-							$formats = $imagick->queryFormats();
-							if (in_array('AVIF', $formats)) {
-								$hasImagick = '1';
-							}
-						}
+						
+						/**
+						 * in case of both local conversion failed,
+						 * logging it and returning original meta,
+						 * with return it will exit the flow
+						 */
 						if($avifsupport == '0' && $hasImagick == '0'){
 							if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
 							
 							return $metadata;
 						} 
+
+						/**
+						 * if not existed from the flow from the previous if 
+						 * condition, continue with local conversion. 
+						 */
 						self::convert($srcPath, $desPath, $quality, $speed);
 					}
 
@@ -92,21 +125,13 @@ class Image {
 		} else {
 
 			$srcPath = self::attachmentUrlToPath($originalImages[0]);
+
 			if ($srcPath != false && $srcPath != '') {
+
 				$desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
 
 				if(Options::getConversionEngine() == 'local'){
-					$avifsupport = '0';
-					if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
-		
-					$hasImagick = '0';
-					if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
-						$imagick = new \Imagick();
-						$formats = $imagick->queryFormats();
-						if (in_array('AVIF', $formats)) {
-							$hasImagick = '1';
-						}
-					}
+					
 					if($avifsupport == '0' && $hasImagick == '0'){
 						if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
 						
