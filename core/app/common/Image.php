@@ -4,7 +4,7 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit();
 
-use WP_Error;
+
 use Avife\common\Options;
 
 class Image {
@@ -36,11 +36,27 @@ class Image {
 	 * @return void
 	 */
 	public static function beforeConvert($metadata, $attachment_id) {
-
+		/**
+		 * getting the attachment
+		 * attachment is post type, so we can use get_post function
+		 * see: https://developer.wordpress.org/reference/functions/get_post/
+		 */
 		$attachment = get_post($attachment_id);
+		
+		/**
+		 * getting the mime type for comparison 
+		 */
 		$mimeType = $attachment->post_mime_type;
+
+		/**
+		 * if mime type not supported, return the metadata.
+		 * since we only supports jpeg,png,jpg and webp(yet to be supported on bulk conversion)
+		 */
 		if (!in_array($mimeType, array('image/jpeg', 'image/png', 'image/jpg', 'image/webp',))) return $metadata;
 
+		/**
+		 * getting the quality and compression speed for local conversion for GD only 
+		 */
 		$quality = Options::getImageQuality();
 		$speed = Options::getComSpeed();
 
@@ -77,7 +93,6 @@ class Image {
 		}
 
 
-
 		if ($originalImages[0] != $originalImages[1]) {
 
 			foreach ($originalImages as $originalImage) {
@@ -102,7 +117,6 @@ class Image {
 						 */
 						if($avifsupport == '0' && $hasImagick == '0'){
 							if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
-							
 							return $metadata;
 						} 
 
@@ -111,11 +125,14 @@ class Image {
 						 * condition, continue with local conversion. 
 						 */
 						self::convert($srcPath, $desPath, $quality, $speed);
+
 					}
 
 					if(Options::getConversionEngine() == 'cloud'){
+
 						$unConvertedAttachmentUrls[] = $originalImage;
 						self::cloudConvert($unConvertedAttachmentUrls);
+
 					}
 					
 
@@ -156,33 +173,28 @@ class Image {
 		$fileDir = pathinfo(self::attachmentUrlToPath($originalImages[0]), PATHINFO_DIRNAME);
 		$allSizes = $metadata['sizes'];
 		foreach ($allSizes as $size) {
+
 			$src = trailingslashit($fileDir) . $size['file'];
+
 			if (file_exists($src)) {
 				$des = rtrim($src, '.' . pathinfo($src, PATHINFO_EXTENSION)) . '.avif';
 
 				if(Options::getConversionEngine() == 'local'){
-					$avifsupport = '0';
-					if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
-	
-					$hasImagick = '0';
-					if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
-						$imagick = new \Imagick();
-						$formats = $imagick->queryFormats();
-						if (in_array('AVIF', $formats)) {
-							$hasImagick = '1';
-						}
-					}
+
 					if($avifsupport == '0' && $hasImagick == '0'){
 						if(WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
 					
 						return $metadata;
 					} 
 					self::convert($src, $des, $quality, $speed);
+				
 				}
 
 				if(Options::getConversionEngine() == 'cloud'){
+
 					$unConvertedAttachmentUrls[] = self::pathToAttachmentUrl($src);
 					self::cloudConvert($unConvertedAttachmentUrls);
+				
 				}
 
 			}
@@ -190,7 +202,8 @@ class Image {
 		/**
 		 * ends
 		 */
-		update_post_meta($attachment_id, 'avifexpressconverted', true);
+		
+
 		return $metadata;
 	}
 
