@@ -359,13 +359,13 @@ class Image {
 			$imageUrls = json_decode($body, true);
 
 			//check server status code for any issue
-			if($imageUrls['status'] !== 'success'){
+			if(isset($imageUrls['status']) && $imageUrls['status'] !== 'success'){
 				if(WP_DEBUG == true) error_log("Error:" . print_r($imageUrls));
 			
 				
 			}
 
-			if($imageUrls['status'] == 'success'){
+			if(isset($imageUrls['status']) && $imageUrls['status'] == 'success'){
 				
 				
 				$avifServerImageData[] = $imageUrls['data'];
