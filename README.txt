@@ -43,6 +43,9 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
+= 09.07.2024 =
+Background Image replacement Bug Fix
+
 = 01.20.06.2024 =
 1. Removed aviflog(wrapper of monolog), due to php version issue. 
 
