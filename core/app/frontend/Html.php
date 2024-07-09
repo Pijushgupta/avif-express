@@ -12,28 +12,75 @@ use voku\helper\HtmlDomParser;
 
 class Html {
 
-	public static $isAvifSupported = false;
+    /**
+     * if the browser supports avif image or not
+     * @var bool
+     */
+	private static $isAvifSupported = false;
+
+    /**
+     * fallback image type set by user
+     * @var string
+     */
+    private static $fallbackType = 'original';
+
+    /**
+     * @var (voku\helper\HtmlDomParser)
+     */
+    private static $dom;
+
+    /**
+     * @return void
+     */
+    private static $disableOnTheFlyConversion = true;
+
 
 	public static function init() {
 		
 		add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'), 9999);
 	}
+
 	public static function checkConditions() {
+
+        /**
+         * if an administrative(also normal page while user logged in on another tab) interface page or
+         * if the current request is for an RSS or Atom feed or
+         * if the current request is an AJAX request or
+         * if rendering "inactive" then terminate
+         */
 		if (is_admin() || is_feed() || wp_doing_ajax() || Options::getOperationMode() == 'inactive') return;
+
 		/**
-		 * checking and storing, if the browser support avif format 
+		 * checking, if the browser support avif format
 		 */
 		$httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT']:'';
 		self::$isAvifSupported = strpos($httpAccept, 'image/avif');
 
+        /**
+         * this to compliment for very old browser that don't support avif
+         * then either switch to 'original' or 'webp' defined by user
+         */
+        self::$fallbackType = strtolower(Options::getFallbackMode());
+
 		/**
 		 * creating cookie regarding avif support
-		 * for: nginx, apache2, liteSpeed and etc
+		 * for: nginx, apache2, liteSpeed etc.
 		 * based on this cookie value server can decide to cache or not to cache
 		 */
 		Cookie::setAvifCookie(self::$isAvifSupported);
 
-		/**
+        /**
+         * checking if browser support avif and fallback mode normal
+         * return original content.
+         */
+        if(self::$isAvifSupported === false && self::$fallbackType !== 'original') return;
+
+        /**
+         * storing option data if "Disable on the fly avif" conversion true or false
+         */
+        self::$disableOnTheFlyConversion = Options::getOnTheFlyAvif();
+
+        /**
 		 * starting content replacement work
 		 */
 		ob_start('Avife\frontend\Html::getContent');
@@ -41,13 +88,6 @@ class Html {
 
 
 	public static function getContent($content) {
-		
-		/**
-		 * if rendering inactive return the original content
-		 */
-		
-		if(Options::getOperationMode() != 'active') return $content;
-		
 
 		/**
 		 * if it's not html return the content
@@ -60,65 +100,93 @@ class Html {
 		if (!preg_match("#^\\s*<#", $content)) {
 			return $content;
 		}
-		
-		
-		
-		
-		
-		$dom  = HtmlDomParser::str_get_html($content);
+
+        /**
+         * loading the dom using voku\helper\HtmlDomParser
+         * see more: https://github.com/voku/simple_html_dom
+         */
+		self::$dom  = HtmlDomParser::str_get_html($content);
+
+        /**
+         * handing img tags
+         */
+		self::handleImg();
 		
 		/**
-		 * this to compliment for very old browser that don't support avif 
-		 * then either switch to 'original' or 'webp' defined by user
+		 * for inline background images.
 		 */
-		$fallbackType = strtolower(Options::getFallbackMode());
+		self::handleImgBG();
 
-		/**
-		 * for img tags
-		 */
-		foreach ($dom->getElementsByTagName('img') as &$image) {
-			
-			if(self::$isAvifSupported != false ){
+		return self::$dom;
+	}
 
-				
+    /**
+     * replaces images(img tag) with proper avif file
+     * @return void
+     */
+    public static function handleImg(){
 
-				if(WP_DEBUG == true){
-					error_log('Avif express: Avif images supported on the browser');
-				}
+        foreach (self::$dom->getElementsByTagName('img') as &$image) {
 
-				$image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
-				$image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
-			}
-			if(self::$isAvifSupported == false &&  $fallbackType == 'webp'){
+            if(self::$isAvifSupported){
 
-				
-				if(WP_DEBUG == true){
-					error_log('Avif express:Avif images not supported on the browser');
-				}
+                $image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
+                $image->setAttribute('srcset', self::replaceImgSrcSet($image->getAttribute('srcset')));
+            }
+            if(!self::$isAvifSupported &&  self::$fallbackType == 'webp'){
 
-				$image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
-				$image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
-				
-			}
-		}
-		
-		/**
-		 * for background images.
-		 */
-		foreach ($dom->find('[style*=background-image]') as &$element) {
+                $image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
+                $image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
+
+            }
+        }
+    }
+
+    /**
+     * replaces inline css with images with avif images
+     * @return void
+     */
+    public static function handleImgBG(){
+
+        foreach (self::$dom->find('[style*=background-image]') as &$element) {
             $style = $element->getAttribute('style');
+            /**
+             * /..../ delimiter
+             * url to match "url" string in style element
+             * \( to match "(" after "url" string, "(" is special char, so we need to escape it
+             * ( start of a capturing group
+             * \'|" , "'" is a special chan so escaping it with \', "|" is logical-or or alteration operator, " is just
+             * double quote . So its target '.....' or ".....". ex: background-image:url(".....")
+             * ) ending of a capturing group
+             * ? matches the shortest possible match
+             * () creates a new capturing group
+             * .* targets all the char inside '.....' or "....." or just ..... , excepts new line char
+             * \1 referencing first capture group for ' or " for string closing char. \\1 = \1 , \ is escaping "\"
+             * \) closing the of url(.....")" . \ is escaping ).
+             * /..../ delimiter ends
+             *
+             * $style source
+             * $matches destination
+             * $matches[1] - Contains the " or '
+             * $matches[2] - contains the url without any quote
+             */
             preg_match('/url\((\'|")?(.*?)\\1\)/', $style, $matches);
+
             if (isset($matches[2])) {
-                $imageUrl = $matches[2];
-                $updatedImageUrl = self::$isAvifSupported ? self::replaceImgSrc($imageUrl) : ($fallbackType == 'webp' ? self::webpReplaceImgSrc($imageUrl) : $imageUrl);
+
+                $updatedImageUrl = $imageUrl = $matches[2];
+
+                if(self::$isAvifSupported){
+                    $updatedImageUrl = self::replaceImgSrc($imageUrl);
+                }elseif(self::$isAvifSupported && self::$fallbackType == 'webp'){
+                    $updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
+                }
+
                 $newStyle = str_replace($imageUrl, $updatedImageUrl, $style);
                 $element->setAttribute('style', $newStyle);
             }
         }
-		
-		
-		return $dom;
-	}
+    }
 
 	/**
 	 * replace image url with .avif extension
@@ -160,7 +228,7 @@ class Html {
 		 * creating on the fly if server support that 
 		 * else try webp conversion
 		 */
-		if(!Options::getOnTheFlyAvif()){
+		if(self::$disableOnTheFlyConversion){
 			if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 				
 				$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
@@ -188,9 +256,12 @@ class Html {
 			}
 		}
 		/**
-		 * if server capable of generating webp then return that else return original
+		 * if server capable of generating webp and user selected fallback format as webp then return that else return original
 		 */
-		return self::webpReplaceImgSrc($imageUrl);
+        if(self::$fallbackType == 'webp'){
+            return self::webpReplaceImgSrc($imageUrl);
+        }
+        return $imageUrl;
 		
 	}
 
@@ -232,8 +303,8 @@ class Html {
 						/**
 						 * creating on the fly if server support that 
 						 * else try webp conversion
-						 */
-						if(!Options::getOnTheFlyAvif()){
+                         */
+						if(self::$disableOnTheFlyConversion){
 							if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 								$imagePathSrc = Image::attachmentUrlToPath($v);
 								$imagePathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
@@ -246,18 +317,18 @@ class Html {
 									$v = $avifImageUrl;
 								}else{
 									
-									if(WP_DEBUG){
-										trigger_error('Avif express:Avif on the fly conversion failed');
-									}
-									$v = self::webpReplaceImgSrc($v);
+									if(WP_DEBUG) error_log('Avif express:Avif on the fly conversion failed');
+
+                                    if(self::$fallbackType == 'webp') $v = self::webpReplaceImgSrc($v);
+
 								}
 								
 							}else{
-								$v = self::webpReplaceImgSrc($v);
+                                if(self::$fallbackType == 'webp') $v = self::webpReplaceImgSrc($v);
 							}
 						}
 						else{
-							$v = self::webpReplaceImgSrc($v);
+                            if(self::$fallbackType == 'webp') $v = self::webpReplaceImgSrc($v);
 						}
 					}
 				}
