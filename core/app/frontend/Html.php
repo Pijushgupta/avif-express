@@ -123,24 +123,16 @@ class Html {
 		/**
 		 * for background images.
 		 */
-		foreach ($dom->find('[style*=background-image]') as &$element){
-
-			$style = $element->getAttribute('style');
-			
-            preg_match('/url\((.*?)\)/', $style, $matches);
-            $imageUrl = $updatedImageUrl = $matches[1];
-			
-			if(self::$isAvifSupported != false){
-				$updatedImageUrl = self::replaceImgSrc($imageUrl);
-			}
-
-			if(self::$isAvifSupported == false && $fallbackType == 'webp'){
-				$updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
-			}
-			
-			$newStyle = str_replace($imageUrl, $updatedImageUrl, $style);
-			$element->setAttribute('style',$newStyle);
-		}
+		foreach ($dom->find('[style*=background-image]') as &$element) {
+            $style = $element->getAttribute('style');
+            preg_match('/url\((\'|")?(.*?)\\1\)/', $style, $matches);
+            if (isset($matches[2])) {
+                $imageUrl = $matches[2];
+                $updatedImageUrl = self::$isAvifSupported ? self::replaceImgSrc($imageUrl) : ($fallbackType == 'webp' ? self::webpReplaceImgSrc($imageUrl) : $imageUrl);
+                $newStyle = str_replace($imageUrl, $updatedImageUrl, $style);
+                $element->setAttribute('style', $newStyle);
+            }
+        }
 		
 		
 		return $dom;
