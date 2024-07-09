@@ -6,6 +6,8 @@ if (!defined('ABSPATH')) exit;
 
 use Avife\common\Options;
 use Avife\common\Image;
+use Avife\common\Cookie;
+
 use voku\helper\HtmlDomParser;
 
 
@@ -30,7 +32,7 @@ class Html {
 		 * for: nginx, apache2, liteSpeed and etc
 		 * based on this cookie value server can decide to cache or not to cache
 		 */
-		self::avifCookie();
+		Cookie::setAvifCookie(self::$isAvifSupported);
 
 		/**
 		 * starting content replacement work
@@ -38,25 +40,6 @@ class Html {
 		ob_start('Avife\frontend\Html::getContent');
 	}
 
-	public static function avifCookie(){
-		
-			
-			if (self::$isAvifSupported !== false) {
-
-				unset($_COOKIE['browser_avif_support_false']);
-				setcookie('browser_avif_support_false', '', time() - (15 * 60) ); 
-				setcookie('browser_avif_support_true', 'true', time() + 86400 ); //24 hours
-		
-				return true;
-			}
-		
-			unset($_COOKIE['browser_avif_support_true']);
-			setcookie('browser_avif_support_true', '', time() - (15 * 60));
-			setcookie('browser_avif_support_false', 'true', time() + 86400 ); //24 hours
-
-			return false;
-		
-	}
 
 	public static function getContent($content) {
 		
