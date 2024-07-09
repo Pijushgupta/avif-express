@@ -1,10 +1,12 @@
-<?php 
+<?php
 
 namespace Avife\common;
 
-class Cookie{
+class Cookie
+{
 
-    public static function setAvifCookie($isAvifSupported) {
+    public static function setAvifCookie($isAvifSupported)
+    {
         if ($isAvifSupported) {
             self::setCookie('browser_avif_support_false', '', time() - (15 * 60));
             self::setCookie('browser_avif_support_true', 'true', time() + 86400); // 24 hours
@@ -14,7 +16,8 @@ class Cookie{
         }
     }
 
-    private static function setCookie($name, $value, $expire) {
+    private static function setCookie($name, $value, $expire)
+    {
         unset($_COOKIE[$name]);
         setcookie($name, $value, $expire, '/', COOKIE_DOMAIN);
     }

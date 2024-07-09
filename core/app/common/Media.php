@@ -9,212 +9,218 @@ use Avife\common\Image;
 use Avife\common\Theme;
 use Avife\common\Options;
 
-class Media {
+class Media
+{
 
 
+    /**
+     * ajaxCountMedia
+     * @return void ajax handle for countMedia
+     */
+    public static function ajaxCountMedia()
+    {
+        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        echo json_encode(self::countMedia());
+        wp_die();
+    }
 
-	/**
-	 * ajaxCountMedia
-	 * @return void ajax handle for countMedia
-	 */
-	public static function ajaxCountMedia() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
-		echo json_encode(self::countMedia());
-		wp_die();
-	}
+    /**
+     * countMedia
+     *
+     * @return array in array(number of converted images, number of total images, number of various image sizes)
+     */
+    public static function countMedia()
+    {
+        $uploadDirPath = wp_upload_dir()['basedir'];
 
-	/**
-	 * countMedia
-	 *
-	 * @return array in array(number of converted images, number of total images, number of various image sizes)
-	 */
-	public static function countMedia() {
-		$uploadDirPath = wp_upload_dir()['basedir'];
-
-		$allMedia = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), 0);
-		if (gettype($allMedia) == 'array') {
-			$allMedia = count($allMedia);
-		}
-
-
-		$convertedMedia = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
-
-		if (gettype($convertedMedia) == 'array') {
-			$convertedMedia = count($convertedMedia);
-		}
-
-		return array($convertedMedia, $allMedia, count(get_intermediate_image_sizes()));
-	}
-
-	/**
-	 * ajaxConvertRemaining
-	 *
-	 * @return void ajax handle for convertRemaining 
-	 */
-	public static function ajaxConvertRemaining() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
-
-		$avifsupport = '0';
-		if(function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
-		
-		$hasImagick = '0';
-		if(extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0){
-			$imagick = new \Imagick();
-			$formats = $imagick->queryFormats();
-			if (in_array('AVIF', $formats)) {
-				$hasImagick = '1';
-			}
-		}
-
-		$isCloudEngine = '0';
-		if(Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
-
-		if($avifsupport == '0' && $hasImagick == '0' && $isCloudEngine == '0') wp_die();
-
-		echo json_encode(self::convertRemaining());
-		wp_die();
-	}
-
-	/**
-	 * convertRemaining
-	 *
-	 * @return boolean|null|string true on success. false on error, null on empty source and string 'keep-alive' to let client know to request again. 
-	 */
-	public static function convertRemaining() {
+        $allMedia = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), 0);
+        if (gettype($allMedia) == 'array') {
+            $allMedia = count($allMedia);
+        }
 
 
-		$uploadDirPath = wp_upload_dir()['basedir'];
+        $convertedMedia = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
 
-		$unConvertedAttachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "jpeg"), 1);
+        if (gettype($convertedMedia) == 'array') {
+            $convertedMedia = count($convertedMedia);
+        }
 
-		if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) return null;
+        return array($convertedMedia, $allMedia, count(get_intermediate_image_sizes()));
+    }
 
-		/**
-		 * Checking if 'set_time_limit' can be set or not 
-		 * if not don't do anything
-		 */
-		if (Setting::avif_set_time_limit() == false) return false;
+    /**
+     * ajaxConvertRemaining
+     *
+     * @return void ajax handle for convertRemaining
+     */
+    public static function ajaxConvertRemaining()
+    {
+        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
 
-		
-		$keepAlive = 0; 
-		$counter = 1;
-		$quality = Options::getImageQuality();
-		$speed = Options::getComSpeed();
+        $avifsupport = '0';
+        if (function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
 
-		
+        $hasImagick = '0';
+        if (extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0) {
+            $imagick = new \Imagick();
+            $formats = $imagick->queryFormats();
+            if (in_array('AVIF', $formats)) {
+                $hasImagick = '1';
+            }
+        }
 
-		if(Options::getConversionEngine() == 'local'){
-			
-			
-			foreach ($unConvertedAttachments as $unConvertedAttachment) {
+        $isCloudEngine = '0';
+        if (Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
 
-				/**
-				 * creating path for file to delete. Just by removing original extension with .avif 
-				 */
-				$dest = (string)rtrim($unConvertedAttachment, '.' . pathinfo($unConvertedAttachment, PATHINFO_EXTENSION)) . '.avif';
+        if ($avifsupport == '0' && $hasImagick == '0' && $isCloudEngine == '0') wp_die();
 
-				Image::convert($unConvertedAttachment, $dest, $quality, $speed);
+        echo json_encode(self::convertRemaining());
+        wp_die();
+    }
 
-				if ($counter == 2) {
-					return 'keep-alive';
-				}
-				$counter++;
-			}
-		}
+    /**
+     * convertRemaining
+     *
+     * @return boolean|null|string true on success. false on error, null on empty source and string 'keep-alive' to let client know to request again.
+     */
+    public static function convertRemaining()
+    {
 
-		if(Options::getConversionEngine() == 'cloud'){
-			//only allow 20 images per batch
-			if(count($unConvertedAttachments) > 20){
-				$unConvertedAttachments = array_slice($unConvertedAttachments,0,20);
-				$keepAlive = 1;
-			}
-			$unConvertedAttachmentUrls = Image::pathToAttachmentUrl($unConvertedAttachments);
-			
-			if(Image::cloudConvert($unConvertedAttachmentUrls) === false) return 'ccfail';
-			if($keepAlive == 1) return 'keep-alive';
-			
-		}
-		return true;
-	}
 
-	/**
-	 * ajaxDeleteAll
-	 *
-	 * @return void ajax handle for deleteAll
-	 */
-	public static function ajaxDeleteAll() {
-		if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();;
-		echo json_encode(self::deleteAll());
-		wp_die();
-	}
+        $uploadDirPath = wp_upload_dir()['basedir'];
 
-	/**
-	 * deleteAll
-	 * delete All converted Images
-	 * @return true as signal
-	 */
-	public static function deleteAll() {
+        $unConvertedAttachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "jpeg"), 1);
 
-		$uploadDirPath = wp_upload_dir()['basedir'];
-		$attachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
+        if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) return null;
 
-		foreach ($attachments as $attachment) {
-			/**
-			 * creating path for file to delete. Just by removing original extension with .avif 
-			 */
-			$dest = (string)rtrim($attachment, '.' . pathinfo($attachment, PATHINFO_EXTENSION)) . '.avif';
+        /**
+         * Checking if 'set_time_limit' can be set or not
+         * if not don't do anything
+         */
+        if (Setting::avif_set_time_limit() == false) return false;
 
-			/**
-			 * Finally deleting the file
-			 */
-			if (file_exists($dest)) wp_delete_file($dest);
 
-			/**
-			 * delete fallback webp
-			 */
-			$dest = (string)rtrim($attachment, '.' . pathinfo($attachment, PATHINFO_EXTENSION)) . '.webp';
+        $keepAlive = 0;
+        $counter = 1;
+        $quality = Options::getImageQuality();
+        $speed = Options::getComSpeed();
 
-			/**
-			 * deleting the file
-			 */
-			if (file_exists($dest)) wp_delete_file($dest);
-		}
-		return true;
-	}
 
-	/**
-	 * getAttachments
-	 *
-	 * @param  mixed $all : -1 for all, 0 for un converted, 1 for converted
-	 * @return Array
-	 */
-	public static function getAttachments($all = -1) {
-		$attachments = get_posts(array(
-			'post_type' => 'attachment',
-			'posts_per_page' => -1,
+        if (Options::getConversionEngine() == 'local') {
 
-		));
-		if ($all === -1) {
-			if (empty($attachments) || $attachments == null) return 0;
-			return $attachments;
-		}
-		if ($all === 0) {
-			$newAttachment = array();
-			foreach ($attachments as $attachment) {
-				if (get_post_meta($attachment->ID, 'avifexpressconverted', null) != true)
-					$newAttachment[] = $attachment;
-			}
-			if (empty($newAttachment)) return 0;
-			return $newAttachment;
-		}
-		if ($all === 1) {
-			$newAttachment = array();
-			foreach ($attachments as $attachment) {
-				if (get_post_meta($attachment->ID, 'avifexpressconverted', null) == true)
-					$newAttachment[] = $attachment;
-			}
-			if (empty($newAttachment)) return 0;
-			return $newAttachment;
-		}
-	}
+
+            foreach ($unConvertedAttachments as $unConvertedAttachment) {
+
+                /**
+                 * creating path for file to delete. Just by removing original extension with .avif
+                 */
+                $dest = (string)rtrim($unConvertedAttachment, '.' . pathinfo($unConvertedAttachment, PATHINFO_EXTENSION)) . '.avif';
+
+                Image::convert($unConvertedAttachment, $dest, $quality, $speed);
+
+                if ($counter == 2) {
+                    return 'keep-alive';
+                }
+                $counter++;
+            }
+        }
+
+        if (Options::getConversionEngine() == 'cloud') {
+            //only allow 20 images per batch
+            if (count($unConvertedAttachments) > 20) {
+                $unConvertedAttachments = array_slice($unConvertedAttachments, 0, 20);
+                $keepAlive = 1;
+            }
+            $unConvertedAttachmentUrls = Image::pathToAttachmentUrl($unConvertedAttachments);
+
+            if (Image::cloudConvert($unConvertedAttachmentUrls) === false) return 'ccfail';
+            if ($keepAlive == 1) return 'keep-alive';
+
+        }
+        return true;
+    }
+
+    /**
+     * ajaxDeleteAll
+     *
+     * @return void ajax handle for deleteAll
+     */
+    public static function ajaxDeleteAll()
+    {
+        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();;
+        echo json_encode(self::deleteAll());
+        wp_die();
+    }
+
+    /**
+     * deleteAll
+     * delete All converted Images
+     * @return true as signal
+     */
+    public static function deleteAll()
+    {
+
+        $uploadDirPath = wp_upload_dir()['basedir'];
+        $attachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
+
+        foreach ($attachments as $attachment) {
+            /**
+             * creating path for file to delete. Just by removing original extension with .avif
+             */
+            $dest = (string)rtrim($attachment, '.' . pathinfo($attachment, PATHINFO_EXTENSION)) . '.avif';
+
+            /**
+             * Finally deleting the file
+             */
+            if (file_exists($dest)) wp_delete_file($dest);
+
+            /**
+             * delete fallback webp
+             */
+            $dest = (string)rtrim($attachment, '.' . pathinfo($attachment, PATHINFO_EXTENSION)) . '.webp';
+
+            /**
+             * deleting the file
+             */
+            if (file_exists($dest)) wp_delete_file($dest);
+        }
+        return true;
+    }
+
+    /**
+     * getAttachments
+     *
+     * @param mixed $all : -1 for all, 0 for un converted, 1 for converted
+     * @return Array
+     */
+    public static function getAttachments($all = -1)
+    {
+        $attachments = get_posts(array(
+            'post_type' => 'attachment',
+            'posts_per_page' => -1,
+
+        ));
+        if ($all === -1) {
+            if (empty($attachments) || $attachments == null) return 0;
+            return $attachments;
+        }
+        if ($all === 0) {
+            $newAttachment = array();
+            foreach ($attachments as $attachment) {
+                if (get_post_meta($attachment->ID, 'avifexpressconverted', null) != true)
+                    $newAttachment[] = $attachment;
+            }
+            if (empty($newAttachment)) return 0;
+            return $newAttachment;
+        }
+        if ($all === 1) {
+            $newAttachment = array();
+            foreach ($attachments as $attachment) {
+                if (get_post_meta($attachment->ID, 'avifexpressconverted', null) == true)
+                    $newAttachment[] = $attachment;
+            }
+            if (empty($newAttachment)) return 0;
+            return $newAttachment;
+        }
+    }
 }
