@@ -85,7 +85,7 @@ class Media {
 
 		$uploadDirPath = wp_upload_dir()['basedir'];
 
-		$unConvertedAttachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), 1);
+		$unConvertedAttachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "jpeg"), 1);
 
 		if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) return null;
 

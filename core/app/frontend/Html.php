@@ -7,7 +7,6 @@ if (!defined('ABSPATH')) exit;
 use Avife\common\Options;
 use Avife\common\Image;
 use Avife\common\Cookie;
-
 use voku\helper\HtmlDomParser;
 
 
@@ -131,9 +130,10 @@ class Html {
 		
 		/**
 		 * Checking if the images are already optimized images 
+		 * ignore if image belongs to following formats, svg, webp or avif.
 		 */
-		$flieExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
-		if(strtolower($flieExtension) == 'svg' || strtolower($flieExtension) == 'webp' || strtolower($flieExtension) == 'avif'){
+		$fileExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
+		if(strtolower($fileExtension) == 'svg' || strtolower($fileExtension) == 'webp' || strtolower($fileExtension) == 'avif'){
 			return $imageUrl;
 		}  
 
@@ -142,7 +142,7 @@ class Html {
 		 * checking if the source file existing on the server or not
 		 * if domain is different or file not existing return the original image url
 		 */
-		if(strpos($imageUrl, get_bloginfo('url')) === false || self::isFileExists($imageUrl) == false) return  $imageUrl;
+		if(strpos($imageUrl, get_bloginfo('url')) === false || !self::isFileExists($imageUrl)) return  $imageUrl;
 
 		/**
 		 * creating the avif image url
@@ -153,27 +153,27 @@ class Html {
 		 * checking if its already existing or not
 		 * if yes then return it.
 		 */
-		if(self::isFileExists($avifImageUrl) == true) return $avifImageUrl;
+		if(self::isFileExists($avifImageUrl)) return $avifImageUrl;
 		
 		
 		/**
 		 * creating on the fly if server support that 
 		 * else try webp conversion
 		 */
-		if(Options::getOnTheFlyAvif() != true){
+		if(!Options::getOnTheFlyAvif()){
 			if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 				
 				$imagePathSrc = Image::attachmentUrlToPath($imageUrl);
-				$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
+				$imagePathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
 
-				Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
+				Image::convert($imagePathSrc,$imagePathDest,Options::getImageQuality(),Options::getComSpeed());
 
 				/**
 				 * checking if the created file is valid or not
 				 * due to GD bug sometimes it creates a file with 0 byte
 				 */
 
-				if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
+				if(file_exists($imagePathDest) && filesize($imagePathDest) > 0){
 					return $avifImageUrl;
 				}
 				
@@ -183,7 +183,7 @@ class Html {
 			 */
 		
 			
-			if(WP_DEBUG == true){
+			if(WP_DEBUG){
 				error_log('Avif on the fly conversion failed');
 			}
 		}
@@ -213,7 +213,7 @@ class Html {
 				$ext = pathinfo($v, PATHINFO_EXTENSION);
 				/**
 				 * checking the extension against allowed ones
-				 * also this will eleminate non file strings
+				 * also this will eliminate non file strings
 				 */
 				if ($ext && in_array($ext, array('jpg', 'jpeg', 'png'))) {
 
@@ -233,20 +233,20 @@ class Html {
 						 * creating on the fly if server support that 
 						 * else try webp conversion
 						 */
-						if(Options::getOnTheFlyAvif() != true){
+						if(!Options::getOnTheFlyAvif()){
 							if(AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')){
 								$imagePathSrc = Image::attachmentUrlToPath($v);
-								$imagepathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
-								Image::convert($imagePathSrc,$imagepathDest,Options::getImageQuality(),Options::getComSpeed());
+								$imagePathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
+								Image::convert($imagePathSrc,$imagePathDest,Options::getImageQuality(),Options::getComSpeed());
 								/**
 								 * checking if the created file is valid or not
 								 * due GD bug sometimes it creates a file with 0 byte
 								 */
-								if(file_exists($imagepathDest) && filesize($imagepathDest) > 0){
+								if(file_exists($imagePathDest) && filesize($imagePathDest) > 0){
 									$v = $avifImageUrl;
 								}else{
 									
-									if(WP_DEBUG == true){
+									if(WP_DEBUG){
 										trigger_error('Avif express:Avif on the fly conversion failed');
 									}
 									$v = self::webpReplaceImgSrc($v);
@@ -275,17 +275,17 @@ class Html {
 		/**
 		 * Checking if the images are already optimized images 
 		 */
-		$flieExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
-		if(strtolower($flieExtension) == 'svg' || strtolower($flieExtension) == 'webp'|| strtolower($flieExtension) == 'avif'){
-			return $imageUrl;
-		} 
+		$fileExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
+        if(in_array(strtolower($fileExtension), array('svg', 'webp', 'avif'))){
+            return $imageUrl;
+        }
 
 		/**
 		 * checking if the url belongs to this site or not
 		 * checking if source file exists in server
 		 * if not return the original image url
 		 */
-		if(strpos($imageUrl, get_bloginfo('url')) === false || self::isFileExists($imageUrl) == false) return $imageUrl;
+		if(strpos($imageUrl, get_bloginfo('url')) === false || !self::isFileExists($imageUrl)) return $imageUrl;
 
 		
 		/**
@@ -298,7 +298,7 @@ class Html {
 		 * checking if the file already existing or not
 		 * if yes then return it.
 		 */
-		if(self::isFileExists($newImageUrl) == true) return $newImageUrl;
+		if(self::isFileExists($newImageUrl)) return $newImageUrl;
 
 		/**
 		 * starting conversion(on the fly)
@@ -310,7 +310,7 @@ class Html {
 		/**
 		 * if conversion failed return the original
 		 */
-		if($conversionStatus == false) return $imageUrl;
+		if(!$conversionStatus) return $imageUrl;
 		
 		/**
 		 * finally retuning the converted image url
@@ -333,7 +333,7 @@ class Html {
 			 * if file do not exists or the url does not belong to our domain
 			 * in any of that situation skip it.
 			 */
-			if(strpos($v, get_bloginfo('url')) === false || self::isFileExists($v) != true) continue;
+			if(strpos($v, get_bloginfo('url')) === false || !self::isFileExists($v)) continue;
 
 			$ext = pathinfo($v, PATHINFO_EXTENSION);
 			if (!in_array($ext, array('jpg', 'jpeg', 'png'))) {
@@ -361,7 +361,7 @@ class Html {
 				 * checking if webp conversion failed or not OR after conversion file not existing
 				 * in above case skip the url replacement and continue with next one
 				 */
-				if($conversionStatus == false || self::isFileExists($v) == false) continue;
+				if(!$conversionStatus || !self::isFileExists($v)) continue;
 				
 				/**
 				 * finally replacing the url with webp url
@@ -380,13 +380,14 @@ class Html {
 	/**
 	 * isFileExists
 	 * checks if provided url having real file 
-	 * @param  string $url
+	 * @param string $url
 	 * @return boolean true on success and false on fail
 	 */
-	public static function isFileExists($url) {
+	public static function isFileExists(string $url): bool
+    {
 		$path = Image::attachmentUrlToPath($url);
-		if ($path == false) return false;
-		if (file_exists($path) == false) return false;
+		if (!$path) return false;
+		if (!file_exists($path)) return false;
 		return true;
 	}
 }
