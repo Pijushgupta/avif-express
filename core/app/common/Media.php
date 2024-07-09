@@ -26,7 +26,7 @@ class Media {
 	/**
 	 * countMedia
 	 *
-	 * @return array in array(number of converted iamges, number of total images, number of various image sizes)
+	 * @return array in array(number of converted images, number of total images, number of various image sizes)
 	 */
 	public static function countMedia() {
 		$uploadDirPath = wp_upload_dir()['basedir'];
