@@ -55,8 +55,7 @@ class Html
         /**
          * checking, if the browser support avif format
          */
-        $httpAccept = $_SERVER['HTTP_ACCEPT'] ?? '';
-        self::$isAvifSupported = strpos($httpAccept, 'image/avif');
+        self::$isAvifSupported = strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'image/avif');
 
         /**
          * this to compliment for very old browser that don't support avif
@@ -81,7 +80,7 @@ class Html
          * storing option data if "Disable on the fly avif" conversion true or false
          */
         self::$enableOnTheFlyConversion = !Options::getOnTheFlyAvif();
-        var_dump(self::$enableOnTheFlyConversion);
+
         /**
          * starting content replacement work
          */
@@ -182,7 +181,7 @@ class Html
 
                 if (self::$isAvifSupported) {
                     $updatedImageUrl = self::replaceImgSrc($imageUrl);
-                } elseif (self::$isAvifSupported && self::$fallbackType == 'webp') {
+                } elseif (!self::$isAvifSupported && self::$fallbackType == 'webp') {
                     $updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
                 }
 
@@ -202,20 +201,16 @@ class Html
     {
 
         /**
-         * Checking if the images are already optimized images
-         * ignore if image belongs to following formats, svg, webp or avif.
+         * checking if an image having a supported extension or not
          */
-        $fileExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
-        if (strtolower($fileExtension) == 'svg' || strtolower($fileExtension) == 'webp' || strtolower($fileExtension) == 'avif') {
-            return $imageUrl;
-        }
+        if (!self::isSupportedExtension($imageUrl)) return $imageUrl;
 
         /**
          * Checking if the image source form same domain or not
          * checking if the source file existing on the server or not
-         * if domain is different or file not existing return the original image url
+         * if domain is different or file not present return the original image url
          */
-        if (strpos($imageUrl, get_bloginfo('url')) === false || !self::isFileExists($imageUrl)) return $imageUrl;
+        if (!self::isValidImageUrl($imageUrl)) return $imageUrl;
 
         /**
          * creating the avif image url
@@ -243,7 +238,7 @@ class Html
 
             /**
              * checking if the created file is valid or not
-             * due to GD bug sometimes it creates a file with 0 byte
+             * due to GD bug(inherited from libavif) sometimes it creates a file with 0 byte
              */
             if (file_exists($imagePathDest) && filesize($imagePathDest) > 0) {
                 return $avifImageUrl;
@@ -333,17 +328,14 @@ class Html
         /**
          * Checking if the images are already optimized images
          */
-        $fileExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
-        if (in_array(strtolower($fileExtension), array('svg', 'webp', 'avif'))) {
-            return $imageUrl;
-        }
+        if(!self::isSupportedExtension($imageUrl)) return $imageUrl;
 
         /**
          * checking if the url belongs to this site or not
          * checking if source file exists in server
          * if not return the original image url
          */
-        if (strpos($imageUrl, get_bloginfo('url')) === false || !self::isFileExists($imageUrl)) return $imageUrl;
+        if (!self::isValidImageUrl($imageUrl)) return $imageUrl;
 
         /**
          * checking if the webp file already existing in server or not
@@ -388,15 +380,15 @@ class Html
         foreach ($srcset as $k => &$v) {
 
             /**
-             * if file do not exists or the url does not belong to our domain
+             * if present or the url does not belong to our domain
              * in any of that situation skip it.
              */
-            if (strpos($v, get_bloginfo('url')) === false || !self::isFileExists($v)) continue;
+            if (!self::isValidImageUrl($v)) continue;
 
-            $ext = pathinfo($v, PATHINFO_EXTENSION);
-            if (!in_array($ext, array('jpg', 'jpeg', 'png'))) {
-                continue;
-            }
+            /**
+             * checking if image is supported
+             */
+            if (!self::isSupportedExtension($v)) continue;
 
             /**
              * creating the webp file url
@@ -435,15 +427,6 @@ class Html
         return implode(' ', $srcset);
     }
 
-    /**
-     * @param string &$imageUrl
-     * @return void
-     */
-    public static function createFallBackWebP(&$imageUrl){
-            if(self::$fallbackType == 'webp'){
-                $imageUrl = self::webpReplaceImgSrc($imageUrl);
-            }
-    }
 
     /**
      * checks if an image having a supported extension or not
@@ -457,7 +440,7 @@ class Html
     }
 
     /**
-     * checks if it is  a valid image url and real file present in server
+     * checks if it is a valid image url and real file present in server
      * @param $url
      * @return bool
      */
