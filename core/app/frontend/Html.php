@@ -33,7 +33,7 @@ class Html
     /**
      * @return void
      */
-    private static $disableOnTheFlyConversion = true;
+    private static $enableOnTheFlyConversion = true;
 
 
     public static function init()
@@ -81,8 +81,8 @@ class Html
         /**
          * storing option data if "Disable on the fly avif" conversion true or false
          */
-        self::$disableOnTheFlyConversion = Options::getOnTheFlyAvif();
-
+        self::$enableOnTheFlyConversion = !Options::getOnTheFlyAvif();
+        var_dump(self::$enableOnTheFlyConversion);
         /**
          * starting content replacement work
          */
@@ -235,7 +235,7 @@ class Html
          * creating on the fly if server support that
          * else try webp conversion
          */
-        if (self::$disableOnTheFlyConversion) {
+        if (self::$enableOnTheFlyConversion) {
             if (AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')) {
 
                 $imagePathSrc = Image::attachmentUrlToPath($imageUrl);
@@ -312,7 +312,7 @@ class Html
                          * creating on the fly if server support that
                          * else try webp conversion
                          */
-                        if (self::$disableOnTheFlyConversion) {
+                        if (self::$enableOnTheFlyConversion) {
                             if (AVIFE_IMAGICK_VER != 0 || function_exists('imageavif')) {
                                 $imagePathSrc = Image::attachmentUrlToPath($v);
                                 $imagePathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
