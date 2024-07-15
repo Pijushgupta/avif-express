@@ -18,7 +18,6 @@ class Image
     public static function activate()
     {
 
-
         /**
          * Checking if auto conversion enabled
          */
@@ -40,7 +39,7 @@ class Image
     public static function beforeConvert($metadata, $attachment_id)
     {
         /**
-         * getting the attachment
+         * getting the attachment.
          * attachment is post type, so we can use get_post function
          * see: https://developer.wordpress.org/reference/functions/get_post/
          */
@@ -53,9 +52,9 @@ class Image
 
         /**
          * if mime type not supported, return the metadata.
-         * since we only supports jpeg,png,jpg and webp(yet to be supported on bulk conversion)
+         * since we only supports jpeg,png,jpg
          */
-        if (!in_array($mimeType, array('image/jpeg', 'image/png', 'image/jpg', 'image/webp',))) return $metadata;
+        if (!in_array($mimeType, array('image/jpeg', 'image/png', 'image/jpg'))) return $metadata;
 
         /**
          * getting the quality and compression speed for local conversion for GD only
@@ -119,7 +118,7 @@ class Image
                          * with return it will exit the flow
                          */
                         if ($avifsupport == '0' && $hasImagick == '0') {
-                            if (WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+                            if (WP_DEBUG) error_log('Convert on Upload: Local avif support not found');
                             return $metadata;
                         }
 
@@ -153,7 +152,7 @@ class Image
                 if (Options::getConversionEngine() == 'local') {
 
                     if ($avifsupport == '0' && $hasImagick == '0') {
-                        if (WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+                        if (WP_DEBUG) error_log('Convert on Upload: Local avif support not found');
 
                         return $metadata;
                     }
@@ -185,7 +184,7 @@ class Image
                 if (Options::getConversionEngine() == 'local') {
 
                     if ($avifsupport == '0' && $hasImagick == '0') {
-                        if (WP_DEBUG == true) error_log('Convert on Upload: Local avif support not found');
+                        if (WP_DEBUG) error_log('Convert on Upload: Local avif support not found');
 
                         return $metadata;
                     }
@@ -224,6 +223,10 @@ class Image
         $attachment_meta = wp_get_attachment_metadata($post_id);
         $orginalImageUrls[0] = $orginalImageUrl;
         $uploadDirInfo = wp_upload_dir();
+        if(is_bool($uploadDirInfo) && WP_DEBUG){
+            error_log('Insufficient File Permissions');
+            return;
+        }
         $orginalImageUrls[1] = $uploadDirInfo['baseurl'] . '/' . $attachment_meta['file'];
 
         if ($orginalImageUrls[0] != $orginalImageUrls[1]) {
@@ -345,12 +348,11 @@ class Image
     public static function cloudConvert(array $urls)
     {
 
-
         //get the api key from option table
         $apiKey = Options::getApiKey();
 
         //if api key is not set then return false
-        if ($apiKey == false) return false;
+        if (!$apiKey) return false;
 
         //add origin and api key to the request header
         $requestHeader = array(
@@ -380,8 +382,8 @@ class Image
 
             //checking for any error and then logging it, if WP_DEBUG is true and then exit
             if (is_wp_error($cloudResponse)) {
-                if (WP_DEBUG == true) error_log("Error:" . $cloudResponse->get_error_message());
 
+                if (WP_DEBUG) error_log("Error:" . $cloudResponse->get_error_message());
 
             }
 
@@ -389,13 +391,12 @@ class Image
 
             //check server status code for any issue
             if (isset($imageUrls['status']) && $imageUrls['status'] !== 'success') {
-                if (WP_DEBUG == true) error_log("Error:" . print_r($imageUrls));
 
+                if (WP_DEBUG) error_log("Error:" . print_r($imageUrls,true));
 
             }
 
             if (isset($imageUrls['status']) && $imageUrls['status'] == 'success') {
-
 
                 $avifServerImageData[] = $imageUrls['data'];
             }
@@ -403,7 +404,7 @@ class Image
         }
 
 
-        //using wordpress file system class instead of php native file_get_contents()
+        //using WordPress file system class instead of php native file_get_contents()
         include_once ABSPATH . 'wp-admin/includes/file.php';
         WP_Filesystem();
 
@@ -413,7 +414,7 @@ class Image
 
                 //creating destination file path form the source
                 $srcImagePath = self::attachmentUrlToPath($imageUrl[0]);
-                if ($srcImagePath == false) {
+                if (!$srcImagePath) {
                     if (WP_DEBUG) error_log('Unable to create absolute path from relative path of source image');
 
                     continue;
@@ -460,9 +461,10 @@ class Image
         if (!$src) return false;
 
         if (!extension_loaded('imagick')) {
-            if (WP_DEBUG) error_log('Imagick extension not loaded');
 
+            if (WP_DEBUG) error_log('Imagick extension not loaded');
             return $src;
+
         };
 
         $des = dirname($src) . DIRECTORY_SEPARATOR . pathinfo($src, PATHINFO_FILENAME) . '.webp';
@@ -473,12 +475,18 @@ class Image
         }
 
         if (class_exists('Imagick')) {
-            $imagick = new \Imagick();
-            $formats = $imagick->queryFormats();
-            if (in_array('WEBP', $formats)) {
-                $imagick->readImage($src);
-                $imagick->setImageFormat('webp');
-                return $imagick->writeImage($des);
+            try{
+                $imagick = new \Imagick();
+                $formats = $imagick->queryFormats();
+                if (in_array('webp', array_map('strtolower',$formats))) {
+                    $imagick->readImage($src);
+                    $imagick->setImageFormat('webp');
+                    return $imagick->writeImage($des);
+                }elseif(WP_DEBUG){
+                   error_log('Imagick Webp Conversion failed');
+                }
+            }catch (\ImagickException $e) {
+                if (WP_DEBUG) error_log('Imagick error: ' . $e->getMessage());
             }
         }
 
@@ -503,8 +511,8 @@ class Image
 
     /**
      * Convert Absolute Path to Relative Url
-     * @param String|Array $url
-     * @return String|Array
+     * @param String|array $url
+     * @return String|array
      */
     public static function pathToAttachmentUrl($url = '')
     {
