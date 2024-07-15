@@ -16,7 +16,6 @@ if (!file_exists(__DIR__ . '/core/app/app.php')) return;
 function initiate_plugin()
 {
 
-
     /**
      * text domain, can be used to translate string. But we are using vue js powered admin page.
      * So it little to no use. Keeping it for future.
@@ -53,6 +52,48 @@ function initiate_plugin()
      * if you want change this to something else, please also change the same thing in app.js in assets/src directory.
      */
     if (!defined('AVIFE_VUE_ROOT_ID')) define('AVIFE_VUE_ROOT_ID', 'avife-root');
+
+
+    if (!defined('IS_IMAGICK_AVIF') || !defined('IS_IMAGICK_WEBP')) {
+        $isImagickAvifSupported = false;
+        $isImagickWebpSupported = false;
+
+        if (class_exists('Imagick')) {
+            $imagick = new Imagick();
+            $formats = array_map('strtolower', $imagick->queryFormats());
+
+            $isImagickAvifSupported = in_array('avif', $formats);
+            $isImagickWebpSupported = in_array('webp', $formats);
+        }
+
+        if (!defined('IS_IMAGICK_AVIF')) {
+            define('IS_IMAGICK_AVIF', $isImagickAvifSupported);
+        }
+
+        if (!defined('IS_IMAGICK_WEBP')) {
+            define('IS_IMAGICK_WEBP', $isImagickWebpSupported);
+        }
+    }
+
+
+    if(!defined('IS_GD_AVIF') || !defined('IS_GD_WEBP')){
+
+        $isGdWebpSupported = false;
+        $isGdAvifSupported = false;
+        if(extension_loaded('gd') && function_exists('gd_info')){
+            $gdInfo = gd_info();
+            $isGdWebpSupported = !empty($gdInfo['WebP Support']);
+            $isGdAvifSupported = !empty($gdInfo['AVIF Support']);
+        }
+
+        if (!defined('IS_GD_WEBP')) {
+            define('IS_GD_WEBP', $isGdWebpSupported);
+        }
+
+        if (!defined('IS_GD_AVIF')) {
+            define('IS_GD_AVIF', $isGdAvifSupported);
+        }
+    }
 
     /**
      * storing imageMagick version
@@ -93,6 +134,7 @@ function initiate_plugin()
      * fallback browsers that don't support Webp
      */
     if (!defined('AVIF_WEBP_POSSIBLE')) {
+
         if (class_exists('Imagick')) {
             $imagick = new Imagick();
             $formats = $imagick->queryFormats();
