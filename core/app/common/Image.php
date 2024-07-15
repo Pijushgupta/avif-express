@@ -223,7 +223,7 @@ class Image
         $attachment_meta = wp_get_attachment_metadata($post_id);
         $orginalImageUrls[0] = $orginalImageUrl;
         $uploadDirInfo = wp_upload_dir();
-        if(is_bool($uploadDirInfo) && WP_DEBUG){
+        if (is_bool($uploadDirInfo) && WP_DEBUG) {
             error_log('Insufficient File Permissions');
             return;
         }
@@ -274,7 +274,8 @@ class Image
         }
 
         // Try Imagick First
-        if (extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0) {
+        if (IS_IMAGICK_AVIF) {
+
             $imagick = new \Imagick();
             $formats = $imagick->queryFormats();
             if (in_array('AVIF', $formats)) {
@@ -297,7 +298,7 @@ class Image
         }
 
         //Try GD -- going to be deprecated
-        if (function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') {
+        if (IS_GD_AVIF) {
 
             $fileType = getimagesize($src);
             if (!$fileType) {
@@ -326,7 +327,7 @@ class Image
                 if (WP_DEBUG) error_log('Failed to create GD image resource');
                 return;
             }
-
+            //php >= 8.1
             @imageavif($sourceGDImg, $des, $quality, $speed);
             if (filesize($des) % 2 == 1) {
                 file_put_contents($des, "\0", FILE_APPEND);
@@ -392,7 +393,7 @@ class Image
             //check server status code for any issue
             if (isset($imageUrls['status']) && $imageUrls['status'] !== 'success') {
 
-                if (WP_DEBUG) error_log("Error:" . print_r($imageUrls,true));
+                if (WP_DEBUG) error_log("Error:" . print_r($imageUrls, true));
 
             }
 
@@ -456,16 +457,9 @@ class Image
      * @param string $src source of the image
      * @return bool TRUE|FALSE true on success, false on fail
      */
-    public static function webpConvert($src)
+    public static function webpConvert($src): bool
     {
         if (!$src) return false;
-
-        if (!extension_loaded('imagick')) {
-
-            if (WP_DEBUG) error_log('Imagick extension not loaded');
-            return $src;
-
-        };
 
         $des = dirname($src) . DIRECTORY_SEPARATOR . pathinfo($src, PATHINFO_FILENAME) . '.webp';
 
@@ -474,20 +468,53 @@ class Image
             return true;
         }
 
-        if (class_exists('Imagick')) {
-            try{
+        if (IS_IMAGICK_WEBP) {
+            try {
                 $imagick = new \Imagick();
-                $formats = $imagick->queryFormats();
-                if (in_array('webp', array_map('strtolower',$formats))) {
-                    $imagick->readImage($src);
-                    $imagick->setImageFormat('webp');
-                    return $imagick->writeImage($des);
-                }elseif(WP_DEBUG){
-                   error_log('Imagick Webp Conversion failed');
-                }
-            }catch (\ImagickException $e) {
+                $imagick->readImage($src);
+                $imagick->setImageFormat('webp');
+                return $imagick->writeImage($des);
+
+            } catch (\ImagickException $e) {
                 if (WP_DEBUG) error_log('Imagick error: ' . $e->getMessage());
+                return false;
             }
+        }
+
+        if (IS_GD_WEBP) {
+            $fileType = getimagesize($src);
+            if (!$fileType) {
+                if (WP_DEBUG) error_log('Failed to get image size');
+                return false;
+            }
+            $fileType = $fileType['mime'];
+
+            switch ($fileType) {
+                case 'image/jpeg':
+                case 'image/jpg':
+                    $sourceGDImg = @imagecreatefromjpeg($src);
+                    break;
+                case 'image/png':
+                    $sourceGDImg = @imagecreatefrompng($src);
+                    break;
+                default:
+                    if (WP_DEBUG) error_log('Unsupported image type for GD conversion: ' . $fileType);
+                    return false;
+            }
+
+            if (is_bool($sourceGDImg) && $sourceGDImg === false) {
+                if (WP_DEBUG) error_log('Failed to create GD image resource');
+                return false;
+            }
+
+            $result = @imagewebp($sourceGDImg, $des);
+            if ($result === false) {
+                if (WP_DEBUG) error_log('Failed to convert image to WebP using GD');
+                return false;
+            }
+
+            @imagedestroy($sourceGDImg);
+            return true;
         }
 
         return false;
@@ -500,7 +527,7 @@ class Image
      * @param string $url url of an Image
      * @return string|boolean  path of an Image, false on fail
      */
-    public static function attachmentUrlToPath($url)
+    public static function attachmentUrlToPath(string $url)
     {
         $parsed_url = parse_url($url);
         if (empty($parsed_url['path'])) return false;

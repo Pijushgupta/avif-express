@@ -39,20 +39,13 @@ final class Ui
         $gd = extension_loaded('gd');
 
         $avifsupport = '0';
-        if (function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
+        if(IS_GD_AVIF) $avifsupport = '1';
 
         $hasImagick = '0';
-        if (extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0) {
-            $imagick = new \Imagick();
-            $formats = $imagick->queryFormats();
-            if (in_array('AVIF', $formats)) {
-                $hasImagick = '1';
-            }
-        }
+        if(IS_IMAGICK_AVIF)  $hasImagick = '1';
 
         $isCloudEngine = '0';
         if (Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
-
 
         $dashboardLang = explode('_', get_locale())[0];
 

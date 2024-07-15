@@ -53,7 +53,9 @@ function initiate_plugin()
      */
     if (!defined('AVIFE_VUE_ROOT_ID')) define('AVIFE_VUE_ROOT_ID', 'avife-root');
 
-
+    /**
+     * setting imagick constant
+     */
     if (!defined('IS_IMAGICK_AVIF') || !defined('IS_IMAGICK_WEBP')) {
         $isImagickAvifSupported = false;
         $isImagickWebpSupported = false;
@@ -62,7 +64,7 @@ function initiate_plugin()
             $imagick = new Imagick();
             $formats = array_map('strtolower', $imagick->queryFormats());
 
-            $isImagickAvifSupported = in_array('avif', $formats);
+            $isImagickAvifSupported = in_array('avif', $formats) && function_exists('imageavif');
             $isImagickWebpSupported = in_array('webp', $formats);
         }
 
@@ -75,7 +77,9 @@ function initiate_plugin()
         }
     }
 
-
+    /**
+     * setting GD constants
+     */
     if(!defined('IS_GD_AVIF') || !defined('IS_GD_WEBP')){
 
         $isGdWebpSupported = false;
@@ -130,7 +134,7 @@ function initiate_plugin()
 
     /**
      * setting constant to determine if backup WEBP
-     * conversion possible or not. Its going to be used as
+     * conversion possible or not. It's going to be used as
      * fallback browsers that don't support Webp
      */
     if (!defined('AVIF_WEBP_POSSIBLE')) {
