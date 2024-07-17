@@ -7,21 +7,7 @@ if (!defined('ABSPATH')) exit();
 
 use Avife\common\Options;
 use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
+
 
 class Image
 {
