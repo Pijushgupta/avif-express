@@ -6,13 +6,29 @@ if (!defined('ABSPATH')) exit();
 
 
 use Avife\common\Options;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
+use Avife\common\Utility;
 
 class Image
 {
 
     /**
      * activate
-     * Adding our methods to wordpress hooks
+     * Adding our methods to WordPress hooks
      * @return void
      */
     public static function activate()
@@ -68,32 +84,10 @@ class Image
         $originalImages[0] = $attachment->guid;
 
         $uploadDirInfo = wp_upload_dir();
+        if (!is_array($uploadDirInfo)) {
+            Utility::logError('File System Permission issue.');
+        }
         $originalImages[1] = $uploadDirInfo['baseurl'] . DIRECTORY_SEPARATOR . $metadata['file'];
-
-        /**
-         * checking if GD can create avif image or not,
-         * based on that setting flag avifsupport,
-         * 0 = not capable , 1 = capable
-         */
-        $avifsupport = '0';
-        if (function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') {
-            $avifsupport = '1';
-        }
-
-        /**
-         * checking if Imagick can create avif image or not,
-         * based on that setting flag hasImagick,
-         * 0 = not capable, 1 = capable
-         */
-        $hasImagick = '0';
-        if (extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0) {
-            $imagick = new \Imagick();
-            $formats = $imagick->queryFormats();
-            if (in_array('AVIF', $formats)) {
-                $hasImagick = '1';
-            }
-        }
-
 
         if ($originalImages[0] != $originalImages[1]) {
 
@@ -104,28 +98,21 @@ class Image
                  */
                 $srcPath = self::attachmentUrlToPath($originalImage);
 
-                if ($srcPath != false && $srcPath != '') {
+                if ($srcPath && $srcPath != '') {
                     /**
                      * creating destination file path
                      */
                     $desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
 
                     if (Options::getConversionEngine() == 'local') {
-
                         /**
-                         * in case of both local conversion failed,
-                         * logging it and returning original meta,
-                         * with return it will exit the flow
+                         * checking if local conversion possible or not
                          */
-                        if ($avifsupport == '0' && $hasImagick == '0') {
-                            if (WP_DEBUG) error_log('Convert on Upload: Local avif support not found');
+                        if (!Utility::isLocalAvifConversionSupported()) {
+                            Utility::logError('Convert on Upload: Local avif support not found');
                             return $metadata;
                         }
 
-                        /**
-                         * if not existed from the flow from the previous if
-                         * condition, continue with local conversion.
-                         */
                         self::convert($srcPath, $desPath, $quality, $speed);
 
                     }
@@ -145,14 +132,14 @@ class Image
 
             $srcPath = self::attachmentUrlToPath($originalImages[0]);
 
-            if ($srcPath != false && $srcPath != '') {
+            if ($srcPath && $srcPath != '') {
 
                 $desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
 
                 if (Options::getConversionEngine() == 'local') {
 
-                    if ($avifsupport == '0' && $hasImagick == '0') {
-                        if (WP_DEBUG) error_log('Convert on Upload: Local avif support not found');
+                    if (!Utility::isLocalAvifConversionSupported()) {
+                        Utility::logError('Convert on Upload: Local avif support not found');
 
                         return $metadata;
                     }
@@ -183,8 +170,8 @@ class Image
 
                 if (Options::getConversionEngine() == 'local') {
 
-                    if ($avifsupport == '0' && $hasImagick == '0') {
-                        if (WP_DEBUG) error_log('Convert on Upload: Local avif support not found');
+                    if (!Utility::isLocalAvifConversionSupported()) {
+                        Utility::logError('Convert on Upload: Local avif support not found');
 
                         return $metadata;
                     }
@@ -223,8 +210,9 @@ class Image
         $attachment_meta = wp_get_attachment_metadata($post_id);
         $orginalImageUrls[0] = $orginalImageUrl;
         $uploadDirInfo = wp_upload_dir();
-        if (is_bool($uploadDirInfo) && WP_DEBUG) {
-            error_log('Insufficient File Permissions');
+        if (is_bool($uploadDirInfo)) {
+            Utility::logError('Insufficient File Permissions');
+
             return;
         }
         $orginalImageUrls[1] = $uploadDirInfo['baseurl'] . '/' . $attachment_meta['file'];
@@ -262,15 +250,15 @@ class Image
      * @param mixed $des Path to save converted file
      * @param mixed $quality Image Quality(0 - 100)
      * @param mixed $speed Conversion speed (0 - 10)
-     * @return void
+     * @return boolean
      */
-    public static function convert($src, $des, $quality, $speed)
+    public static function convert($src, $des, $quality, $speed): bool
     {
         if (!$src && !$des && !$quality && !$speed) return false;
 
         if (!file_exists($src)) {
-            if (WP_DEBUG) error_log('Source image file does not exist:' . $src);
-            return;
+            Utility::logError('Source image file does not exist:' . $src);
+            return false;
         }
 
         // Try Imagick First
@@ -291,19 +279,19 @@ class Image
                     }
                     $imagick->writeImage($des);
                 } catch (\ImagickException $e) {
-                    if (WP_DEBUG) error_log('Imagick error: ' . $e->getMessage());
+                    Utility::logError('Imagick error: ' . $e->getMessage());
                 }
-                return;
+                return true;
             }
         }
 
-        //Try GD -- going to be deprecated
+        // Try GD
         if (IS_GD_AVIF) {
 
             $fileType = getimagesize($src);
             if (!$fileType) {
-                if (WP_DEBUG) error_log('Failed to get image size');
-                return;
+                Utility::logError('Failed to get image size');
+                return false;
             }
             $fileType = $fileType['mime'];
 
@@ -315,31 +303,29 @@ class Image
                 case 'image/png':
                     $sourceGDImg = @imagecreatefrompng($src);
                     break;
-                case 'image/webp':
-                    $sourceGDImg = @imagecreatefromwebp($src);
-                    break;
                 default:
-                    if (WP_DEBUG) error_log('Unsupported image type for GD conversion: ' . $fileType);
-                    return;
+                    Utility::logError('Unsupported image type for GD conversion: ' . $fileType);
+                    return false;
             }
 
             if (is_bool($sourceGDImg)) {
-                if (WP_DEBUG) error_log('Failed to create GD image resource');
-                return;
+                Utility::logError('Failed to create GD image resource');
+                return false;
             }
-            //php >= 8.1
+
+            //noinspection PhpUndefinedFunctionInspection
             @imageavif($sourceGDImg, $des, $quality, $speed);
             if (filesize($des) % 2 == 1) {
                 file_put_contents($des, "\0", FILE_APPEND);
             }
             @imagedestroy($sourceGDImg);
-            return;
+            return true;
         }
 
 
-        if (WP_DEBUG) error_log('Avif Express: Local avif support not found');
+        Utility::logError('Avif Express: Local avif support not found');
 
-        return;
+        return false;
     }
 
     /**
@@ -381,10 +367,10 @@ class Image
             //2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url)
             $body = wp_remote_retrieve_body($cloudResponse);
 
-            //checking for any error and then logging it, if WP_DEBUG is true and then exit
+            //checking for any error and then logging it
             if (is_wp_error($cloudResponse)) {
 
-                if (WP_DEBUG) error_log("Error:" . $cloudResponse->get_error_message());
+                Utility::logError("Error:" . $cloudResponse->get_error_message());
 
             }
 
@@ -393,7 +379,7 @@ class Image
             //check server status code for any issue
             if (isset($imageUrls['status']) && $imageUrls['status'] !== 'success') {
 
-                if (WP_DEBUG) error_log("Error:" . print_r($imageUrls, true));
+                Utility::logError("Error:" . print_r($imageUrls, true));
 
             }
 
@@ -416,7 +402,7 @@ class Image
                 //creating destination file path form the source
                 $srcImagePath = self::attachmentUrlToPath($imageUrl[0]);
                 if (!$srcImagePath) {
-                    if (WP_DEBUG) error_log('Unable to create absolute path from relative path of source image');
+                    Utility::logError('Unable to create absolute path from relative path of source image');
 
                     continue;
                 }
@@ -429,7 +415,7 @@ class Image
                 //getting remote avif file
                 $response = wp_remote_get($imageUrl[1]);
                 if (is_wp_error($response)) {
-                    if (WP_DEBUG) error_log("Avif Download Error:" . $response->get_error_message());
+                    Utility::logError("Avif Download Error:" . $response->get_error_message());
 
                     continue;
                 }
@@ -438,13 +424,13 @@ class Image
                 if (WP_Filesystem()) {
                     global $wp_filesystem;
                     if (!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)) {
-                        if (WP_DEBUG) error_log('Unable to write avif file');
+                        Utility::logError('Unable to write avif file');
 
                         continue;
                     }
 
                 } else {
-                    if (WP_DEBUG) error_log('Unable to initialize the WP_filesystem');
+                    Utility::logError('Unable to initialize the WP_filesystem');
 
                 }
             }
@@ -476,7 +462,7 @@ class Image
                 return $imagick->writeImage($des);
 
             } catch (\ImagickException $e) {
-                if (WP_DEBUG) error_log('Imagick error: ' . $e->getMessage());
+                Utility::logError('Imagick error: ' . $e->getMessage());
                 return false;
             }
         }
@@ -484,7 +470,7 @@ class Image
         if (IS_GD_WEBP) {
             $fileType = getimagesize($src);
             if (!$fileType) {
-                if (WP_DEBUG) error_log('Failed to get image size');
+                Utility::logError('Failed to get image size');
                 return false;
             }
             $fileType = $fileType['mime'];
@@ -498,18 +484,18 @@ class Image
                     $sourceGDImg = @imagecreatefrompng($src);
                     break;
                 default:
-                    if (WP_DEBUG) error_log('Unsupported image type for GD conversion: ' . $fileType);
+                    Utility::logError('Unsupported image type for GD conversion: ' . $fileType);
                     return false;
             }
 
             if (is_bool($sourceGDImg) && $sourceGDImg === false) {
-                if (WP_DEBUG) error_log('Failed to create GD image resource');
+                Utility::logError('Failed to create GD image resource');
                 return false;
             }
 
             $result = @imagewebp($sourceGDImg, $des);
             if ($result === false) {
-                if (WP_DEBUG) error_log('Failed to convert image to WebP using GD');
+                Utility::logError('Failed to convert image to WebP using GD');
                 return false;
             }
 
