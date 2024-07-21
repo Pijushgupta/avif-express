@@ -19,7 +19,7 @@ class Media
      */
     public static function ajaxCountMedia()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
         echo json_encode(self::countMedia());
         wp_die();
     }
@@ -29,7 +29,7 @@ class Media
      *
      * @return array in array(number of converted images, number of total images, number of various image sizes)
      */
-    public static function countMedia()
+    public static function countMedia(): array
     {
         $uploadDirPath = wp_upload_dir()['basedir'];
 
@@ -55,7 +55,7 @@ class Media
      */
     public static function ajaxConvertRemaining()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
 
         $isCloudEngine = '0';
         if (Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
@@ -88,7 +88,7 @@ class Media
          * Checking if 'set_time_limit' can be set or not
          * if not don't do anything
          */
-        if (Setting::avif_set_time_limit() == false) return false;
+        if (!Setting::avif_set_time_limit()) return false;
 
 
         $keepAlive = 0;
@@ -138,7 +138,7 @@ class Media
      */
     public static function ajaxDeleteAll()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();;
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();;
         echo json_encode(self::deleteAll());
         wp_die();
     }
