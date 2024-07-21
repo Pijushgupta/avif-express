@@ -6,7 +6,7 @@ class PhpInfo
 
     public static function ajaxGetGdInfo()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
         echo json_encode(self::getGdInfo());
         wp_die();
     }
@@ -19,7 +19,7 @@ class PhpInfo
 
     public static function ajaxGetImagickInfo()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
         echo json_encode(self::getImagickInfo());
         wp_die();
     }
@@ -35,7 +35,7 @@ class PhpInfo
 
     public static function ajaxGetPhpInfo()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
         echo json_encode(self::getPhpInfo());
         wp_die();
     }

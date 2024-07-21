@@ -184,7 +184,7 @@ class Image
 
     /**
      * delete
-     * finding the converted image and its thumbs and deleting
+     * finding the converted image and its thumbs and deleting when user deletes an image from WordPress Media
      * @param mixed $post_id
      * @param mixed $post
      * @return void

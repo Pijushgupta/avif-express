@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 class Setting
 {
-    public static function avif_set_time_limit()
+    public static function avif_set_time_limit(): bool
     {
         if (function_exists('wp_is_ini_value_changeable') && wp_is_ini_value_changeable('max_execution_time')) {
             set_time_limit(0);
@@ -20,7 +20,7 @@ class Setting
      */
     public static function ajaxDeleteLogFile()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
         if (self::deleteLogFile()) {
             echo json_encode(array('status' => 'success'));
         } else {
@@ -32,7 +32,7 @@ class Setting
     /**
      * deleteLogFile
      */
-    public static function deleteLogFile()
+    public static function deleteLogFile(): bool
     {
         if (file_exists(AVIF_LOG_FILE)) {
             @unlink(AVIF_LOG_FILE);
@@ -47,7 +47,7 @@ class Setting
      */
     public static function ajaxIsLogFileExists()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
         if (self::isLogFileExists()) {
             echo json_encode(array('status' => 'success'));
         } else {
@@ -59,7 +59,7 @@ class Setting
     /**
      * isLogFileExists
      */
-    public static function isLogFileExists()
+    public static function isLogFileExists(): bool
     {
         if (file_exists(AVIF_LOG_FILE)) {
             return true;

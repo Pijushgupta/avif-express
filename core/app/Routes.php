@@ -9,7 +9,7 @@ class Routes
 
     public static function enable()
     {
-
+        //keep it simple for IDE, no factorization needed!!!
         add_action('wp_ajax_ajaxGetAutoConvtStatus', array('Avife\common\Options', 'ajaxGetAutoConvtStatus'));
         add_action('wp_ajax_ajaxSetAutoConvtStatus', array('Avife\common\Options', 'ajaxSetAutoConvtStatus'));
         add_action('wp_ajax_ajaxGetOperationMode', array('Avife\common\Options', 'ajaxGetOperationMode'));
@@ -40,7 +40,6 @@ class Routes
         add_action('wp_ajax_ajaxGetGdInfo', array('Avife\common\PhpInfo', 'ajaxGetGdInfo'));
         add_action('wp_ajax_ajaxGetImagickInfo', array('Avife\common\PhpInfo', 'ajaxGetImagickInfo'));
         add_action('wp_ajax_ajaxGetPhpInfo', array('Avife\common\PhpInfo', 'ajaxGetPhpInfo'));
-
 
         add_action('wp_ajax_ajaxDeleteLogFile', array('Avife\common\Setting', 'ajaxDeleteLogFile'));
         add_action('wp_ajax_ajaxIsLogFileExists', array('Avife\common\Setting', 'ajaxIsLogFileExists'));
