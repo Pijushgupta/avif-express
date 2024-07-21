@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 use Avife\common\Options;
 use Avife\common\Image;
 use Avife\common\Cookie;
+use Avife\common\Utility;
 use voku\helper\HtmlDomParser;
 
 
@@ -228,10 +229,10 @@ class Html
          * creating on the fly if server support that
          * else try webp conversion
          */
-        if (self::$enableOnTheFlyConversion && (AVIFE_IMAGICK_VER != 0 || function_exists('imageavif'))) {
+        if (self::$enableOnTheFlyConversion && Utility::isLocalAvifConversionSupported()) {
 
 
-            $imagePathSrc = Image::attachmentUrlToPath($imageUrl);
+            $imagePathSrc = Utility::attachmentUrlToPath($imageUrl);
             $imagePathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
 
             Image::convert($imagePathSrc, $imagePathDest, Options::getImageQuality(), Options::getComSpeed());
@@ -292,10 +293,10 @@ class Html
              * else try webp conversion if user has set fallback image to webp
              * OR else jump to next iteration
              */
-            if (self::$enableOnTheFlyConversion && (AVIFE_IMAGICK_VER != 0 || function_exists('imageavif'))) {
+            if (self::$enableOnTheFlyConversion && Utility::isLocalAvifConversionSupported()) {
 
 
-                $imagePathSrc = Image::attachmentUrlToPath($v);
+                $imagePathSrc = Utility::attachmentUrlToPath($v);
                 $imagePathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
 
                 Image::convert($imagePathSrc, $imagePathDest, Options::getImageQuality(), Options::getComSpeed());
@@ -354,7 +355,7 @@ class Html
          * after the conversion webpConvert() will save the new file
          * in the same location
          */
-        $conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($imageUrl));
+        $conversionStatus = Image::webpConvert(Utility::attachmentUrlToPath($imageUrl));
 
         /**
          * if conversion failed return the original
@@ -405,7 +406,7 @@ class Html
                 /**
                  * if file not existing then create one and change file extension
                  */
-                $conversionStatus = Image::webpConvert(Image::attachmentUrlToPath($v));
+                $conversionStatus = Image::webpConvert(Utility::attachmentUrlToPath($v));
 
                 /**
                  * checking if webp conversion failed or not OR after conversion file not existing
@@ -456,7 +457,7 @@ class Html
      */
     public static function isFileExists(string $url): bool
     {
-        $path = Image::attachmentUrlToPath($url);
+        $path = Utility::attachmentUrlToPath($url);
         if (!$path) return false;
         if (!file_exists($path)) return false;
         return true;

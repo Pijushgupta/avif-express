@@ -39,22 +39,11 @@ class Theme
     public static function ajaxThemeFilesConvert()
     {
         if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
-        $avifsupport = '0';
-        if (function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
-
-        $hasImagick = '0';
-        if (extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0) {
-            $imagick = new \Imagick();
-            $formats = $imagick->queryFormats();
-            if (in_array('AVIF', $formats)) {
-                $hasImagick = '1';
-            }
-        }
 
         $isCloudEngine = '0';
         if (Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
 
-        if ($avifsupport == '0' && $hasImagick == '0' && $isCloudEngine == '0') wp_die();
+        if (!Utility::isLocalAvifConversionSupported() && $isCloudEngine == '0') wp_die();
         echo json_encode(self::themeFilesConvert());
         wp_die();
     }
@@ -104,7 +93,7 @@ class Theme
                 $filePaths = array_slice($filePaths, 0, 20);
                 $keepAlive = 1;
             }
-            $unConvertedAttachmentUrls = Image::pathToAttachmentUrl($filePaths);
+            $unConvertedAttachmentUrls = Utility::pathToAttachmentUrl($filePaths);
 
             if (Image::cloudConvert($unConvertedAttachmentUrls) === false) return 'ccfail';
             if ($keepAlive == 1) return 'keep-alive';

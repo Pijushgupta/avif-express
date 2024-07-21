@@ -57,22 +57,13 @@ class Media
     {
         if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
 
-        $avifsupport = '0';
-        if (function_exists('imageavif') && function_exists('gd_info') && gd_info()['AVIF Support'] != '') $avifsupport = '1';
-
-        $hasImagick = '0';
-        if (extension_loaded('imagick') && class_exists('Imagick') && AVIFE_IMAGICK_VER > 0) {
-            $imagick = new \Imagick();
-            $formats = $imagick->queryFormats();
-            if (in_array('AVIF', $formats)) {
-                $hasImagick = '1';
-            }
-        }
-
         $isCloudEngine = '0';
         if (Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
-
-        if ($avifsupport == '0' && $hasImagick == '0' && $isCloudEngine == '0') wp_die();
+        /**
+         * checking if local conversion not possible and cloud conversion disabled 
+         * then terminate
+         */
+        if (!Utility::isLocalAvifConversionSupported() && $isCloudEngine == '0') wp_die();
 
         echo json_encode(self::convertRemaining());
         wp_die();
@@ -131,7 +122,7 @@ class Media
                 $unConvertedAttachments = array_slice($unConvertedAttachments, 0, 20);
                 $keepAlive = 1;
             }
-            $unConvertedAttachmentUrls = Image::pathToAttachmentUrl($unConvertedAttachments);
+            $unConvertedAttachmentUrls = Utility::pathToAttachmentUrl($unConvertedAttachments);
 
             if (Image::cloudConvert($unConvertedAttachmentUrls) === false) return 'ccfail';
             if ($keepAlive == 1) return 'keep-alive';

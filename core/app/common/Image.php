@@ -82,7 +82,7 @@ class Image
                 /**
                  * creating Path form image url
                  */
-                $srcPath = self::attachmentUrlToPath($originalImage);
+                $srcPath = Utility::attachmentUrlToPath($originalImage);
 
                 if ($srcPath && $srcPath != '') {
                     /**
@@ -116,7 +116,7 @@ class Image
 
         } else {
 
-            $srcPath = self::attachmentUrlToPath($originalImages[0]);
+            $srcPath = Utility::attachmentUrlToPath($originalImages[0]);
 
             if ($srcPath && $srcPath != '') {
 
@@ -145,7 +145,7 @@ class Image
         /**
          * converting generated thumbnails
          */
-        $fileDir = pathinfo(self::attachmentUrlToPath($originalImages[0]), PATHINFO_DIRNAME);
+        $fileDir = pathinfo(Utility::attachmentUrlToPath($originalImages[0]), PATHINFO_DIRNAME);
         $allSizes = $metadata['sizes'];
         foreach ($allSizes as $size) {
 
@@ -167,7 +167,7 @@ class Image
 
                 if (Options::getConversionEngine() == 'cloud') {
 
-                    $unConvertedAttachmentUrls[] = self::pathToAttachmentUrl($src);
+                    $unConvertedAttachmentUrls[] = Utility::pathToAttachmentUrl($src);
                     self::cloudConvert($unConvertedAttachmentUrls);
 
                 }
@@ -205,12 +205,12 @@ class Image
 
         if ($orginalImageUrls[0] != $orginalImageUrls[1]) {
             foreach ($orginalImageUrls as $orginalImageUrl) {
-                $orginalImagePath = self::attachmentUrlToPath($orginalImageUrl);
+                $orginalImagePath = Utility::attachmentUrlToPath($orginalImageUrl);
                 $orginalImagePath = rtrim($orginalImagePath, '.' . pathinfo($orginalImagePath, PATHINFO_EXTENSION)) . '.avif';
                 if (file_exists($orginalImagePath)) wp_delete_file($orginalImagePath);
             }
         } else {
-            $orginalImagePath = self::attachmentUrlToPath($orginalImageUrls[0]);
+            $orginalImagePath = Utility::attachmentUrlToPath($orginalImageUrls[0]);
             $orginalImagePath = rtrim($orginalImagePath, '.' . pathinfo($orginalImagePath, PATHINFO_EXTENSION)) . '.avif';
             if (file_exists($orginalImagePath)) wp_delete_file($orginalImagePath);
         }
@@ -218,7 +218,7 @@ class Image
         /**
          * Deleting Thumbs
          */
-        $fileDir = pathinfo(self::attachmentUrlToPath($orginalImageUrls[0]), PATHINFO_DIRNAME);
+        $fileDir = pathinfo(Utility::attachmentUrlToPath($orginalImageUrls[0]), PATHINFO_DIRNAME);
         $sizes = $attachment_meta['sizes'];
         foreach ($sizes as $size) {
             $file = $fileDir . '/' . $size['file'];
@@ -386,7 +386,7 @@ class Image
             foreach ($avifServerImageData as $imageUrl) {
 
                 //creating destination file path form the source
-                $srcImagePath = self::attachmentUrlToPath($imageUrl[0]);
+                $srcImagePath = Utility::attachmentUrlToPath($imageUrl[0]);
                 if (!$srcImagePath) {
                     Utility::logError('Unable to create absolute path from relative path of source image');
 
@@ -491,43 +491,5 @@ class Image
 
         return false;
 
-    }
-
-    /**
-     * attachmentUrlToPath
-     * This function converts the url of an Image to actual path of that image
-     * @param string $url url of an Image
-     * @return string|boolean  path of an Image, false on fail
-     */
-    public static function attachmentUrlToPath(string $url)
-    {
-        $parsed_url = parse_url($url);
-        if (empty($parsed_url['path'])) return false;
-        $file = ABSPATH . ltrim($parsed_url['path'], '/');
-        if (file_exists($file)) return $file;
-        return false;
-    }
-
-    /**
-     * Convert Absolute Path to Relative Url
-     * @param String|array $url
-     * @return String|array
-     */
-    public static function pathToAttachmentUrl($url = '')
-    {
-        if ($url == '') return '';
-        if (is_array($url)) {
-            $relativeUrl = [];
-            foreach ($url as $link) {
-                $relativeUrl[] = self::pathToAttachmentUrl($link);
-            }
-            return $relativeUrl;
-        }
-        $wpContentPosition = strpos($url, 'wp-content');
-        if ($wpContentPosition !== false) {
-            return get_site_url() . '/wp-content' . explode('wp-content', $url)[1];
-        }
-
-        return '';
     }
 }

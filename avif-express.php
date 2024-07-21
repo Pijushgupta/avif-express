@@ -61,7 +61,7 @@ function initiate_plugin()
         $isImagickWebpSupported = false;
 
         if (class_exists('Imagick')) {
-            $imagick = new Imagick();
+            $imagick = new \Imagick();
             $formats = array_map('strtolower', $imagick->queryFormats());
 
             $isImagickAvifSupported = in_array('avif', $formats) && function_exists('imageavif');
@@ -97,64 +97,6 @@ function initiate_plugin()
         if (!defined('IS_GD_AVIF')) {
             define('IS_GD_AVIF', $isGdAvifSupported);
         }
-    }
-
-    /**
-     * storing imageMagick version
-     */
-    if (!defined('AVIFE_IMAGICK_VER')) {
-        /**
-         * checking if imagick is present or not
-         * */
-        if (class_exists('Imagick')) {
-
-            /**
-             * getting the imagick version
-             */
-            $v = Imagick::getVersion();
-
-            /**
-             * storing the version number
-             */
-            preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $v);
-
-            /**
-             * checking if the version is greater than or equal to 7.0.25
-             * see https://www.php.net/manual/en/function.version-compare.php
-             */
-            if (version_compare($v[1], '7.0.25') >= 0) {
-                define('AVIFE_IMAGICK_VER', $v[1]);
-            } else {
-                define('AVIFE_IMAGICK_VER', 0);
-            }
-        } else {
-            define('AVIFE_IMAGICK_VER', 0);
-        }
-    }
-
-    /**
-     * setting constant to determine if backup WEBP
-     * conversion possible or not. It's going to be used as
-     * fallback browsers that don't support Webp
-     */
-    if (!defined('AVIF_WEBP_POSSIBLE')) {
-
-        if (class_exists('Imagick')) {
-            $imagick = new Imagick();
-            $formats = $imagick->queryFormats();
-            if (!in_array('WEBP', $formats)) {
-                define('AVIF_WEBP_POSSIBLE', false);
-
-            } elseif (function_exists('imagewebp')) {
-                define('AVIF_WEBP_POSSIBLE', true);
-
-            } else {
-                define('AVIF_WEBP_POSSIBLE', false);
-            }
-        } else {
-            define('AVIF_WEBP_POSSIBLE', false);
-        }
-
     }
 
     /**
