@@ -60,4 +60,35 @@ class Utility
 
         return '';
     }
+
+
+    /**
+     * deletes converted webp and avif files if present
+     * @param array $files
+     * @return bool
+     */
+    public static function deleteFiles(array $files) : bool{
+        foreach ($files as $file) {
+            /**
+             * creating path for file to delete. Just by removing original extension with .avif
+             */
+            $dest = (string)rtrim($file, '.' . pathinfo($file, PATHINFO_EXTENSION)) . '.avif';
+
+            /**
+             * Finally deleting the file
+             */
+            if (file_exists($dest)) wp_delete_file($dest);
+
+            /**
+             * delete fallback webp
+             */
+            $dest = (string)rtrim($file, '.' . pathinfo($file, PATHINFO_EXTENSION)) . '.webp';
+
+            /**
+             * deleting the file
+             */
+            if (file_exists($dest)) wp_delete_file($dest);
+        }
+        return true;
+    }
 }

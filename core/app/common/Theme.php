@@ -18,7 +18,11 @@ class Theme
         wp_die();
     }
 
-    public static function getCurrentTheme()
+    /**
+     * provides information about current theme
+     * @return array[]
+     */
+    public static function getCurrentTheme(): array
     {
         $active_theme = wp_get_theme();
 
@@ -38,7 +42,7 @@ class Theme
 
     public static function ajaxThemeFilesConvert()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
 
         $isCloudEngine = '0';
         if (Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
@@ -67,7 +71,7 @@ class Theme
          * Checking if 'set_time_limit' can be set or not
          * if not don't do anything
          */
-        if (Setting::avif_set_time_limit() == false) return false;
+        if (!Setting::avif_set_time_limit()) return false;
         $quality = Options::getImageQuality();
         $speed = Options::getComSpeed();
 
@@ -100,7 +104,6 @@ class Theme
 
         }
 
-
         return true;
     }
 
@@ -111,7 +114,7 @@ class Theme
      */
     public static function ajaxThemeFilesDelete()
     {
-        if (wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce') == false) wp_die();
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
         echo json_encode(self::themeFilesDelete());
         wp_die();
     }
@@ -122,7 +125,7 @@ class Theme
      * In case of child theme, delete from parent and child.
      * @return boolean
      */
-    public static function themeFilesDelete()
+    public static function themeFilesDelete() : bool
     {
 
         $filePaths = self::themeFilesConverted();
@@ -134,39 +137,15 @@ class Theme
          * iterating through file paths
          *
          */
-        foreach ($filePaths as $filePath) {
-            /**
-             * creating path for file to delete. Just by removing original extension with .avif
-             */
-            $dest = (string)rtrim($filePath, '.' . pathinfo($filePath, PATHINFO_EXTENSION)) . '.avif';
-
-            /**
-             * Finally deleting the file
-             */
-            if (file_exists($dest)) wp_delete_file($dest);
-
-            /**
-             * delete fallback webp
-             */
-            $dest = (string)rtrim($filePath, '.' . pathinfo($filePath, PATHINFO_EXTENSION)) . '.webp';
-
-            /**
-             * deleting the file
-             */
-            if (file_exists($dest)) wp_delete_file($dest);
-        }
-        /**
-         * returning true for positive signal
-         */
-        return true;
+        return Utility::deleteFiles($filePaths);
     }
 
 
     /**
      * themeFilesConverted
-     * @return array returns a array containing the paths of jpg,webp and jpeg images in the theme dir(s) that are already converted
+     * @return array returns an array containing the paths of jpg,webp and jpeg images in the theme dir(s) that are already converted
      */
-    public static function themeFilesConverted()
+    public static function themeFilesConverted(): array
     {
         $themeDirs = self::avif_get_theme_dirs();
         $convertedFiles = [];
@@ -179,11 +158,11 @@ class Theme
 
     /**
      * themesFilesUnconverted
-     * returns a array containing the paths of jpg,webp and jpeg images in the theme dir
+     * returns an array containing the paths of jpg,webp and jpeg images in the theme dir
      * that ate yet to get converted
      * @return array
      */
-    public static function themesFilesUnconverted()
+    public static function themesFilesUnconverted() : array
     {
         $themeDirs = self::avif_get_theme_dirs();
         $unconvertedFiles = [];
@@ -195,10 +174,10 @@ class Theme
 
     /**
      * themesFilesTotal
-     * returns a array containing the paths of jpg,webp and jpeg images in the theme dir
+     * returns an array containing the paths of jpg,webp and jpeg images in the theme dir
      * @return array
      */
-    public static function themesFilesTotal()
+    public static function themesFilesTotal() : array
     {
         $themeDirs = self::avif_get_theme_dirs();
         $totalFiles = [];
@@ -216,7 +195,7 @@ class Theme
      * @param int $hasAvif : 0  - All , 1 - Unconverted, -1 - Converted
      * @return array file paths
      */
-    public static function findFiles($basePath, $exts, $hasAvif = 0)
+    public static function findFiles(string $basePath, array $exts, int $hasAvif = 0) : array
     {
         /**
          * To store the paths
@@ -257,7 +236,7 @@ class Theme
             $files = array_merge($files, $baseFiles);
         }
         /**
-         * finding paths of all sub directories within provided base directory
+         * finding paths of all subdirectories within provided base directory
          * and storing them
          * @type array
          */
@@ -287,7 +266,7 @@ class Theme
      * avif_get_theme_dirs
      * @return array returns the theme path(s). In case of child theme, return parent and child theme path
      */
-    public static function avif_get_theme_dirs()
+    public static function avif_get_theme_dirs(): array
     {
         $themes = array();
         if (is_child_theme()) {

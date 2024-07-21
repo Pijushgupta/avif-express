@@ -154,29 +154,8 @@ class Media
         $uploadDirPath = wp_upload_dir()['basedir'];
         $attachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
 
-        foreach ($attachments as $attachment) {
-            /**
-             * creating path for file to delete. Just by removing original extension with .avif
-             */
-            $dest = (string)rtrim($attachment, '.' . pathinfo($attachment, PATHINFO_EXTENSION)) . '.avif';
-
-            /**
-             * Finally deleting the file
-             */
-            if (file_exists($dest)) wp_delete_file($dest);
-
-            /**
-             * delete fallback webp
-             */
-            $dest = (string)rtrim($attachment, '.' . pathinfo($attachment, PATHINFO_EXTENSION)) . '.webp';
-
-            /**
-             * deleting the file
-             */
-            if (file_exists($dest)) wp_delete_file($dest);
-        }
-        return true;
+       return Utility::deleteFiles($attachments);
     }
 
-    
+
 }
