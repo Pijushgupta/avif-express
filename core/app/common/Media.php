@@ -60,7 +60,7 @@ class Media
         $isCloudEngine = '0';
         if (Options::getConversionEngine() == 'cloud') $isCloudEngine = '1';
         /**
-         * checking if local conversion not possible and cloud conversion disabled 
+         * checking if local conversion not possible and cloud conversion disabled
          * then terminate
          */
         if (!Utility::isLocalAvifConversionSupported() && $isCloudEngine == '0') wp_die();
@@ -146,9 +146,9 @@ class Media
     /**
      * deleteAll
      * delete All converted Images
-     * @return true as signal
+     * @return bool true as signal
      */
-    public static function deleteAll()
+    public static function deleteAll() : bool
     {
 
         $uploadDirPath = wp_upload_dir()['basedir'];
@@ -178,40 +178,5 @@ class Media
         return true;
     }
 
-    /**
-     * getAttachments
-     *
-     * @param mixed $all : -1 for all, 0 for un converted, 1 for converted
-     * @return Array
-     */
-    public static function getAttachments($all = -1)
-    {
-        $attachments = get_posts(array(
-            'post_type' => 'attachment',
-            'posts_per_page' => -1,
-
-        ));
-        if ($all === -1) {
-            if (empty($attachments) || $attachments == null) return 0;
-            return $attachments;
-        }
-        if ($all === 0) {
-            $newAttachment = array();
-            foreach ($attachments as $attachment) {
-                if (get_post_meta($attachment->ID, 'avifexpressconverted', null) != true)
-                    $newAttachment[] = $attachment;
-            }
-            if (empty($newAttachment)) return 0;
-            return $newAttachment;
-        }
-        if ($all === 1) {
-            $newAttachment = array();
-            foreach ($attachments as $attachment) {
-                if (get_post_meta($attachment->ID, 'avifexpressconverted', null) == true)
-                    $newAttachment[] = $attachment;
-            }
-            if (empty($newAttachment)) return 0;
-            return $newAttachment;
-        }
-    }
+    
 }
