@@ -17,11 +17,11 @@ On upload, images like jpg, png and WebP gets converted to avif format. Converte
 * Images get converted on upload.
 * Bulk convert previously uploaded images.
 * Bulk convert theme images.
-* Local Conversion 
-* Cloud Conversion 
+* Local Conversion
+* Cloud Conversion (Freemium)
 * Serve Webpage with altered avif images.
 * Fully CDN compatible.
-* Backward compatibility - Browsers that don't support Avif images will get WebP/Original images served on-the-fly. 
+* Backward compatibility - Browsers that don't support Avif images will get Original images served on-the-fly.
 * Native Language Support for German, Spanish, Russian, French, Hindi and Bengali.
 
 = Official documentation of Avif Express =
@@ -47,60 +47,60 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select 
 Background Image replacement Bug Fix
 
 = 01.20.06.2024 =
-1. Removed aviflog(wrapper of monolog), due to php version issue. 
+1. Removed aviflog(wrapper of monolog), due to php version issue.
 
-= 19.06.2024 = 
+= 19.06.2024 =
 1. Added cloud conversion for ease of use in case the server doesn't support AVIF conversion.
 2. Added an option for a fallback image type (WebP/original) for older browsers/webviews.
 3. Added a cookie to notify the server whether to catch pages for browsers that don't support AVIF. (Cookies: browser_avif_support_true, browser_avif_support_false)
 4. Implemented a logging system.
 5. Added system information to display local server capabilities to the end user.
-6. Added on-the-fly AVIF conversion if the server supports it. 
+6. Added on-the-fly AVIF conversion if the server supports it.
 
 = 28.06.2023 =
-Feature: 
+Feature:
 1. Externally added webp images can be served via this plugin on browser that does not support avif image. note: Image fix name should be same as source.
 Bugfix
 1. If server is capable of generating webp and not avif, then this plugin will generate and serve webp images. In case server is not capable of generating webp and avif both, original image will get served in case no externally added webp image found.
-2. Other small bug fixes. 
+2. Other small bug fixes.
 
 = 02.05.11.2023 =
-Bugfix: Image Magic class checking.  
+Bugfix: Image Magic class checking.
 
 = 05.11.2023 =
-Bugfix: Skipping SVG processing on rendering. Checking server capability to convert Avif even when rendering is off.  
+Bugfix: Skipping SVG processing on rendering. Checking server capability to convert Avif even when rendering is off.
 
 = 05.07.2023 =
 Backward compatibility - Browsers that don't support Avif images will get WebP images served on the fly.
-Bugfix: Images that don't belongs to the same domain no logger getting skipped. 
+Bugfix: Images that don't belongs to the same domain no logger getting skipped.
 
 = 03.20.2023 =
-Added translation for German, Spanish, Russian, French, Hindi and Bengali, for backend Admin dash. 
+Added translation for German, Spanish, Russian, French, Hindi and Bengali, for backend Admin dash.
 
-= 02.27.2023 = 
-Issue: Undefined Constant. Fixed.  Pointed by [argument](https://wordpress.org/support/users/argument/,"Bug finder"). 
+= 02.27.2023 =
+Issue: Undefined Constant. Fixed.  Pointed by [argument](https://wordpress.org/support/users/argument/,"Bug finder").
 
-= 02.26.2023 = 
-ImageMagick version checking. Version '7.0.25' or above required. 
-Issue: Auto convert on upload was not working. Fixed : Typo in namespace.  
+= 02.26.2023 =
+ImageMagick version checking. Version '7.0.25' or above required.
+Issue: Auto convert on upload was not working. Fixed : Typo in namespace.
 
-= 02.25.2023 = 
-Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. #Php_bug. Fixed with Imagick library.  
+= 02.25.2023 =
+Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. #Php_bug. Fixed with Imagick library.
 
-= 02.23.2023 = 
-Issue: Migrated images with post type of attachment were not getting converted. Fixed.  
-Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. Not fixed. #Php_bug 
+= 02.23.2023 =
+Issue: Migrated images with post type of attachment were not getting converted. Fixed.
+Issue: php 8.1 or 8.2 with GD with libavif support still creating 0 byte avif images. Not fixed. #Php_bug
 
-= 01.30.2023 = 
+= 01.30.2023 =
 Conflict with Autoptimize plugin fixed.
 
-= 01.20.2023 = 
+= 01.20.2023 =
 Lowered the "Requires at least" wordpress version.
 Updated Description on README.txt.
-Code commenting. 
-Added php version checking, require at least 8.1, since imageavif() method only comes with php8.1 or later. 
+Code commenting.
+Added php version checking, require at least 8.1, since imageavif() method only comes with php8.1 or later.
 Added method checking for imageavif(), it prevent ajax error in case Php GD not having libavif. libavif is library required by GD to convert image to avif image.
-Note: latest Plesk Obsidian(Version 18.0.49) with php 8.2 do not provide libavif to GD. No way around. 
+Note: latest Plesk Obsidian(Version 18.0.49) with php 8.2 do not provide libavif to GD. No way around.
 
 = 01.19.2023 =
 Updated FAQ section on README.txt.
