@@ -7,8 +7,6 @@ if (!defined('ABSPATH')) exit();
 
 use Avife\common\Options;
 use Avife\common\Utility;
-use Avife\common\Utility;
-use Avife\common\Utility;
 
 
 class Image
@@ -326,62 +324,113 @@ class Image
         //get the api key from option table
         $apiKey = Options::getApiKey();
 
-        //if the domain/installation is local
-        $isLocal = Utility::isLocalDomain();
-
         //if api key is not set then return false
         if (!$apiKey) return false;
 
-        //add origin and api key to the request header
-        $requestHeader = array(
+        //if the domain/installation is local
+        $isLocal = Utility::isLocalDomain();
 
-            'X-RapidAPI-Key' => $apiKey,
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json'
-        );
+        //add origin and api key to the request header
+
 
         $avifServerImageData = [];
+        if($isLocal){
+            foreach ($urls as $url) {
+                // Convert URL to local file path
+                $filePath = Utility::attachmentUrlToPath($url);
 
-        foreach ($urls as $url) {
+                if (!$filePath || !file_exists($filePath)) {
+                    Utility::logError("Error: File does not exist at path " . $filePath);
+                    continue;
+                }
 
+                // Prepare the file for upload
+                $file = fopen($filePath, 'r');
+                $boundary = wp_generate_uuid4();
+                $delimiter = '-------------' . $boundary;
 
-            //actual payload with appended url, GET method
-            $fullRequestUrl = AVIF_CLOUD_ADDRESS . '?url=' . urlencode($url);
+                // Multipart form data body
+                $body = '--' . $delimiter . "\r\n" .
+                    'Content-Disposition: form-data; name="image"; filename="' . basename($filePath) . '"' . "\r\n" .
+                    'Content-Type: ' . mime_content_type($filePath) . "\r\n\r\n" .
+                    stream_get_contents($file) . "\r\n" .
+                    '--' . $delimiter . '--';
 
-            //add origin to the request header
-            $origin = str_replace(['https://', 'http://'], '', strtolower(get_site_url()));
+                fclose($file);
 
-            //conversion started
-            //1. sending all urls(array of url) to the cloud server
-            $cloudResponse = wp_remote_get($fullRequestUrl, array('headers' => $requestHeader));
+                // 1. Sending image to the cloud server
+                $cloudResponse = wp_remote_post(AVIF_CLOUD_ADDRESS, array(
+                    'headers' => [
+                        'X-RapidAPI-Key' => $apiKey,
+                        'Content-Type' => 'multipart/form-data; boundary=' . $delimiter,
+                        ],
+                    'body' => $body
+                ));
 
-            //2. getting the response contain all urls(array of url where url['src] = source url and url['dest'] is avif cloud server converted image url)
-            $body = wp_remote_retrieve_body($cloudResponse);
+                // 2. Getting the response
+                $body = wp_remote_retrieve_body($cloudResponse);
 
-            //checking for any error and then logging it
-            if (is_wp_error($cloudResponse)) {
+                // Checking for any error and then logging it
+                if (is_wp_error($cloudResponse)) {
+                    Utility::logError("Error:" . $cloudResponse->get_error_message());
+                }
 
-                Utility::logError("Error:" . $cloudResponse->get_error_message());
+                $imageUrls = json_decode($body, true);
+
+                // Check server status code for any issue
+                if (isset($imageUrls['status']) && $imageUrls['status'] !== 'success') {
+                    Utility::logError("Error:" . print_r($imageUrls, true));
+                }
+
+                if (isset($imageUrls['status']) && $imageUrls['status'] == 'success') {
+                    $avifServerImageData[] = $imageUrls['data'];
+                }
 
             }
 
-            $imageUrls = json_decode($body, true);
+        }else{
+            foreach ($urls as $url) {
 
-            //check server status code for any issue
-            if (isset($imageUrls['status']) && $imageUrls['status'] !== 'success') {
 
-                Utility::logError("Error:" . print_r($imageUrls, true));
+                //actual payload with appended url, GET method
+                $fullRequestUrl = AVIF_CLOUD_ADDRESS . '?url=' . urlencode($url);
+
+                //conversion started
+                //1. sending url to the cloud server
+                $cloudResponse = wp_remote_get($fullRequestUrl, array('headers' => [
+                    'X-RapidAPI-Key' => $apiKey,
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json'
+                ]));
+
+                //2. getting the response
+                $body = wp_remote_retrieve_body($cloudResponse);
+
+                //checking for any error and then logging it
+                if (is_wp_error($cloudResponse)) {
+
+                    Utility::logError("Error:" . $cloudResponse->get_error_message());
+
+                }
+
+                $imageUrls = json_decode($body, true);
+
+                //check server status code for any issue
+                if (isset($imageUrls['status']) && $imageUrls['status'] !== 'success') {
+
+                    Utility::logError("Error:" . print_r($imageUrls, true));
+
+                }
+
+                if (isset($imageUrls['status']) && $imageUrls['status'] == 'success') {
+
+                    $avifServerImageData[] = $imageUrls['data'];
+                }
 
             }
-
-            if (isset($imageUrls['status']) && $imageUrls['status'] == 'success') {
-
-                $avifServerImageData[] = $imageUrls['data'];
-            }
-
         }
 
-        self::imageWrite($avifServerImageData);
+        self::imageGetAndWrite($avifServerImageData);
 
     }
 
@@ -455,11 +504,11 @@ class Image
     }
 
     /**
-     * responsible for writing converted images from cloud
+     * responsible for getting and writing converted images from cloud
      * @param $avifServerImageData
      * @return void
      */
-    public static function imageWrite($avifServerImageData)
+    public static function imageGetAndWrite($avifServerImageData)
     {
         //using WordPress file system class instead of php native file_get_contents()
         include_once ABSPATH . 'wp-admin/includes/file.php';
@@ -479,7 +528,6 @@ class Image
                 $srcImagePath = Utility::attachmentUrlToPath($imageUrl[0]);
                 if (!$srcImagePath) {
                     Utility::logError('Unable to create absolute path from relative path of source image');
-
                     continue;
                 }
 
@@ -487,22 +535,19 @@ class Image
                 $pathInfo = pathinfo($srcImagePath);
                 $avifFileName = $pathInfo["dirname"] . DIRECTORY_SEPARATOR . $pathInfo["filename"] . '.avif';
 
-
                 //getting remote avif file
                 $response = wp_remote_get($imageUrl[1]);
                 if (is_wp_error($response)) {
                     Utility::logError("Avif Download Error:" . $response->get_error_message());
-
                     continue;
                 }
+
                 //retrieving avif file body content
                 $body = wp_remote_retrieve_body($response);
-
 
                 if (!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)) {
                     Utility::logError('Unable to write avif file');
                 }
-
 
             }
         }else{
