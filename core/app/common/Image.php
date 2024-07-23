@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) exit();
 use Avife\common\Options;
 use Avife\common\Utility;
 use Avife\common\Utility;
+use Avife\common\Utility;
 
 
 class Image
@@ -462,7 +463,13 @@ class Image
     {
         //using WordPress file system class instead of php native file_get_contents()
         include_once ABSPATH . 'wp-admin/includes/file.php';
-        WP_Filesystem();
+
+        if(!WP_Filesystem()){
+            Utility::logError('Unable to initialize the WP_filesystem');
+            return;
+        }
+
+        global $wp_filesystem;
 
         //this if condition to prevent to null
         if (is_array($avifServerImageData) || is_object($avifServerImageData)) {
@@ -490,17 +497,16 @@ class Image
                 }
                 //retrieving avif file body content
                 $body = wp_remote_retrieve_body($response);
-                if (WP_Filesystem()) {
-                    global $wp_filesystem;
-                    if (!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)) {
-                        Utility::logError('Unable to write avif file');
-                    }
 
-                } else {
-                    Utility::logError('Unable to initialize the WP_filesystem');
 
+                if (!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)) {
+                    Utility::logError('Unable to write avif file');
                 }
+
+
             }
+        }else{
+            Utility::logError('Invalid input: Expected array or object');
         }
     }
 }
