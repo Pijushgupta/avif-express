@@ -91,4 +91,21 @@ class Utility
         }
         return true;
     }
+
+
+    public static function isLocalDomain() {
+        $serverName = $_SERVER['SERVER_NAME'];
+        $serverAddr = $_SERVER['SERVER_ADDR'];
+
+        // Check if the server name is localhost or an IP in the private range
+        if ($serverName === 'localhost' ||
+            $serverAddr === '127.0.0.1' ||
+            strpos($serverAddr, '192.168.') === 0 ||
+            strpos($serverAddr, '10.') === 0 ||
+            strpos($serverAddr, '172.') === 0 && (int)substr($serverAddr, 4, 2) >= 16 && (int)substr($serverAddr, 4, 2) <= 31) {
+            return true;
+        }
+
+        return false;
+    }
 }
