@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit();
 
 use Avife\common\Options;
 use Avife\common\Utility;
+use Avife\common\Utility;
 
 
 class Image
@@ -324,6 +325,9 @@ class Image
         //get the api key from option table
         $apiKey = Options::getApiKey();
 
+        //if the domain/installation is local
+        $isLocal = Utility::isLocalDomain();
+
         //if api key is not set then return false
         if (!$apiKey) return false;
 
@@ -376,51 +380,7 @@ class Image
 
         }
 
-
-        //using WordPress file system class instead of php native file_get_contents()
-        include_once ABSPATH . 'wp-admin/includes/file.php';
-        WP_Filesystem();
-
-        //this if condition to prevent to null
-        if (is_array($avifServerImageData) || is_object($avifServerImageData)) {
-            foreach ($avifServerImageData as $imageUrl) {
-
-                //creating destination file path form the source
-                $srcImagePath = Utility::attachmentUrlToPath($imageUrl[0]);
-                if (!$srcImagePath) {
-                    Utility::logError('Unable to create absolute path from relative path of source image');
-
-                    continue;
-                }
-
-                //creating destination path
-                $pathInfo = pathinfo($srcImagePath);
-                $avifFileName = $pathInfo["dirname"] . DIRECTORY_SEPARATOR . $pathInfo["filename"] . '.avif';
-
-
-                //getting remote avif file
-                $response = wp_remote_get($imageUrl[1]);
-                if (is_wp_error($response)) {
-                    Utility::logError("Avif Download Error:" . $response->get_error_message());
-
-                    continue;
-                }
-                //retrieving avif file body content
-                $body = wp_remote_retrieve_body($response);
-                if (WP_Filesystem()) {
-                    global $wp_filesystem;
-                    if (!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)) {
-                        Utility::logError('Unable to write avif file');
-
-                        continue;
-                    }
-
-                } else {
-                    Utility::logError('Unable to initialize the WP_filesystem');
-
-                }
-            }
-        }
+        self::imageWrite($avifServerImageData);
 
     }
 
@@ -491,5 +451,56 @@ class Image
 
         return false;
 
+    }
+
+    /**
+     * responsible for writing converted images from cloud
+     * @param $avifServerImageData
+     * @return void
+     */
+    public static function imageWrite($avifServerImageData)
+    {
+        //using WordPress file system class instead of php native file_get_contents()
+        include_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+
+        //this if condition to prevent to null
+        if (is_array($avifServerImageData) || is_object($avifServerImageData)) {
+            foreach ($avifServerImageData as $imageUrl) {
+
+                //creating destination file path form the source
+                $srcImagePath = Utility::attachmentUrlToPath($imageUrl[0]);
+                if (!$srcImagePath) {
+                    Utility::logError('Unable to create absolute path from relative path of source image');
+
+                    continue;
+                }
+
+                //creating destination path
+                $pathInfo = pathinfo($srcImagePath);
+                $avifFileName = $pathInfo["dirname"] . DIRECTORY_SEPARATOR . $pathInfo["filename"] . '.avif';
+
+
+                //getting remote avif file
+                $response = wp_remote_get($imageUrl[1]);
+                if (is_wp_error($response)) {
+                    Utility::logError("Avif Download Error:" . $response->get_error_message());
+
+                    continue;
+                }
+                //retrieving avif file body content
+                $body = wp_remote_retrieve_body($response);
+                if (WP_Filesystem()) {
+                    global $wp_filesystem;
+                    if (!$wp_filesystem->put_contents($avifFileName, $body, FS_CHMOD_FILE)) {
+                        Utility::logError('Unable to write avif file');
+                    }
+
+                } else {
+                    Utility::logError('Unable to initialize the WP_filesystem');
+
+                }
+            }
+        }
     }
 }
