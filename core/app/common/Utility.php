@@ -6,8 +6,8 @@ class Utility
 {
 
     /**
-    * Logs an error message if WP_DEBUG is enabled.
-    */
+     * Logs an error message if WP_DEBUG is enabled.
+     */
     public static function logError($message)
     {
         if (WP_DEBUG) {
@@ -67,7 +67,8 @@ class Utility
      * @param array $files
      * @return bool
      */
-    public static function deleteFiles(array $files) : bool{
+    public static function deleteFiles(array $files): bool
+    {
         foreach ($files as $file) {
             /**
              * creating path for file to delete. Just by removing original extension with .avif
@@ -93,7 +94,8 @@ class Utility
     }
 
 
-    public static function isLocalDomain() {
+    public static function isLocalDomain(): bool
+    {
         $serverName = $_SERVER['SERVER_NAME'];
         $serverAddr = $_SERVER['SERVER_ADDR'];
 
@@ -107,5 +109,17 @@ class Utility
         }
 
         return false;
+    }
+
+    public static function prepareRequestHeader(
+        string $apikey,
+        string $contentType = 'application/json',
+        string $accept = 'application/json'): array
+    {
+        return [
+            'X-RapidAPI-Key' => $apikey,
+            'Content-Type' => $contentType,
+            'Accept' => $accept
+        ];
     }
 }

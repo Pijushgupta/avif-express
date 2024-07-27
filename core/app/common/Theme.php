@@ -4,9 +4,7 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 
-use Avife\common\Image;
-use Avife\common\Options;
-use Avife\common\Setting;
+
 
 class Theme
 {

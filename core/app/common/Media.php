@@ -4,10 +4,6 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 
-use Avife\common\Setting;
-use Avife\common\Image;
-use Avife\common\Theme;
-use Avife\common\Options;
 
 class Media
 {

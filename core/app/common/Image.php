@@ -4,11 +4,6 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit();
 
-
-use Avife\common\Options;
-use Avife\common\Utility;
-
-
 class Image
 {
 
@@ -334,7 +329,7 @@ class Image
 
 
         $avifServerImageData = [];
-        if($isLocal){
+        if ($isLocal) {
             foreach ($urls as $url) {
                 // Convert URL to local file path
                 $filePath = Utility::attachmentUrlToPath($url);
@@ -354,16 +349,16 @@ class Image
                     'Content-Disposition: form-data; name="image"; filename="' . basename($filePath) . '"' . "\r\n" .
                     'Content-Type: ' . mime_content_type($filePath) . "\r\n\r\n" .
                     stream_get_contents($file) . "\r\n" .
+                    '--' . $delimiter . "\r\n" .
+                    'Content-Disposition: form-data; name="src"' . "\r\n\r\n" .
+                    $url . "\r\n" .
                     '--' . $delimiter . '--';
 
                 fclose($file);
 
                 // 1. Sending image to the cloud server
                 $cloudResponse = wp_remote_post(AVIF_CLOUD_ADDRESS, array(
-                    'headers' => [
-                        'X-RapidAPI-Key' => $apiKey,
-                        'Content-Type' => 'multipart/form-data; boundary=' . $delimiter,
-                        ],
+                    'headers' => Utility::prepareRequestHeader($apiKey, 'multipart/form-data; boundary=' . $delimiter,),
                     'body' => $body
                 ));
 
@@ -388,7 +383,7 @@ class Image
 
             }
 
-        }else{
+        } else {
             foreach ($urls as $url) {
 
 
@@ -397,11 +392,11 @@ class Image
 
                 //conversion started
                 //1. sending url to the cloud server
-                $cloudResponse = wp_remote_get($fullRequestUrl, array('headers' => [
-                    'X-RapidAPI-Key' => $apiKey,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
-                ]));
+                $cloudResponse = wp_remote_get($fullRequestUrl,
+                    [
+                        'headers' => Utility::prepareRequestHeader($apiKey)
+                    ]
+                );
 
                 //2. getting the response
                 $body = wp_remote_retrieve_body($cloudResponse);
@@ -430,7 +425,7 @@ class Image
             }
         }
 
-        self::imageGetAndWrite($avifServerImageData);
+        self::processResponse($avifServerImageData);
 
     }
 
@@ -508,12 +503,12 @@ class Image
      * @param $avifServerImageData
      * @return void
      */
-    public static function imageGetAndWrite($avifServerImageData)
+    public static function processResponse($avifServerImageData)
     {
         //using WordPress file system class instead of php native file_get_contents()
         include_once ABSPATH . 'wp-admin/includes/file.php';
 
-        if(!WP_Filesystem()){
+        if (!WP_Filesystem()) {
             Utility::logError('Unable to initialize the WP_filesystem');
             return;
         }
@@ -550,7 +545,7 @@ class Image
                 }
 
             }
-        }else{
+        } else {
             Utility::logError('Invalid input: Expected array or object');
         }
     }
