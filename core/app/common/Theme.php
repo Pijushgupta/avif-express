@@ -4,8 +4,6 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 
-
-
 class Theme
 {
 
@@ -97,7 +95,9 @@ class Theme
             }
             $unConvertedAttachmentUrls = Utility::pathToAttachmentUrl($filePaths);
 
-            if (Image::cloudConvert($unConvertedAttachmentUrls) === false) return 'ccfail';
+            $cs = Image::cloudConvert($unConvertedAttachmentUrls);
+            if ($cs === false) return 'ccfail';
+            if ($cs === 'ccover') return 'ccover';
             if ($keepAlive == 1) return 'keep-alive';
 
         }

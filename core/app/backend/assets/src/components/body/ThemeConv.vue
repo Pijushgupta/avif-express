@@ -5,7 +5,7 @@
 					<button class=" bg-blue-600 text-white px-4 py-2 rounded-full mr-3" v-on:click="convert">{{ t('convert') }}</button>
 					<button class=" bg-gray-600 text-white px-4 py-2 rounded-full"  v-on:click="deleteImg">{{ t('delete') }}</button>
 				</div>
-</div>	
+</div>
 </template>
 <script setup>
 import { waitingSatus } from '../../../stores/state';
@@ -34,7 +34,7 @@ function getTheme() {
 	})
 		.then(res => res.json())
 		.then(res => {
-			
+
 			theme_name.value = res[0].theme_name;
 			is_child.value = res[0].is_child;
 			conveted_files.value = res[0].files.converted;
@@ -45,11 +45,11 @@ function getTheme() {
 getTheme();
 
 function convert() {
-	
+
 	if (avifsupportstatus != '1' && hasImagickstatus != '1' && isEnabledCloud != '1') return false;
 	if (conveted_files.value == total_files.value || total_files.value <= 0) {
 		return false;
-	} 
+	}
 	const toast = useToast();
 	toast(t('conversionMayTakeTimeMsg'));
 	toWait.toggleWaiting();
@@ -64,12 +64,18 @@ function convert() {
 		})
 		.then(res => res.json())
 		.then(res => {
+      if(res === 'ccover'){
+        getTheme();
+        const toast = useToast();
+        toast.error(t('ccover'));
+        toWait.toggleWaiting();
+      }
 			if(res === 'ccfail'){
 				getTheme();
 				const toast = useToast();
 				toast.error(t('ccfail'));
 				toWait.toggleWaiting();
-				
+
 			}
 			if (res === true || res === null) {
 				getTheme();
@@ -89,20 +95,20 @@ function convert() {
 				console.log('keep-alive');
 				innerConvert()
 			}
-			
+
 		})
 		.catch(err => console.log(err));
 	}
 
 	innerConvert();
-	
+
 
 }
 
 function deleteImg(){
 	if (conveted_files.value == 0) {
 		return false;
-	} 
+	}
 	const toast = useToast();
 	toast(t("thisMayTakeTime"));
 	toWait.toggleWaiting();
@@ -122,8 +128,8 @@ function deleteImg(){
 				toast(t("deleteImageInTheme"));
 				toWait.toggleWaiting();
 			}
-			
-			
+
+
 		})
 		.catch(err => console.log(err));
 }

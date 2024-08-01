@@ -34,12 +34,12 @@ function getAttachemnts(){
 	})
 		.then(res => res.json())
 		.then(res => {
-			
+
 			convertedImage.value = res[0]
 			totalImages.value = res[1]
-			numberOfthums.value = res[2]	
-		
-			
+			numberOfthums.value = res[2]
+
+
 		})
 		.catch(err => {console.log(err) });
 }
@@ -63,12 +63,18 @@ function convert() {
 	})
 		.then(res => res.json())
 		.then(res => {
+      if(res === 'ccover'){
+        const toast = useToast();
+        toast.error(t('ccover'));
+        getAttachemnts();
+        toWait.toggleWaiting();
+      }
 			if(res === 'ccfail'){
 				const toast = useToast();
 				toast.error(t('ccfail'));
 				getAttachemnts();
 				toWait.toggleWaiting();
-				
+
 			}
 			if (res === true || res === null) {
 				const toast = useToast();
@@ -91,7 +97,7 @@ function convert() {
 	}
 
 	innerConvert();
-	
+
 }
 function deleteAll() {
 	if (convertedImage.value < 1) return false;

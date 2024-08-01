@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.5.4
-Stable tag: 2024.06.20.01
+Stable tag: 2024.08.02
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -43,8 +43,11 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
-= 09.07.2024 =
-Background Image replacement Bug Fix
+= 02.08.2024 =
+1. Fixed background image replacement bug.
+2. Fixed Imagick version checking bug.
+3. Added file system permission check before writing.
+4. Enabled cloud conversion from localhost.
 
 = 01.20.06.2024 =
 1. Removed aviflog(wrapper of monolog), due to php version issue.

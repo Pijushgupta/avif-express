@@ -364,6 +364,10 @@ class Image
 
                 // 2. Getting the response
                 $body = wp_remote_retrieve_body($cloudResponse);
+                if(intval(wp_remote_retrieve_header($cloudResponse,'x-ratelimit-requests-remaining')) == 0){
+                    Utility::logError('Consumed all of the allocated API calls');
+                    return 'ccover';
+                }
 
                 // Checking for any error and then logging it
                 if (is_wp_error($cloudResponse)) {
@@ -406,6 +410,11 @@ class Image
 
                     Utility::logError("Error:" . $cloudResponse->get_error_message());
 
+                }
+
+                if(intval(wp_remote_retrieve_header($cloudResponse,'x-ratelimit-requests-remaining')) == 0){
+                    Utility::logError('Consumed all of the allocated API calls');
+                    return 'ccover';
                 }
 
                 $imageUrls = json_decode($body, true);

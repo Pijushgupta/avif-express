@@ -2,6 +2,8 @@
 
 namespace Avife\common;
 
+if (!defined('ABSPATH')) exit;
+
 class Utility
 {
 
