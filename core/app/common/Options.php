@@ -212,7 +212,21 @@ class Options
     public static function setApiKey($value = '')
     {
         if ($value == '') return;
-        return update_option('avifapikey', $value);
+        //test api key before saving
+        $status =  Api::check($value);
+
+        switch ($status) {
+            //case of connection issue
+            case 3:
+                return null;
+            //case of invalid api key
+            case 2:
+                return false;
+            //case of success
+            case 1:
+                update_option('avifapikey', $value);
+                return true;
+        }
     }
 
     public static function ajaxGetFallbackMode()

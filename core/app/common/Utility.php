@@ -124,4 +124,25 @@ class Utility
             'Accept' => $accept
         ];
     }
+
+
+    public static function prepareFormBody(string $filePath, $boundary, string $url = ''){
+        // Prepare the file for upload
+        $file = fopen($filePath, 'r');
+        $delimiter = '-------------' . $boundary;
+
+        // Multipart form data body
+        $body = '--' . $delimiter . "\r\n" .
+            'Content-Disposition: form-data; name="image"; filename="' . basename($filePath) . '"' . "\r\n" .
+            'Content-Type: ' . mime_content_type($filePath) . "\r\n\r\n" .
+            stream_get_contents($file) . "\r\n" .
+            '--' . $delimiter . "\r\n" .
+            'Content-Disposition: form-data; name="src"' . "\r\n\r\n" .
+            $url . "\r\n" .
+            '--' . $delimiter . '--';
+
+        fclose($file);
+
+        return $body;
+    }
 }

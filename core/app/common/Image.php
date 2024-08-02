@@ -339,22 +339,11 @@ class Image
                     continue;
                 }
 
-                // Prepare the file for upload
-                $file = fopen($filePath, 'r');
                 $boundary = wp_generate_uuid4();
                 $delimiter = '-------------' . $boundary;
 
-                // Multipart form data body
-                $body = '--' . $delimiter . "\r\n" .
-                    'Content-Disposition: form-data; name="image"; filename="' . basename($filePath) . '"' . "\r\n" .
-                    'Content-Type: ' . mime_content_type($filePath) . "\r\n\r\n" .
-                    stream_get_contents($file) . "\r\n" .
-                    '--' . $delimiter . "\r\n" .
-                    'Content-Disposition: form-data; name="src"' . "\r\n\r\n" .
-                    $url . "\r\n" .
-                    '--' . $delimiter . '--';
+                $body = Utility::prepareFormBody($filePath, $boundary,$url);
 
-                fclose($file);
 
                 // 1. Sending image to the cloud server
                 $cloudResponse = wp_remote_post(AVIF_CLOUD_ADDRESS, array(

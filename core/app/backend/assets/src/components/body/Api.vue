@@ -3,7 +3,7 @@
 		<div class="w-full flex flex-row justify-between items-center p-4">
 			<label class="w-full flex justify-start  " for="apiContentArea">{{t('api')}}</label>
 			<button id="apiContentArea" @click="showApiContent = !showApiContent">
-				
+
 				<svg v-show="showApiContent == false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"> <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /> </svg>
 				<svg v-show="showApiContent == true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"> <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /> </svg>
 
@@ -24,7 +24,7 @@
 				<button class="bg-blue-600 text-white px-4 py-2 rounded-full" @click="setApiKey">Update</button>
 			</div>
 		</div>
-				
+
 	</div>
 </template>
 <script setup>
@@ -51,7 +51,7 @@ function getApiKey(){
 	})
 		.then(res => res.json())
 		.then(res => {
-			
+
 			if(res !== false){
 				apiKey.value = res;
 			}
@@ -64,11 +64,11 @@ getApiKey();
 function setApiKey(){
 	const toast = useToast();
 	if(apiKey.value == ''){
-		
+
 		toast.error('Please enter api key');
 		return;
 	}
-	console.log(apiKey.value);
+	//console.log(apiKey.value);
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
 	data.append('action', 'ajaxSetApiKey');
@@ -81,12 +81,23 @@ function setApiKey(){
 	})
 		.then(res => res.json())
 		.then(res => {
-			
+
 			if(res === true){
-				
-				toast(t('Api key updated successfully'));
-				
+
+				toast('Api key updated successfully');
+
 			}
+      if(res === null){
+
+        toast('Something went wrong!');
+
+      }
+      if(res === false){
+
+        toast('Invalid api key');
+
+      }
+      //console.log(res);
 		})
 		.catch(err => {console.log(err) });
 }
