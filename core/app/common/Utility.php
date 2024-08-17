@@ -33,11 +33,25 @@ class Utility
      */
     public static function attachmentUrlToPath(string $url)
     {
-        $parsed_url = parse_url($url);
-        if (empty($parsed_url['path'])) return false;
-        $file = ABSPATH . ltrim($parsed_url['path'], '/');
-        if (file_exists($file)) return $file;
-        return false;
+        // Parse the URL to get the path
+    $parsed_url = parse_url($url);
+    if (empty($parsed_url['path'])) return false;
+
+    // Get the upload directory data
+    $upload_dir = wp_upload_dir();
+    $upload_baseurl = $upload_dir['baseurl'];
+    $upload_basedir = $upload_dir['basedir'];
+
+    // Remove the base URL part to get the relative path
+    $relative_path = str_replace($upload_baseurl, '', $url);
+    $file_path = $upload_basedir . $relative_path;
+
+    // Check if the file exists
+    if (file_exists($file_path)) {
+        return $file_path;
+    }
+
+    return false;
     }
 
     /**
