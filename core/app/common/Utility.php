@@ -33,26 +33,54 @@ class Utility
      */
     public static function attachmentUrlToPath(string $url)
     {
-        // Parse the URL to get the path
         $parsed_url = parse_url($url);
         if (empty($parsed_url['path'])) return false;
 
-        // Get the upload directory data
+        $url_path = ltrim($parsed_url['path'], '/');
+
+        // Handle uploads
         $upload_dir = wp_upload_dir();
-        $upload_baseurl = $upload_dir['baseurl'];
-        $upload_basedir = $upload_dir['basedir'];
+        if (strpos($url, $upload_dir['baseurl']) === 0) {
+            $relative = str_replace($upload_dir['baseurl'], '', $url);
+            $path = $upload_dir['basedir'] . $relative;
+            if (file_exists($path)) return $path;
+        }
 
-        // Remove the base URL part to get the relative path
-        $relative_path = str_replace($upload_baseurl, '', $url);
-        $file_path = $upload_basedir . $relative_path;
+        // Theme (child and parent)
+        $theme_dirs = [
+            get_stylesheet_directory(),
+            get_template_directory()
+        ];
 
-        // Check if the file exists
-        if (file_exists($file_path)) {
-            return $file_path;
+        foreach ($theme_dirs as $theme_dir) {
+            $theme_url = content_url(str_replace(ABSPATH, '', $theme_dir));
+            if (strpos($url, $theme_url) === 0) {
+                $relative = str_replace($theme_url, '', $url);
+                $path = $theme_dir . $relative;
+                if (file_exists($path)) return $path;
+            }
+        }
+
+        // Plugins
+        $plugin_url = plugins_url();
+        if (strpos($url, $plugin_url) === 0) {
+            $relative = str_replace($plugin_url, '', $url);
+            $path = WP_PLUGIN_DIR . $relative;
+            if (file_exists($path)) return $path;
+        }
+
+        // Fallback: try matching with ABSPATH
+        $site_url = site_url();
+        if (strpos($url, $site_url) === 0) {
+            $relative = str_replace($site_url, '', $url);
+            $path = ABSPATH . ltrim($relative, '/');
+            if (file_exists($path)) return $path;
         }
 
         return false;
     }
+
+
 
     /**
      * Convert Absolute Path to Relative Url
@@ -116,11 +144,13 @@ class Utility
         $serverAddr = $_SERVER['SERVER_ADDR'];
 
         // Check if the server name is localhost or an IP in the private range
-        if ($serverName === 'localhost' ||
+        if (
+            $serverName === 'localhost' ||
             $serverAddr === '127.0.0.1' ||
             strpos($serverAddr, '192.168.') === 0 ||
             strpos($serverAddr, '10.') === 0 ||
-            strpos($serverAddr, '172.') === 0 && (int)substr($serverAddr, 4, 2) >= 16 && (int)substr($serverAddr, 4, 2) <= 31) {
+            strpos($serverAddr, '172.') === 0 && (int)substr($serverAddr, 4, 2) >= 16 && (int)substr($serverAddr, 4, 2) <= 31
+        ) {
             return true;
         }
 
@@ -130,8 +160,8 @@ class Utility
     public static function prepareRequestHeader(
         string $apikey,
         string $contentType = 'application/json',
-        string $accept = 'application/json'): array
-    {
+        string $accept = 'application/json'
+    ): array {
         return [
             'X-RapidAPI-Key' => $apikey,
             'Content-Type' => $contentType,
@@ -140,7 +170,8 @@ class Utility
     }
 
 
-    public static function prepareFormBody(string $filePath, $boundary, string $url = ''){
+    public static function prepareFormBody(string $filePath, $boundary, string $url = '')
+    {
         // Prepare the file for upload
         $file = fopen($filePath, 'r');
         $delimiter = '-------------' . $boundary;
