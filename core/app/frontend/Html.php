@@ -8,8 +8,9 @@ use Avife\common\Options;
 use Avife\common\Image;
 use Avife\common\Cookie;
 use Avife\common\Utility;
-use voku\helper\HtmlDomParser;
 
+use voku\helper\HtmlDomParser;
+//use Masterminds\HTML5;
 
 class Html
 {
@@ -35,7 +36,6 @@ class Html
      * @var bool
      */
     private static $enableOnTheFlyConversion = false;
-
 
     public static function init()
     {
@@ -151,46 +151,38 @@ class Html
      */
     public static function handleImgBG()
     {
-
-        foreach (self::$dom->find('[style*=background-image]') as &$element) {
-            $style = $element->getAttribute('style');
-            /**
-             * /..../ delimiter
-             * url to match "url" string in style element
-             * \( to match "(" after "url" string, "(" is special char, so we need to escape it
-             * ( start of a capturing group
-             * \'|" , "'" is a special chan so escaping it with \', "|" is logical-or or alteration operator, " is just
-             * double quote . So its target '.....' or ".....". ex: background-image:url(".....")
-             * ) ending of a capturing group
-             * ? matches the shortest possible match
-             * () creates a new capturing group
-             * .* targets all the char inside '.....' or "....." or just ..... , excepts new line char
-             * \1 referencing first capture group for ' or " for string closing char. \\1 = \1 , \ is escaping "\"
-             * \) closing the of url(.....")" . \ is escaping ).
-             * /..../ delimiter ends
-             *
-             * $style source
-             * $matches destination
-             * $matches[1] - Contains the " or '
-             * $matches[2] - contains the url without any quote
-             */
-            preg_match('/url\((\'|")?(.*?)\\1\)/', $style, $matches);
-
-            if (isset($matches[2])) {
-
-                $updatedImageUrl = $imageUrl = $matches[2];
-
+    // Loop through each element with a 'style' attribute
+    foreach (self::$dom->find('[style]') as &$element) {
+        $style = $element->getAttribute('style');
+        
+        // Match all occurrences of 'background' or 'background-image' with url(...)
+        $style = preg_replace_callback(
+            '/\bbackground(?:-image)?\s*:\s*[^;]*?url\((["\']?)([^"\')]+)\1\)/i',
+            function ($matches) {
+                
+                $imageUrl = trim($matches[2]);
+                $updatedImageUrl = $imageUrl;
+                error_log("url before:".$updatedImageUrl);
                 if (self::$isAvifSupported) {
                     $updatedImageUrl = self::replaceImgSrc($imageUrl);
-                } elseif (!self::$isAvifSupported && self::$fallbackType == 'webp') {
+                    
+                } elseif (self::$fallbackType === 'webp') {
                     $updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
                 }
+                error_log("url after:".$updatedImageUrl);
+                
+                return str_replace($imageUrl, $updatedImageUrl, $matches[0]);
+            },
+            $style
+        );
 
-                $newStyle = str_replace($imageUrl, $updatedImageUrl, $style);
-                $element->setAttribute('style', $newStyle);
-            }
-        }
-    }
+        $element->setAttribute('style', $style);
+
+    }   
+}
+
+
+
 
     /**
      * replace image url with .avif extension
@@ -200,6 +192,7 @@ class Html
      */
     public static function replaceImgSrc($imageUrl)
     {
+        $imageUrl = trim($imageUrl);
 
         /**
          * checking if an image having a supported extension or not
@@ -212,7 +205,7 @@ class Html
          * if domain is different or file not present return the original image url
          */
         if (!self::isValidImageUrl($imageUrl)) return $imageUrl;
-
+        
         /**
          * creating the avif image url
          */
@@ -245,7 +238,7 @@ class Html
                 return $avifImageUrl;
             }
 
-        }elseif(self::$fallbackType == 'webp') {
+        } elseif (self::$fallbackType == 'webp') {
             return self::webpReplaceImgSrc($imageUrl);
         }
         return $imageUrl;
@@ -261,17 +254,18 @@ class Html
         $srcset = explode(' ', $srcset);
 
         foreach ($srcset as $k => &$v) {
+            $v = trim($v);
             /**
              * checking if it's a real url belongs to same domain
              * and the file really exists
              * if it fails skip and jump on next iterate
              */
-            if(!self::isValidImageUrl($v)) continue;
+            if (!self::isValidImageUrl($v)) continue;
 
             /**
              * checking the extension against allowed ones
              */
-            if(!self::isSupportedExtension($v)) continue;
+            if (!self::isSupportedExtension($v)) continue;
 
             /**
              * creating new image file url with altered extension
@@ -310,10 +304,9 @@ class Html
                     continue;
                 }
 
-            }elseif(self::$fallbackType == 'webp'){
+            } elseif (self::$fallbackType == 'webp') {
                 $v = self::webpReplaceImgSrc($v);
             }
-
 
 
         }
@@ -325,11 +318,12 @@ class Html
      */
     public static function webpReplaceImgSrc($imageUrl)
     {
+        $imageUrl = trim($imageUrl);
 
         /**
          * Checking if the images are already optimized images
          */
-        if(!self::isSupportedExtension($imageUrl)) return $imageUrl;
+        if (!self::isSupportedExtension($imageUrl)) return $imageUrl;
 
         /**
          * checking if the url belongs to this site or not
@@ -379,6 +373,8 @@ class Html
 
         $srcset = explode(' ', $srcset);
         foreach ($srcset as $k => &$v) {
+
+            $v = trim($v);
 
             /**
              * if present or the url does not belong to our domain
@@ -445,7 +441,8 @@ class Html
      * @param $url
      * @return bool
      */
-    public static function isValidImageUrl($url){
+    public static function isValidImageUrl($url)
+    {
         return strpos($url, get_bloginfo('url')) !== false && self::isFileExists($url);
     }
 
