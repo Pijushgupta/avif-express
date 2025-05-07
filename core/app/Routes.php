@@ -29,6 +29,9 @@ class Routes
         add_action('wp_ajax_ajaxGetFallbackMode', array('Avife\common\Options', 'ajaxGetFallbackMode'));
         add_action('wp_ajax_ajaxSetFallbackMode', array('Avife\common\Options', 'ajaxSetFallbackMode'));
 
+        add_action('wp_ajax_ajaxGetLazyLoad', array('Avife\common\Options', 'ajaxGetLazyLoad'));
+        add_action('wp_ajax_ajaxSetLazyLoad', array('Avife\common\Options', 'ajaxSetLazyLoad'));
+
         add_action('wp_ajax_ajaxCountMedia', array('Avife\common\Media', 'ajaxCountMedia'));
         add_action('wp_ajax_ajaxConvertRemaining', array('Avife\common\Media', 'ajaxConvertRemaining'));
         add_action('wp_ajax_ajaxDeleteAll', array('Avife\common\Media', 'ajaxDeleteAll'));

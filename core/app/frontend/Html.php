@@ -37,6 +37,11 @@ class Html
      */
     private static $enableOnTheFlyConversion = false;
 
+    /**
+     * @var bool
+     */
+    private static $enableLazyLoading = false;
+
     public static function init()
     {
         add_action('template_redirect', array('Avife\frontend\Html', 'checkConditions'), 9999);
@@ -81,6 +86,11 @@ class Html
          * storing option data if "Disable on the fly avif" conversion true or false
          */
         self::$enableOnTheFlyConversion = !Options::getOnTheFlyAvif();
+
+        /**
+         * storing option data for `Lazy Loading images`
+         */
+        self::$enableLazyLoading = Options::getLazyLoad();
 
         /**
          * starting content replacement work
@@ -131,6 +141,9 @@ class Html
 
         foreach (self::$dom->getElementsByTagName('img') as &$image) {
 
+            $image->setAttribute('converter', 'avif-express');
+            if (self::$enableLazyLoading) $image->setAttribute('loading', 'lazy');
+
             if (self::$isAvifSupported) {
 
                 $image->setAttribute('src', self::replaceImgSrc($image->getAttribute('src')));
@@ -140,7 +153,6 @@ class Html
 
                 $image->setAttribute('src', self::webpReplaceImgSrc($image->getAttribute('src')));
                 $image->setAttribute('srcset', self::webpReplaceImgSrcSet($image->getAttribute('srcset')));
-
             }
         }
     }
@@ -151,35 +163,42 @@ class Html
      */
     public static function handleImgBG()
     {
-    // Loop through each element with a 'style' attribute
-    foreach (self::$dom->find('[style]') as &$element) {
-        $style = $element->getAttribute('style');
-        
-        // Match all occurrences of 'background' or 'background-image' with url(...)
-        $style = preg_replace_callback(
-            '/\bbackground(?:-image)?\s*:\s*[^;]*?url\((["\']?)([^"\')]+)\1\)/i',
-            function ($matches) {
-                
-                $imageUrl = trim($matches[2]);
-                $updatedImageUrl = $imageUrl;
-                error_log("url before:".$updatedImageUrl);
-                if (self::$isAvifSupported) {
-                    $updatedImageUrl = self::replaceImgSrc($imageUrl);
-                    
-                } elseif (self::$fallbackType === 'webp') {
-                    $updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
-                }
-                error_log("url after:".$updatedImageUrl);
-                
-                return str_replace($imageUrl, $updatedImageUrl, $matches[0]);
-            },
-            $style
-        );
+        $replaceCallback = function ($matches) {
+            $imageUrl = trim($matches[2]);
+            $updatedImageUrl = $imageUrl;
 
-        $element->setAttribute('style', $style);
+            if (self::$isAvifSupported) {
+                $updatedImageUrl = self::replaceImgSrc($imageUrl);
+            } elseif (self::$fallbackType === 'webp') {
+                $updatedImageUrl = self::webpReplaceImgSrc($imageUrl);
+            }
 
-    }   
-}
+            return str_replace($imageUrl, $updatedImageUrl, $matches[0]);
+        };
+
+        // 1. Inline style attributes
+        foreach (self::$dom->find('[style]') as &$element) {
+            $style = $element->getAttribute('style');
+            $style = preg_replace_callback(
+                '/\bbackground(?:-image)?\s*:\s*[^;{]*?url\((["\']?)([^"\')]+)\1\)/i',
+                $replaceCallback,
+                $style
+            );
+            $element->setAttribute('style', $style);
+        }
+
+        // 2. <style> tag contents
+        foreach (self::$dom->find('style') as &$styleTag) {
+            $css = $styleTag->innertext;
+            $css = preg_replace_callback(
+                '/url\((["\']?)([^"\')]+)\1\)/i',
+                $replaceCallback,
+                $css
+            );
+            $styleTag->innertext = $css;
+        }
+    }
+
 
 
 
@@ -205,7 +224,7 @@ class Html
          * if domain is different or file not present return the original image url
          */
         if (!self::isValidImageUrl($imageUrl)) return $imageUrl;
-        
+
         /**
          * creating the avif image url
          */
@@ -237,12 +256,10 @@ class Html
             if (file_exists($imagePathDest) && filesize($imagePathDest) > 0) {
                 return $avifImageUrl;
             }
-
         } elseif (self::$fallbackType == 'webp') {
             return self::webpReplaceImgSrc($imageUrl);
         }
         return $imageUrl;
-
     }
 
     /**
@@ -303,12 +320,9 @@ class Html
                     $v = $avifImageUrl;
                     continue;
                 }
-
             } elseif (self::$fallbackType == 'webp') {
                 $v = self::webpReplaceImgSrc($v);
             }
-
-
         }
         return implode(' ', $srcset);
     }
@@ -360,8 +374,6 @@ class Html
          * finally retuning the converted image url
          */
         return $newImageUrl;
-
-
     }
 
     /**
@@ -397,7 +409,6 @@ class Html
              */
             if (self::isFileExists($webpImageUrl)) {
                 $v = $webpImageUrl;
-
             } else {
                 /**
                  * if file not existing then create one and change file extension
@@ -414,11 +425,7 @@ class Html
                  * finally replacing the url with webp url
                  */
                 $v = $webpImageUrl;
-
-
             }
-
-
         }
         unset($v);
         return implode(' ', $srcset);
@@ -430,8 +437,9 @@ class Html
      * @param string $url
      * @return bool true|false
      */
-    public static function isSupportedExtension(string $url){
-        if(!isset($url)) return false;
+    public static function isSupportedExtension(string $url)
+    {
+        if (!isset($url)) return false;
         $ext = pathinfo($url, PATHINFO_EXTENSION);
         return $ext && in_array($ext, array('jpg', 'jpeg', 'png'));
     }

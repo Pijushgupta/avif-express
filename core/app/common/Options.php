@@ -219,10 +219,10 @@ class Options
             //case of connection issue
             case 3:
                 return null;
-            //case of invalid api key
+                //case of invalid api key
             case 2:
                 return false;
-            //case of success
+                //case of success
             case 1:
                 update_option('avifapikey', $value);
                 return true;
@@ -256,4 +256,27 @@ class Options
         return update_option('aviffallbackmode', $value);
     }
 
+    public static function ajaxGetLazyLoad()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::getLazyLoad());
+        wp_die();
+    }
+
+    public static function getLazyLoad()
+    {
+        return (bool)get_option('aviflazyload', false);
+    }
+
+    public static function ajaxSetLazyLoad()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::setLazyLoad());
+        wp_die();
+    }
+
+    public static function setLazyLoad()
+    {
+        return update_option('aviflazyload', !self::getLazyLoad());
+    }
 }

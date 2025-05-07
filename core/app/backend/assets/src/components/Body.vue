@@ -98,6 +98,7 @@
 						<CloudSwitcher/>
 						<AutoConvStatus/>
 						<OperationMode/>
+            <LazyLoading/>
 						<FallbackSetting/>
 						<AvifOnTheFly/>
 						<ImageQuality />
@@ -128,6 +129,7 @@
 import { waitingSatus } from '../../stores/state';
 import AutoConvStatus from './body/AutoConvStatus.vue';
 import OperationMode from './body/OperationMode.vue';
+
 import FallbackSetting from './body/FallBackSetting.vue';
 import ImageQuality from './body/ImageQuality.vue';
 import ImageCompression from './body/ImageCompression.vue';
@@ -140,6 +142,7 @@ import EnableLogging from './body/EnableLogging.vue';
 import ViewLog from './body/ViewLog.vue';
 import Api from './body/Api.vue';
 import PhpInformation from './body/PhpInformation.vue';
+import LazyLoading from './body/LazyLoading.vue';
 
 const toWait = waitingSatus();
 
