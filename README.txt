@@ -43,6 +43,11 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
+= 11.05.2024 = 
+1.Improved background replacement logic.
+2.Added image lazy-loading feature.
+3.Bug fix: Fixed image replacement logic for images outside the upload directory.
+
 = 02.08.2024 =
 1. Fixed background image replacement bug.
 2. Fixed Imagick version checking bug.
