@@ -43,7 +43,7 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
-= 12.05.2024 = 
+= 01.12.05.2025 = 
 1.Improved background replacement logic.
 2.Added image lazy-loading feature.
 3.Bug fix: Fixed image replacement logic for images outside the upload directory.
