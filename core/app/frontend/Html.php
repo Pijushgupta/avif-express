@@ -8,6 +8,7 @@ use Avife\common\Options;
 use Avife\common\Image;
 use Avife\common\Cookie;
 use Avife\common\Utility;
+use Avife\factory\Lazyloadfactory;
 
 use voku\helper\HtmlDomParser;
 //use Masterminds\HTML5;
@@ -129,6 +130,21 @@ class Html
          */
         self::handleImgBG();
 
+        /**
+         * lazyload 
+         */
+        $lazyType = Options::getLazyLoad();
+        if ($lazyType != 'off') {
+            $lazy = new Lazyloadfactory();
+            try {
+                $lazyObj = $lazy->Lazyload($lazyType);
+                self::$dom = $lazyObj->handle(self::$dom);
+            } catch (\InvalidArgumentException $e) {
+                Utility::logError($e->getMessage());
+            }
+        }
+
+
         return self::$dom;
     }
 
@@ -142,7 +158,7 @@ class Html
         foreach (self::$dom->getElementsByTagName('img') as &$image) {
 
             $image->setAttribute('converter', 'avif-express');
-            if (self::$enableLazyLoading) $image->setAttribute('loading', 'lazy');
+
 
             if (self::$isAvifSupported) {
 

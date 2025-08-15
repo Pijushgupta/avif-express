@@ -5,14 +5,15 @@
 			<span class="text-xs">{{ $t('qualityWarning') }}</span>
 		</label>
 		<div class="w-1/2 flex justify-end">
-			<input id="imgqal" type="range" min="0" max="110" name="imgqal" v-model="imageQuality" class="w-full" v-on:mouseup="setQuality"/> <span class="w-1/12 flex justify-end">{{ imageQuality }}</span>
+			<input id="imgqal" type="range" min="0" max="110" name="imgqal" v-model.number="imageQuality" class="w-full" v-on:mouseup="setQuality"/> <span class="w-1/12 flex justify-end">{{ imageQuality.toFixed(0) }}</span>
 		</div>
 	</div>
 </template>
 <script setup>
-import { ref } from 'vue';
-const imageQuality = ref(0);
 
+import { useAnimateNumber } from '../../composables/useAnimateNumber';
+
+const { value: imageQuality, animateTo } = useAnimateNumber();
 function getQuality() {
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -24,7 +25,8 @@ function getQuality() {
 	})
 		.then(res => res.json())
 		.then(res => {
-			imageQuality.value = res;
+			 animateTo(parseFloat(res));
+			//imageQuality.value = res;
 			
 		})
 		.catch (err => console.log(err));

@@ -256,6 +256,8 @@ class Options
         return update_option('aviffallbackmode', $value);
     }
 
+
+    // lazy loading Options
     public static function ajaxGetLazyLoad()
     {
         if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
@@ -264,19 +266,72 @@ class Options
     }
 
     public static function getLazyLoad()
-    {
-        return (bool)get_option('aviflazyload', false);
+    {   
+        //migration code 
+        if((string)get_option('aviflazyload', 'off') === true){
+            self::setLazyLoad();
+        }
+        //migration code ens 
+        return (string)get_option('aviflazyload', 'off');
     }
 
     public static function ajaxSetLazyLoad()
     {
         if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
-        echo json_encode(self::setLazyLoad());
+        echo json_encode(self::setLazyLoad(sanitize_text_field($_POST['aviflazyload'])));
         wp_die();
     }
 
-    public static function setLazyLoad()
+    public static function setLazyLoad($value = 'html')
     {
-        return update_option('aviflazyload', !self::getLazyLoad());
+        return update_option('aviflazyload', $value);
     }
+    //---- sub options for js lazy load ----
+    public static function ajaxGetLazyLoadJsRootMargin()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::getLazyLoadJsRootMargin());
+        wp_die();
+    }
+
+    public static function getLazyLoadJsRootMargin()
+    {   
+        return (string)get_option('aviflazyloadrootmargin', 0);
+    }
+
+    public static function ajaxSetLazyLoadJsRootMargin()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::setLazyLoadJsRootMargin(sanitize_text_field($_POST['aviflazyloadrootmargin'])));
+        wp_die();
+    }
+
+    public static function setLazyLoadJsRootMargin($value = 200){
+        return update_option('aviflazyloadrootmargin',$value);
+    }
+    //---------
+    public static function ajaxGetLazyLoadJsThreshold()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::getLazyLoadJsThreshold());
+        wp_die();
+    }
+
+    public static function getLazyLoadJsThreshold()
+    {   
+        return (string)get_option('aviflazyloadjsthreshold', 0);
+    }
+
+    public static function ajaxSetLazyLoadJsThreshold()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::setLazyLoadJsThreshold(sanitize_text_field($_POST['aviflazyloadjsthreshold'])));
+        wp_die();
+    }
+
+    public static function setLazyLoadJsThreshold($value = 200){
+        return update_option('aviflazyloadjsthreshold',$value);
+    }
+    //---- sub options for js lazy load ends
+    //end of lazy loading Options 
 }

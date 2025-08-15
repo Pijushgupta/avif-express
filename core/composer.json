@@ -5,6 +5,7 @@
 		}
 	},
 	"require": {
-		"voku/simple_html_dom": "^4.8"
+		"voku/simple_html_dom": "^4.8",
+		"masterminds/html5": "^2.10"
 	}
 }

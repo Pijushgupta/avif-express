@@ -20,6 +20,10 @@ class ComposerStaticInit717cd024b296725d3c9881f83170a29e
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Component\\CssSelector\\' => 30,
         ),
+        'M' => 
+        array (
+            'Masterminds\\' => 12,
+        ),
         'A' => 
         array (
             'Avife\\' => 6,
@@ -38,6 +42,10 @@ class ComposerStaticInit717cd024b296725d3c9881f83170a29e
         'Symfony\\Component\\CssSelector\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/css-selector',
+        ),
+        'Masterminds\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
         'Avife\\' => 
         array (

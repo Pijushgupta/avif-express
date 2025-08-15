@@ -18,9 +18,9 @@
 					<span>AVIF Support</span>
 					<span>{{ gdInfo['AVIF Support'] == false ? t('no'):t('yes') }}</span>
 				</div>
-				<div class="flex flex-row justify-between items-center" v-if="'WBMP Support' in gdInfo">
+				<div class="flex flex-row justify-between items-center" v-if="'WebP Support' in gdInfo">
 					<span>WEBP Support</span>
-					<span>{{ gdInfo['WBMP Support'] == false ? t('no'):t('yes') }}</span>
+					<span>{{ gdInfo['WebP Support'] == false ? t('no'):t('yes') }}</span>
 				</div>
 
 			</div>
@@ -33,7 +33,7 @@
 					<span>AVIF Support</span>
 					<span>{{ imagickInfo['formats'].indexOf('AVIF') !== -1 ? t('yes'):t('no') }}</span>
 				</div>
-				<div class="flex flex-row justify-between items-center" v-if="'WBMP Support' in gdInfo">
+				<div class="flex flex-row justify-between items-center" v-if="'WebP Support' in gdInfo">
 					<span>WEBP Support</span>
 					<span>{{ imagickInfo['formats'].indexOf('WEBP') !== -1 ? t('yes'):t('no') }}</span>
 				</div>
@@ -84,6 +84,7 @@ function getGetGdInfo(){
 			
 			gdInfo.value = res;
 			
+			
 		})
 		.catch(err => {console.log(err) });
 	
@@ -131,6 +132,7 @@ function getGetGdInfo(){
 
 }
 getGetGdInfo();
+
 
 
 </script>

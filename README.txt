@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.8.1
-Stable tag: 2025.05.12.1
+Stable tag: 2025.08.11
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -43,6 +43,9 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
+= 11.08.2025 =
+
+
 = 01.12.05.2025 = 
 1.Improved background replacement logic.
 2.Added image lazy-loading feature.

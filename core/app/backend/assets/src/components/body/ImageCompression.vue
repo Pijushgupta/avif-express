@@ -5,13 +5,15 @@
 					<span class="text-xs">{{ $t('speedWarning') }}</span>
 				</label>
 				<div class="w-1/2 flex justify-end">
-					<input id="imgComSpeed" type="range" min="0" max="10" name="imgComSpeed" v-model="compressionSpeed" class="w-full" v-on:mouseup="setComSpeed"/> <span class="w-1/12 flex justify-end">{{ compressionSpeed }}</span>
+					<input id="imgComSpeed" type="range" min="0" max="10" name="imgComSpeed" v-model.number="compressionSpeed" class="w-full" v-on:mouseup="setComSpeed"/> <span class="w-1/12 flex justify-end">{{ compressionSpeed.toFixed(0) }}</span>
 				</div>
 			</div>
 </template>
 <script setup>
 import { ref } from 'vue';
-const compressionSpeed = ref(0);
+
+import { useAnimateNumber } from '../../composables/useAnimateNumber';
+const { value: compressionSpeed, animateTo } = useAnimateNumber();
 function getComSpeed() {
 	const data = new FormData();
 	data.append('avife_nonce', avife_nonce);
@@ -23,7 +25,8 @@ function getComSpeed() {
 	})
 		.then(res => res.json())
 		.then(res => {
-			compressionSpeed.value = res;
+			animateTo(parseFloat(res));
+			//compressionSpeed.value = res;
 			
 		})
 		.catch (err => console.log(err));

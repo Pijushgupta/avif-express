@@ -20,7 +20,7 @@
 				<input  id="apikey" type="text" v-model="apiKey">
 			</div>
 			<div class="flex flex-row justify-end">
-				<a class="bg-blue-600 !text-white px-4 py-2 rounded-full mr-2 " href="https://rapidapi.com/aavoya-aavoya-default/api/avif-express" target="_blank">Get API key</a>
+				<a class="pointer-events-none bg-gray-400 no-underline cursor-default !text-white px-4 py-2 rounded-full mr-2 "  href="https://rapidapi.com/aavoya-aavoya-default/api/avif-express" target="_blank">Get API key</a>
 				<button class="bg-blue-600 text-white px-4 py-2 rounded-full" @click="setApiKey">Update</button>
 			</div>
 		</div>

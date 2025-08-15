@@ -32,6 +32,12 @@ class Routes
         add_action('wp_ajax_ajaxGetLazyLoad', array('Avife\common\Options', 'ajaxGetLazyLoad'));
         add_action('wp_ajax_ajaxSetLazyLoad', array('Avife\common\Options', 'ajaxSetLazyLoad'));
 
+        add_action('wp_ajax_ajaxGetLazyLoadJsRootMargin', array('Avife\common\Options', 'ajaxGetLazyLoadJsRootMargin'));
+        add_action('wp_ajax_ajaxSetLazyLoadJsRootMargin', array('Avife\common\Options', 'ajaxSetLazyLoadJsRootMargin'));
+
+        add_action('wp_ajax_ajaxGetLazyLoadJsThreshold', array('Avife\common\Options', 'ajaxGetLazyLoadJsThreshold'));
+        add_action('wp_ajax_ajaxSetLazyLoadJsThreshold', array('Avife\common\Options', 'ajaxSetLazyLoadJsThreshold'));
+
         add_action('wp_ajax_ajaxCountMedia', array('Avife\common\Media', 'ajaxCountMedia'));
         add_action('wp_ajax_ajaxConvertRemaining', array('Avife\common\Media', 'ajaxConvertRemaining'));
         add_action('wp_ajax_ajaxDeleteAll', array('Avife\common\Media', 'ajaxDeleteAll'));
