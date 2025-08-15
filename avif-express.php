@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  * Author: Pijush Gupta
  * Author uri: https://www.linkedin.com/in/pijush-gupta-php/
  * Description: Convert Images to AVIF and serve them
- * Version: 2024.08.02
+ * Version: 2025.08.11
  * Tags: avif, images, performance, avif
  * text-domain: avif-express
  */
@@ -64,7 +64,7 @@ function initiate_plugin()
             $imagick = new \Imagick();
             $formats = array_map('strtolower', $imagick->queryFormats());
 
-            $isImagickAvifSupported = in_array('avif', $formats) && function_exists('imageavif');
+            $isImagickAvifSupported = in_array('avif', $formats);
             $isImagickWebpSupported = in_array('webp', $formats);
         }
 
