@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 
 use Avife\common\CronManager;
 use Avife\common\Options;
-use Avife\common\BackgroundImageCnverter;
+use Avife\common\BackgroundImageConverter;
 use Avife\trait\FileTrait;
 
 class Cron
@@ -56,8 +56,8 @@ class Cron
         $directoryToTarget = Options::getBackgroundConv();
         if ($directoryToTarget == 'off') return false;
 
-        $backgroundImageConverterObj = new BackgroundImageCnverter();
-        if($backgroundImageConverterObj->is_processing()) return false;
+        $backgroundImageConverterObj =  BackgroundImageConverter::get_instance();
+      
         
         $directoryPaths = [];
         
@@ -83,8 +83,8 @@ class Cron
 
         if(empty($filesToConvert)) return false;
 
-        foreach($filesToConvert as $filetoConvert){
-            $backgroundImageConverterObj->push_to_queue($filetoConvert);
+        foreach($filesToConvert as $fileToConvert){
+            $backgroundImageConverterObj->push_to_queue($fileToConvert);
         }
 
         $backgroundImageConverterObj->save()->dispatch();

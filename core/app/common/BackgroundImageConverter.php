@@ -6,13 +6,17 @@ use WP_Background_Process;
 use Avife\common\Options;
 use Exception;
 
-class BackgroundImageCnverter extends WP_Background_Process{
+class BackgroundImageConverter extends WP_Background_Process{
 
-    protected string $action = 'avifeBGIC';
+    protected $prefix = 'avife';
+
+    protected  $action = 'bgic';
 
     protected int $quality;
 
     protected int $speed;
+
+    private static $instance;
 
     public function __construct()
     {   
@@ -22,8 +26,21 @@ class BackgroundImageCnverter extends WP_Background_Process{
 
         
     }
+    /**
+     * Gets the single instance of the class.
+     *
+     * @return self
+     */
+    public static function get_instance() {
+        if ( is_null( self::$instance ) ) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     //actual works  
     protected function task($item){
+        
         try{
             $converter = new ImageConverter($item);
             $converter->setFormat('avif')->setQuality($this->quality)->setSpeed($this->speed)->convert();

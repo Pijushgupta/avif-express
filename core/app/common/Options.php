@@ -379,6 +379,10 @@ class Options
     }
 
     public static function setBackgroundConv($value = 'off'){
+        if($value != 'off'){
+            $cron = new Cron();
+            $cron->initiateConversion();
+        }
         
         return update_option('avifbackgroundConv',$value);
     }

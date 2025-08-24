@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex flex-row justify-between items-center p-4">
-        <label class="w-1/2 flex justify-start">Chose the event time</label>
+        <label class="w-1/2 flex justify-start">Automatically scan Directory</label>
         <div class="w-1/2 flex justify-end items-center">
             
             <select id="cronjob" class="w-full md:w-auto" v-model="events" v-on:change="setBackgroundConvEvent">

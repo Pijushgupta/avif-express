@@ -11,11 +11,10 @@ class CronManager
     private string $hook = '';
     private $callback;
 
-    public function __construct($hook = '', callable $callback)
+    public function __construct(string $hook, callable $callback)
     {
-        $this->callback = $callback;
         $this->hook = $hook;
-
+        $this->callback = $callback;
         // Register the callback
         add_action($this->hook, $this->callback);
     }

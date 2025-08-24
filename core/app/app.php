@@ -12,6 +12,7 @@ use Avife\common\Cron;
 use Avife\common\Image;
 use Avife\frontend\Html;
 use Avife\backend\Enqueue;
+use Avife\common\BackgroundImageConverter;
 
 /**
  * backend code
@@ -50,9 +51,14 @@ if (!is_admin()) {
 }
 
 /**
- * Initiate the cron job directly.
- * The entire file is already loaded on the 'plugins_loaded' hook.
+ * initializing cron based on preset events 
+ * if event is same as before will not do anything 
  */
 $cron = new Cron();
 $cron->initiateCron();
 
+/**
+ * initializing Background image converter for WP_Background_Process 
+ * to make ajax path already present during Async conversion
+ */
+$bg_converter = new BackgroundImageConverter();
