@@ -1,5 +1,5 @@
 <template>
-    <div class="  flex flex-row justify-between items-center p-4 ">
+    <div class="  flex flex-row justify-between items-center p-4 border-b">
                 <label class="w-1/2 flex flex-col justify-start" for="threshold">
                     <span class="flex flex-row items-center">
                 Threshold

@@ -6,11 +6,12 @@ if (!defined('ABSPATH')) exit;
  */
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Avife\backend\Ui;
-use Avife\backend\Enqueue;
 use Avife\Routes;
+use Avife\backend\Ui;
+use Avife\common\Cron;
 use Avife\common\Image;
 use Avife\frontend\Html;
+use Avife\backend\Enqueue;
 
 /**
  * backend code
@@ -47,3 +48,11 @@ if (!is_admin()) {
      */
     Html::init();
 }
+
+/**
+ * Initiate the cron job directly.
+ * The entire file is already loaded on the 'plugins_loaded' hook.
+ */
+$cron = new Cron();
+$cron->initiateCron();
+

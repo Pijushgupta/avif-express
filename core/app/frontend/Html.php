@@ -133,7 +133,7 @@ class Html
         /**
          * lazyload 
          */
-        $lazyType = Options::getLazyLoad();
+        $lazyType = strtolower(Options::getLazyLoad());
         if ($lazyType != 'off') {
             $lazy = new Lazyloadfactory();
             try {

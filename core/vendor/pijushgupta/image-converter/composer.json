@@ -1,0 +1,21 @@
+{
+    "name": "pijushgupta/image-converter",
+    "description": "A PHP library to convert images using Imagick or GD.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["image converter", "avif", "webp", "imagick", "gd"],
+    "authors": [
+        {
+            "name": "Pijush Gupta",
+            "email": "youremail@example.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "PijushGupta\\ImageConverter\\": "src/"
+        }
+    }
+}

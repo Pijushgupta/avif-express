@@ -15,7 +15,7 @@ class Lazyloadfactory {
     {
         $this->methods = [
             'html'=> new lazyhtml(),
-            'js' => new lazyjs('0px 0px '.Options::getLazyLoadJsRootMargin().'px 0px',Options::getLazyLoadJsThreshold())
+            'js' => new lazyjs('0px 0px '.Options::getLazyLoadJsRootMargin().'px 0px',Options::getLazyLoadJsThreshold(), Options::getLazyLoadBackground())
            
         ];
     }

@@ -3,7 +3,7 @@
 namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
-
+use Avife\common\Cron;
 class Options
 {
     public static function ajaxGetAutoConvtStatus()
@@ -93,7 +93,7 @@ class Options
         wp_die();
     }
 
-    public static function getComSpeed(): int
+    public static function getComSpeed()
     {
         return intval(get_option('avifcompressionspeed', 6));
     }
@@ -147,7 +147,7 @@ class Options
         wp_die();
     }
 
-    public static function getOnTheFlyAvif(): bool
+    public static function getOnTheFlyAvif()
     {
         return (bool)get_option('avifontheflyavif', false);
     }
@@ -159,7 +159,7 @@ class Options
         wp_die();
     }
 
-    public static function setOnTheFlyAvif(): bool
+    public static function setOnTheFlyAvif()
     {
         $onTheFlyAvif = self::getOnTheFlyAvif();
         return update_option('avifontheflyavif', !$onTheFlyAvif);
@@ -172,7 +172,7 @@ class Options
         wp_die();
     }
 
-    public static function getEnableLogging(): bool
+    public static function getEnableLogging()
     {
         return (bool)get_option('avifenablelogging', false);
     }
@@ -184,7 +184,7 @@ class Options
         wp_die();
     }
 
-    public static function setEnableLogging(): bool
+    public static function setEnableLogging()
     {
         $enableLogging = self::getEnableLogging();
         return update_option('avifenablelogging', !$enableLogging);
@@ -332,6 +332,81 @@ class Options
     public static function setLazyLoadJsThreshold($value = 200){
         return update_option('aviflazyloadjsthreshold',$value);
     }
+
+    //-------
+    public static function ajaxGetLazyLoadBackground()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::getLazyLoadBackground());
+        wp_die();
+    }
+
+    public static function getLazyLoadBackground()
+    {   
+        return (bool)get_option('aviflazyloadbackground', false);
+    }
+
+    public static function ajaxSetLazyLoadBackground()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::setLazyLoadBackground(sanitize_text_field($_POST['aviflazyloadbackground'])));
+        wp_die();
+    }
+
+    public static function setLazyLoadBackground(){
+        
+        return (bool)update_option('aviflazyloadbackground',!self::getLazyLoadBackground());
+    }
     //---- sub options for js lazy load ends
     //end of lazy loading Options 
+    public static function ajaxGetBackgroundConv()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::getBackgroundConv());
+        wp_die();
+    }
+
+    public static function getBackgroundConv()
+    {   
+        return (string)get_option('avifbackgroundConv', 'off');
+    }
+
+    public static function ajaxSetBackgroundConv()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::setBackgroundConv(sanitize_text_field($_POST['avifbackgroundConv'])));
+        wp_die();
+    }
+
+    public static function setBackgroundConv($value = 'off'){
+        
+        return update_option('avifbackgroundConv',$value);
+    }
+    //--------
+    public static function ajaxGetBackgroundConvEvent()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::getBackgroundConvEvent());
+        wp_die();
+    }
+
+    public static function getBackgroundConvEvent()
+    {   
+        return (string)get_option('avifbackgroundevents', 'hourly');
+    }
+
+    public static function ajaxSetBackgroundConvEvent()
+    {
+        if (!wp_verify_nonce($_POST['avife_nonce'], 'avife_nonce')) wp_die();
+        echo json_encode(self::setBackgroundConvEvent(sanitize_text_field($_POST['avifbackgroundevents'])));
+        wp_die();
+    }
+
+    public static function setBackgroundConvEvent($value = 'hourly'){
+        
+        $cron = new Cron();
+        $cron->initiateCron();
+
+        return update_option('avifbackgroundevents',$value);
+    }
 }

@@ -47,11 +47,13 @@
         </div>
     </div>
     <div class="w-full flex flex-col items-start p-4 pt-0 border-b" v-if="lazyLoadMode === 'js'">
-        <div class="border  rounded  w-full">
+        <div class=" bg-gray-50 rounded  w-full">
 
             <RootMargin/>
 
             <Threshold/>
+
+            <BackgroundImage/>
 
         </div>
     </div>
@@ -60,6 +62,7 @@
 import { ref } from 'vue';
 import RootMargin from './lazyloading/jslazyloading/RootMargin.vue';
 import Threshold from './lazyloading/jslazyloading/Threshold.vue';
+import BackgroundImage from './lazyloading/jslazyloading/BackgroundImage.vue';
 const lazyLoadMode = ref(false);
 
 

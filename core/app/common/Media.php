@@ -4,10 +4,12 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 
+use Avife\trait\ImageHelperTrait;
+
 class Media
 {
 
-
+    use ImageHelperTrait;
     /**
      * ajaxCountMedia
      * @return void ajax handle for countMedia
@@ -28,13 +30,13 @@ class Media
     {
         $uploadDirPath = wp_upload_dir()['basedir'];
 
-        $allMedia = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), 0);
+        $allMedia = self::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), 0);
         if (gettype($allMedia) == 'array') {
             $allMedia = count($allMedia);
         }
 
 
-        $convertedMedia = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
+        $convertedMedia = self::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
 
         if (gettype($convertedMedia) == 'array') {
             $convertedMedia = count($convertedMedia);
@@ -75,8 +77,7 @@ class Media
 
         $uploadDirPath = wp_upload_dir()['basedir'];
 
-        $unConvertedAttachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "jpeg"), 1);
-
+        $unConvertedAttachments = self::findFiles($uploadDirPath, array("png", "jpg", "jpeg"), 1);
         if (gettype($unConvertedAttachments) != 'array' || empty($unConvertedAttachments) || $unConvertedAttachments == 0) return null;
 
         /**
@@ -149,7 +150,7 @@ class Media
     {
 
         $uploadDirPath = wp_upload_dir()['basedir'];
-        $attachments = Theme::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
+        $attachments = self::findFiles($uploadDirPath, array("png", "jpg", "webp", "jpeg"), -1);
 
        return Utility::deleteFiles($attachments);
     }

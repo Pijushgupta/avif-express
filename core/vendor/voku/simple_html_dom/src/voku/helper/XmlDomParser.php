@@ -204,7 +204,6 @@ class XmlDomParser extends AbstractDomParser
         }
 
         if ($documentFound === false) {
-
             // UTF-8 hack: http://php.net/manual/en/domdocument.loadhtml.php#95251
             $xmlHackUsed = false;
             /** @noinspection StringFragmentMisplacedInspection */
@@ -393,7 +392,7 @@ class XmlDomParser extends AbstractDomParser
      */
     public function getElementByClass(string $class): SimpleXmlDomNodeInterface
     {
-        return $this->findMulti(".${class}");
+        return $this->findMulti(".{$class}");
     }
 
     /**
@@ -405,7 +404,7 @@ class XmlDomParser extends AbstractDomParser
      */
     public function getElementById(string $id): SimpleXmlDomInterface
     {
-        return $this->findOne("#${id}");
+        return $this->findOne("#{$id}");
     }
 
     /**
@@ -436,7 +435,7 @@ class XmlDomParser extends AbstractDomParser
      */
     public function getElementsById(string $id, $idx = null)
     {
-        return $this->find("#${id}", $idx);
+        return $this->find("#{$id}", $idx);
     }
 
     /**
@@ -530,7 +529,7 @@ class XmlDomParser extends AbstractDomParser
             &&
             !\file_exists($filePath)
         ) {
-            throw new \RuntimeException("File ${filePath} not found");
+            throw new \RuntimeException("File {$filePath} not found");
         }
 
         try {
@@ -540,11 +539,11 @@ class XmlDomParser extends AbstractDomParser
                 $html = \file_get_contents($filePath);
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException("Could not load file ${filePath}");
+            throw new \RuntimeException("Could not load file {$filePath}");
         }
 
         if ($html === false) {
-            throw new \RuntimeException("Could not load file ${filePath}");
+            throw new \RuntimeException("Could not load file {$filePath}");
         }
 
         return $this->loadHtml($html, $libXMLExtraOptions);
@@ -609,7 +608,7 @@ class XmlDomParser extends AbstractDomParser
             &&
             !\file_exists($filePath)
         ) {
-            throw new \RuntimeException("File ${filePath} not found");
+            throw new \RuntimeException("File {$filePath} not found");
         }
 
         try {
@@ -619,11 +618,11 @@ class XmlDomParser extends AbstractDomParser
                 $xml = \file_get_contents($filePath);
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException("Could not load file ${filePath}");
+            throw new \RuntimeException("Could not load file {$filePath}");
         }
 
         if ($xml === false) {
-            throw new \RuntimeException("Could not load file ${filePath}");
+            throw new \RuntimeException("Could not load file {$filePath}");
         }
 
         return $this->loadXml($xml, $libXMLExtraOptions, $useDefaultLibXMLOptions);

@@ -6,18 +6,21 @@ if (!defined('ABSPATH')) exit;
 
 use Avife\interface\Lazyload;
 use Masterminds\HTML5;
-
+use Avife\trait\DomHelperTrait;
 
 
 class Lazyloadjs implements Lazyload
 {
+    use DomHelperTrait;
     private string $threshold;
     private string $rootMargin;
+    private string $background;
 
-    public function __construct($rootMargin = '0px 0px 200px 0px', $threshold = '0')
+    public function __construct($rootMargin = '0px 0px 200px 0px', $threshold = '0', $background = false)
     {
         $this->rootMargin = $rootMargin;
         $this->threshold = $threshold;
+        $this->background = $background;
     }
 
     public function handle($content)
@@ -47,48 +50,12 @@ class Lazyloadjs implements Lazyload
             $scriptEl->appendChild($dom->createTextNode($this->addJS()));
             $body->appendChild($scriptEl);
         }
-        // Save HTML
+        // Save as HTML
         $updatedHtml = $parser->saveHTML($dom);
 
-        // style {background-image:url()}
-        $updatedHtml = preg_replace_callback(
-            '/<([a-zA-Z]+)([^>]*?)\sstyle\s*=\s*"([^"]*?)"/i',
-            function ($matches) {
-                $originalStyle = $matches[3];
-                $allUrls = [];
-
-                // Match both background and background-image URLs
-                $cleanStyle = preg_replace_callback(
-                    '/\b(background(?:-image)?)\s*:\s*([^;]*?)url\((["\']?)(.*?)\3\)([^;]*?)(;?)/i',
-                    function ($m) use (&$allUrls) {
-                        // Extract URL
-                        $allUrls[] = $m[4];
-
-                        // Keep everything else intact (position, repeat, size, etc.)
-                        $before = trim(preg_replace('/url\((["\']?).*?\1\)/i', '', $m[2]));
-                        $after = $m[5];
-
-                        // Rebuild declaration without the URL
-                        $declaration = $m[1] . ':' . trim($before . ' ' . $after) . $m[6];
-
-                        return $declaration;
-                    },
-                    $originalStyle
-                );
-
-                $cleanStyle = trim($cleanStyle);
-                $newStyle = !empty($cleanStyle) ? 'style="' . $cleanStyle . '"' : '';
-                $dataBg = !empty($allUrls) ? 'data-bg="' . implode(',', $allUrls) . '"' : '';
-
-                return "<{$matches[1]}{$matches[2]} $newStyle $dataBg";
-            },
-            $updatedHtml
-        );
-
-
-
-
-
+        //adding background lazy server side code 
+        if($this->background) $updatedHtml = $this->lazyBackground($updatedHtml);
+        
         return $updatedHtml;
     }
 
@@ -141,13 +108,42 @@ class Lazyloadjs implements Lazyload
     }
 
 
-    private function isInsideNoscript(\DOMNode $node): bool
-    {
-        while ($node = $node->parentNode) {
-            if ($node instanceof \DOMElement && strtolower($node->tagName) === 'noscript') {
-                return true;
-            }
-        }
-        return false;
+    
+
+    private function lazyBackground($content){
+        // style {background-image:url()}
+        return  preg_replace_callback(
+            '/<([a-zA-Z]+)([^>]*?)\sstyle\s*=\s*"([^"]*?)"/i',
+            function ($matches) {
+                $originalStyle = $matches[3];
+                $allUrls = [];
+
+                // Match both background and background-image URLs
+                $cleanStyle = preg_replace_callback(
+                    '/\b(background(?:-image)?)\s*:\s*([^;]*?)url\((["\']?)(.*?)\3\)([^;]*?)(;?)/i',
+                    function ($m) use (&$allUrls) {
+                        // Extract URL
+                        $allUrls[] = $m[4];
+
+                        // Keep everything else intact (position, repeat, size, etc.)
+                        $before = trim(preg_replace('/url\((["\']?).*?\1\)/i', '', $m[2]));
+                        $after = $m[5];
+
+                        // Rebuild declaration without the URL
+                        $declaration = $m[1] . ':' . trim($before . ' ' . $after) . $m[6];
+
+                        return $declaration;
+                    },
+                    $originalStyle
+                );
+
+                $cleanStyle = trim($cleanStyle);
+                $newStyle = !empty($cleanStyle) ? 'style="' . $cleanStyle . '"' : '';
+                $dataBg = !empty($allUrls) ? 'data-bg="' . implode(',', $allUrls) . '"' : '';
+
+                return "<{$matches[1]}{$matches[2]} $newStyle $dataBg";
+            },
+            $content
+        );
     }
 }

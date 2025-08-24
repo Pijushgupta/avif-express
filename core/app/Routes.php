@@ -38,6 +38,15 @@ class Routes
         add_action('wp_ajax_ajaxGetLazyLoadJsThreshold', array('Avife\common\Options', 'ajaxGetLazyLoadJsThreshold'));
         add_action('wp_ajax_ajaxSetLazyLoadJsThreshold', array('Avife\common\Options', 'ajaxSetLazyLoadJsThreshold'));
 
+        add_action('wp_ajax_ajaxGetLazyBackground', array('Avife\common\Options', 'ajaxGetLazyLoadBackground'));
+        add_action('wp_ajax_ajaxSetLazyBackground', array('Avife\common\Options', 'ajaxSetLazyLoadBackground'));
+
+        add_action('wp_ajax_ajaxGetBackgroudConv', array('Avife\common\Options', 'ajaxGetBackgroundConv'));
+        add_action('wp_ajax_ajaxSetBackgroudConv', array('Avife\common\Options', 'ajaxSetBackgroundConv'));
+
+        add_action('wp_ajax_ajaxGetBackgroundConvEvent', array('Avife\common\Options', 'ajaxGetBackgroundConvEvent'));
+        add_action('wp_ajax_ajaxSetBackgroundConvEvent', array('Avife\common\Options', 'ajaxSetBackgroundConvEvent'));
+
         add_action('wp_ajax_ajaxCountMedia', array('Avife\common\Media', 'ajaxCountMedia'));
         add_action('wp_ajax_ajaxConvertRemaining', array('Avife\common\Media', 'ajaxConvertRemaining'));
         add_action('wp_ajax_ajaxDeleteAll', array('Avife\common\Media', 'ajaxDeleteAll'));

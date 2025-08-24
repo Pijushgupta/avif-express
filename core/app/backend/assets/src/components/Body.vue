@@ -97,6 +97,7 @@
 					<template v-if="tab == 0">
 						<CloudSwitcher/>
 						<AutoConvStatus/>
+            <AutoBackgroundConv/>
 						<OperationMode/>
             <LazyLoading/>
 						<FallbackSetting/>
@@ -143,6 +144,7 @@ import ViewLog from './body/ViewLog.vue';
 import Api from './body/Api.vue';
 import PhpInformation from './body/PhpInformation.vue';
 import LazyLoading from './body/LazyLoading.vue';
+import AutoBackgroundConv from './body/AutoBackgroundConv.vue';
 
 const toWait = waitingSatus();
 

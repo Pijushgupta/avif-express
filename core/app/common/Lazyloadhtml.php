@@ -6,13 +6,14 @@ if (!defined('ABSPATH')) exit;
 
 use  Avife\interface\Lazyload;
 use Masterminds\HTML5;
+use Avife\trait\DomHelperTrait;
 
 class Lazyloadhtml implements Lazyload
 {
-
+    use DomHelperTrait;
     public function handle($content)
     {
-        $parser = new HTML5();
+        $parser = new HTML5(['encode_entities' => false]);
         $dom = $parser->loadHTML($content);
 
         // Add loading="lazy" where missing
@@ -33,16 +34,4 @@ class Lazyloadhtml implements Lazyload
         return $updatedHtml;
     }
 
-    private function isInsideNoscript(\DOMNode $node): bool
-    {
-        while ($node = $node->parentNode) {
-            if (
-                $node instanceof \DOMElement &&
-                strtolower($node->tagName) === 'noscript'
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
