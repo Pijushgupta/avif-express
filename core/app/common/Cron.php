@@ -56,7 +56,7 @@ class Cron
         $directoryToTarget = Options::getBackgroundConv();
         if ($directoryToTarget == 'off') return false;
 
-        $backgroundImageConverterObj =  BackgroundImageConverter::get_instance();
+        
       
         
         $directoryPaths = [];
@@ -83,6 +83,8 @@ class Cron
 
         if(empty($filesToConvert)) return false;
 
+        $backgroundImageConverterObj =  BackgroundImageConverter::get_instance();
+        
         foreach($filesToConvert as $fileToConvert){
             $backgroundImageConverterObj->push_to_queue($fileToConvert);
         }

@@ -16,6 +16,8 @@ class BackgroundImageConverter extends WP_Background_Process{
 
     protected int $speed;
 
+    protected string $driver;
+
     private static $instance;
 
     public function __construct()
@@ -23,6 +25,7 @@ class BackgroundImageConverter extends WP_Background_Process{
         parent::__construct();
         $this->quality = Options::getImageQuality();
         $this->speed = Options::getComSpeed();
+        $this->driver = IS_IMAGICK_AVIF ? 'imagick' : 'gd';
 
         
     }
