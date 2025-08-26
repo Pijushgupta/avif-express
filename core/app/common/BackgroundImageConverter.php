@@ -46,7 +46,7 @@ class BackgroundImageConverter extends WP_Background_Process{
         
         try{
             $converter = new ImageConverter($item);
-            $converter->setFormat('avif')->setQuality($this->quality)->setSpeed($this->speed)->convert();
+            $converter->setFormat('avif')->setDriver($this->driver)->setQuality($this->quality)->setSpeed($this->speed)->convert();
         }catch(Exception $e){
             Utility::logError($e->getMessage());
         }
