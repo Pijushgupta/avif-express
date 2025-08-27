@@ -45,14 +45,14 @@ jobs:
             --exclude '.editorconfig' \
             --exclude 'README.md' \
             --exclude '.gitignore' \
-            --exclude 'code/backend/fonts' \
-            --exclude 'code/backend/assets/src' \
-            --exclude 'code/backend/assets/stores' \
-            --exclude 'code/backend/mix-manifest.json' \
-            --exclude 'code/backend/package-lock.json' \
-            --exclude 'code/backend/package.json' \
-            --exclude 'code/backend/tailwind.config.js' \
-            --exclude 'code/backend/webpack.mix.js' 
+            --exclude 'core/backend/fonts' \
+            --exclude 'core/backend/assets/src' \
+            --exclude 'core/backend/assets/stores' \
+            --exclude 'core/backend/mix-manifest.json' \
+            --exclude 'core/backend/package-lock.json' \
+            --exclude 'core/backend/package.json' \
+            --exclude 'core/backend/tailwind.config.js' \
+            --exclude 'core/backend/webpack.mix.js' 
 
         - name: Verify deployment
           run: |
