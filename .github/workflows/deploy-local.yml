@@ -20,27 +20,6 @@ jobs:
             echo "workspace: $GITHUB_WORKSPACE"
             ls -la "$GITHUB_WORKSPACE"
 
-
-        - name: Remove dev files
-          run: |
-            # remove what you don't want to copy (adjust to your needs)
-            rm -rf "$GITHUB_WORKSPACE/node_modules"
-            rm -rf "$GITHUB_WORKSPACE/.git"
-            rm -rf "$GITHUB_WORKSPACE/.github" 
-            rm -rf "$GITHUB_WORKSPACE/.idea"
-            rm -rf "$GITHUB_WORKSPACE/.editorconfig"
-            rm -rf "$GITHUB_WORKSPACE/README.md"
-            rm -rf "$GITHUB_WORKSPACE/.gitignore"
-            rm -rf "$GITHUB_WORKSPACE/code/backend/fonts"
-            rm -rf "$GITHUB_WORKSPACE/code/backend/assets/src"
-            rm -rf "$GITHUB_WORKSPACE/code/backend/assets/stores"
-            rm -rf "$GITHUB_WORKSPACE/code/backend/mix-manifest.json"
-            rm -rf "$GITHUB_WORKSPACE/code/backend/package-lock.json"
-            rm -rf "$GITHUB_WORKSPACE/code/backend/package.json"
-            rm -rf "$GITHUB_WORKSPACE/code/backend/tailwind.config.js"
-            rm -rf "$GITHUB_WORKSPACE/code/backend/webpack.mix.js"
-
-
         - name: Sync to target folder on runner
           run: |
             # Get current date in yyyy-mm-dd format
@@ -49,13 +28,31 @@ jobs:
             # Use $HOME instead of hardcoding your username
             TARGET_DIR="$HOME/Desktop/avif-express-$TODAY"
 
+            # Save TARGET_DIR to env so other steps can use it
+            echo "TARGET_DIR=$TARGET_DIR" >> $GITHUB_ENV
+
             # Create the target folder if it doesn't exist
             mkdir -p "$TARGET_DIR"
 
             # Copy repo contents (after cleanup) to the desired local path
             # if same machine: use rsync (no network)
             # If you need sudo to write to the target, prefix rsync with sudo.
-            rsync -av --delete "$GITHUB_WORKSPACE/" "$TARGET_DIR"
+            rsync -av --progress $GITHUB_WORKSPACE/ $TARGET_DIR \
+            --exclude 'node_modules' \
+            --exclude '.git' \
+            --exclude '.github' \ 
+            --exclude '.idea' \
+            --exclude '.editorconfig' \
+            --exclude 'README.md' \
+            --exclude '.gitignore' \
+            --exclude 'code/backend/fonts' \
+            --exclude 'code/backend/assets/src' \
+            --exclude 'code/backend/assets/stores' \
+            --exclude 'code/backend/mix-manifest.json' \
+            --exclude 'code/backend/package-lock.json' \
+            --exclude 'code/backend/package.json' \
+            --exclude 'code/backend/tailwind.config.js' \
+            --exclude 'code/backend/webpack.mix.js' 
 
         - name: Verify deployment
           run: |
