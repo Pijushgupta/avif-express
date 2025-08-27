@@ -1,8 +1,10 @@
 <template>
 	
 	<div class="clear-both md:px-5 max-w-5xl mx-auto">
+		<div class="bg-white rounded-2xl">
 		<Header/>
 		<Body/>
+		</div>
 	</div>
 	
 </template>

@@ -1,7 +1,7 @@
 <template>
-	<div class="bg-white border border-t-0 rounded-b-2xl overflow-hidden avif-body">
+	<div class="bg-white border border-t-0 rounded-b-2xl overflow-hidden avif-body pt-2 -mt-2">
 		<div class="flex flex-col  relative">
-			<div v-if="hasImagickstatus != '1' && avifsupportstatus != '1' && isEnabledCloud !='1'" class="p-4 bg-gradient-to-r from-red-800 via-red-500 to-red-700 text-white flex flex-col  justify-between   ">
+			<!-- <div v-if="hasImagickstatus != '1' && avifsupportstatus != '1' && isEnabledCloud !='1'" class="p-4 bg-gradient-to-r from-red-800 via-red-500 to-red-700 text-white flex flex-col  justify-between   ">
         <span class="text-left">The PHP GD extension with libavif support or the Imagick extension with AVIF support is not installed or enabled for <strong>Local Conversion</strong>.</span>
         <div class="group relative ">
         <span class="text-left">
@@ -75,7 +75,7 @@
 
          </div>
         </div>
-      </div>
+      </div> -->
 			<div class="relative control-area flex flex-row w-full">
 				<div class="border-r flex flex-col p-2">
 					<span class="pb-2 first:pt-0 last:pb-0 cursor-pointer group relative" @click="tab = 0">
@@ -127,6 +127,7 @@
 
 </template>
 <script setup>
+import { useToast } from 'vue-toastification';
 import { waitingSatus } from '../../stores/state';
 import AutoConvStatus from './body/AutoConvStatus.vue';
 import OperationMode from './body/OperationMode.vue';
@@ -138,7 +139,7 @@ import BulkConv from './body/BulkConv.vue';
 import ThemeConvVue from './body/ThemeConv.vue';
 import CloudSwitcher from './body/CloudSwitcher.vue';
 import AvifOnTheFly from './body/AvifOnTheFly.vue';
-import {ref} from 'vue';
+import {onMounted, ref, nextTick} from 'vue';
 import EnableLogging from './body/EnableLogging.vue';
 import ViewLog from './body/ViewLog.vue';
 import Api from './body/Api.vue';
@@ -155,6 +156,19 @@ const hasImagickstatus  = hasImagick;
 const isEnabledCloud = isCloudEngine;
 
 const tab = ref(0);
+ const toast = useToast();
+onMounted(async ()=>{
+  await nextTick()
+  checkLocalConversionSupport();
+});
+const checkLocalConversionSupport = () => {
+  console.log("Hello");
+  if(hasImagickstatus != '1' && avifsupportstatus != '1' && isEnabledCloud !='1'){
+    
+     toast.error("The PHP GD extension with libavif support or the Imagick extension with AVIF support is not installed or enabled for Local Conversion.")
+  }
+}
+
 
 
 </script>

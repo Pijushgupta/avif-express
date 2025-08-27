@@ -1,0 +1,59 @@
+name: Deploy to local runner
+on:
+    push:
+      branches: [ main ]
+
+
+jobs:
+  deploy:
+  # the job will only run on a runner that has the `self-hosted` + `local` labels
+    runs-on: [ self-hosted, local ]
+
+
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+
+        - name: Show workspace
+          run: |
+            echo "workspace: $GITHUB_WORKSPACE"
+            ls -la "$GITHUB_WORKSPACE"
+
+
+        - name: Remove dev files
+          run: |
+            # remove what you don't want to copy (adjust to your needs)
+            rm -rf "$GITHUB_WORKSPACE/node_modules"
+            rm -rf "$GITHUB_WORKSPACE/.git"
+            rm -rf "$GITHUB_WORKSPACE/.github" 
+            rm -rf "$GITHUB_WORKSPACE/.idea"
+            rm -rf "$GITHUB_WORKSPACE/.editorconfig"
+            rm -rf "$GITHUB_WORKSPACE/.README.md"
+            rm -rf "$GITHUB_WORKSPACE/.gitignore"
+            rm -rf "$GITHUB_WORKSPACE/code/backend/fonts"
+            rm -rf "$GITHUB_WORKSPACE/code/backend/assets/src"
+            rm -rf "$GITHUB_WORKSPACE/code/backend/assets/stores"
+            rm -rf "$GITHUB_WORKSPACE/code/backend/mix-manifest.json"
+            rm -rf "$GITHUB_WORKSPACE/code/backend/package-lock.json"
+            rm -rf "$GITHUB_WORKSPACE/code/backend/package.json"
+            rm -rf "$GITHUB_WORKSPACE/code/backend/tailwind.config.js"
+            rm -rf "$GITHUB_WORKSPACE/code/backend/webpack.mix.js"
+
+
+        - name: Sync to target folder on runner
+          run: |
+            # Get current date in yyyy-mm-dd format
+            TODAY=$(date +'%Y-%m-%d')
+
+            # Use $HOME instead of hardcoding your username
+            TARGET_DIR="$HOME/Desktop/avif-express-$TODAY"
+
+            # Create the target folder if it doesn't exist
+            mkdir -p "$TARGET_DIR"
+
+            # Copy repo contents (after cleanup) to the desired local path
+            # if same machine: use rsync (no network)
+            # If you need sudo to write to the target, prefix rsync with sudo.
+            rsync -av --delete "$GITHUB_WORKSPACE/" "$TARGET_DIR"
+            

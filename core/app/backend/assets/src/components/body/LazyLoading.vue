@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex flex-row justify-between items-center p-4 border-b"
-        :class="lazyLoadMode == 'js' ? 'border-b-0' : ''">
+        :class="lazyLoadMode == 'js' ? '!border-b-0' : ''">
         <label class="w-1/2 flex flex-col justify-start" for="lazyloadmode">
             <span class="flex flex-row items-center">
                 Lazy Loading

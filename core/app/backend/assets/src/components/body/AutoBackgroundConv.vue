@@ -1,9 +1,9 @@
 <template>
-	<div class="w-full flex md:flex-row flex-col justify-between items-center p-4 border-b last:border-b-0" :class="backgroundConv !== 'off' ? 'border-b-0' : ''">
-		<label class="w-full md:w-1/2 flex justify-start mb-2 md:mb-0" for="cronjob">Automatic image Processing in
+	<div class="w-full flex md:flex-row flex-col justify-between items-center p-4 border-b" :class="backgroundConv !== 'off' ? '!border-b-0' : ''">
+		<label class="w-full md:w-1/2 flex justify-start mb-2 md:mb-0" for="cronjobdirectory">Automatic image Processing in
 			Background</label>
 		<div class="w-full md:w-1/2 flex justify-start md:justify-end">
-			<select id="cronjob" class="w-full md:w-auto" v-model="backgroundConv" v-on:change="setBackgroundConv">
+			<select id="cronjobdirectory" class="w-full md:w-auto" v-model="backgroundConv" v-on:change="setBackgroundConv">
 				<option value="off">Inactive</option>
 				<option value="theme">Theme Directory</option>
 				<option value="upload">Upload Directory</option>

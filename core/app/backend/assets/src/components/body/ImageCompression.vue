@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full flex flex-row justify-between items-center p-4 border-b">
 				<label class="w-1/2 flex flex-col justify-start" for="imgComSpeed">
-					<span class="mb-1">{{ $t('compressionSpeed') }}</span>
+					<span class="mb-1">{{ $t('compressionSpeed') }}(GD Only)</span>
 					<span class="text-xs">{{ $t('speedWarning') }}</span>
 				</label>
 				<div class="w-1/2 flex justify-end">
