@@ -29,7 +29,7 @@ jobs:
             rm -rf "$GITHUB_WORKSPACE/.github" 
             rm -rf "$GITHUB_WORKSPACE/.idea"
             rm -rf "$GITHUB_WORKSPACE/.editorconfig"
-            rm -rf "$GITHUB_WORKSPACE/.README.md"
+            rm -rf "$GITHUB_WORKSPACE/README.md"
             rm -rf "$GITHUB_WORKSPACE/.gitignore"
             rm -rf "$GITHUB_WORKSPACE/code/backend/fonts"
             rm -rf "$GITHUB_WORKSPACE/code/backend/assets/src"
@@ -56,4 +56,10 @@ jobs:
             # if same machine: use rsync (no network)
             # If you need sudo to write to the target, prefix rsync with sudo.
             rsync -av --delete "$GITHUB_WORKSPACE/" "$TARGET_DIR"
+            
+        - name: Verify deployment
+          run: |
+            echo "Deployment complete. Contents of $TARGET_DIR:"
+            ls -la "$TARGET_DIR"
+
             
