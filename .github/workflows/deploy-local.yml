@@ -40,7 +40,7 @@ jobs:
             rsync -av --progress $GITHUB_WORKSPACE/ $TARGET_DIR \
             --exclude 'node_modules' \
             --exclude '.git' \
-            --exclude '.github' \ 
+            --exclude '.github' \
             --exclude '.idea' \
             --exclude '.editorconfig' \
             --exclude 'README.md' \
