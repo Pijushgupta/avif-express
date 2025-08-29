@@ -4,7 +4,7 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 
-use Avife\trait\ImageHelperTrait;
+use Avife\traits\ImageHelperTrait;
 
 class Theme
 {
@@ -22,7 +22,7 @@ class Theme
      * provides information about current theme
      * @return array[]
      */
-    public static function getCurrentTheme(): array
+    public static function getCurrentTheme()
     {
         $active_theme = wp_get_theme();
 
@@ -127,7 +127,7 @@ class Theme
      * In case of child theme, delete from parent and child.
      * @return boolean
      */
-    public static function themeFilesDelete() : bool
+    public static function themeFilesDelete()
     {
 
         $filePaths = self::themeFilesConverted();
@@ -147,7 +147,7 @@ class Theme
      * themeFilesConverted
      * @return array returns an array containing the paths of jpg,webp and jpeg images in the theme dir(s) that are already converted
      */
-    public static function themeFilesConverted(): array
+    public static function themeFilesConverted()
     {
         $themeDirs = self::avif_get_theme_dirs();
         $convertedFiles = [];
@@ -164,7 +164,7 @@ class Theme
      * that ate yet to get converted
      * @return array
      */
-    public static function themesFilesUnconverted() : array
+    public static function themesFilesUnconverted()
     {
         $themeDirs = self::avif_get_theme_dirs();
         $unconvertedFiles = [];
@@ -179,7 +179,7 @@ class Theme
      * returns an array containing the paths of jpg,webp and jpeg images in the theme dir
      * @return array
      */
-    public static function themesFilesTotal() : array
+    public static function themesFilesTotal()
     {
         $themeDirs = self::avif_get_theme_dirs();
         $totalFiles = [];
@@ -194,7 +194,7 @@ class Theme
      * avif_get_theme_dirs
      * @return array returns the theme path(s). In case of child theme, return parent and child theme path
      */
-    public static function avif_get_theme_dirs(): array
+    public static function avif_get_theme_dirs()
     {
         $themes = array();
         if (is_child_theme()) {

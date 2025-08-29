@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 
 class CronManager
 {
-    private string $hook = '';
+    private $hook = '';
     private $callback;
 
     public function __construct(string $hook, callable $callback)
@@ -22,7 +22,7 @@ class CronManager
     /**
      * Schedule a cron job with given interval (hourly, twicedaily, daily, weekly).
      */
-    public function schedule(string $interval): void
+    public function schedule(string $interval)
     {
         // Check if an event is already scheduled for this hook.
         if (!wp_next_scheduled($this->hook)) {
@@ -35,7 +35,7 @@ class CronManager
     /**
      * Clear any scheduled event.
      */
-    public function clear(): void
+    public function clear()
     {
         wp_clear_scheduled_hook($this->hook);
     }
@@ -43,7 +43,7 @@ class CronManager
     /**
      * Get current schedule name (if any).
      */
-    public function getCurrentSchedule(): ?string
+    public function getCurrentSchedule()
     {
         $event = wp_get_scheduled_event($this->hook);
 

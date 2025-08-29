@@ -233,7 +233,7 @@ class Image
      * @param mixed $speed Conversion speed (0 - 10)
      * @return boolean
      */
-    public static function convert($src, $des, $quality, $speed): bool
+    public static function convert($src, $des, $quality, $speed)
     {
         if (!$src && !$des && !$quality && !$speed) return false;
 
@@ -432,7 +432,7 @@ class Image
      * @param string $src source of the image
      * @return bool TRUE|FALSE true on success, false on fail
      */
-    public static function webpConvert($src): bool
+    public static function webpConvert($src)
     {
         if (!$src) return false;
 

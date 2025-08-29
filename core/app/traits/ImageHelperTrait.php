@@ -1,6 +1,6 @@
 <?php 
 
-namespace Avife\trait;
+namespace Avife\traits;
 
 
 trait ImageHelperTrait {
@@ -12,7 +12,7 @@ trait ImageHelperTrait {
      * @param int $hasAvif : 0  - All , 1 - Unconverted, -1 - Converted
      * @return array file paths
      */
-    private static function findFiles(string $basePath, array $exts, int $hasAvif = 0) : array
+    private static function findFiles(string $basePath, array $exts, int $hasAvif = 0)
     {
         /**
          * To store the paths

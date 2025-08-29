@@ -13,7 +13,7 @@ class Options
         wp_die();
     }
 
-    public static function getAutoConvtStatus(): bool
+    public static function getAutoConvtStatus()
     {
         return (bool)get_option('avifautoconvstatus', false);
     }
@@ -25,7 +25,7 @@ class Options
         wp_die();
     }
 
-    public static function setAutoConvtStatus(): bool
+    public static function setAutoConvtStatus()
     {
         $autoConvStatus = self::getAutoConvtStatus();
         return update_option('avifautoconvstatus', !$autoConvStatus);
@@ -68,7 +68,7 @@ class Options
         wp_die();
     }
 
-    public static function getImageQuality(): int
+    public static function getImageQuality()
     {
         return intval(get_option('avifimagequality', 70));
     }
@@ -236,7 +236,7 @@ class Options
         wp_die();
     }
 
-    public static function getFallbackMode(): string
+    public static function getFallbackMode()
     {
         if (!get_option('aviffallbackmode', false)) {
             self::setFallbackMode();
@@ -251,7 +251,7 @@ class Options
         wp_die();
     }
 
-    public static function setFallbackMode($value = 'original'): bool
+    public static function setFallbackMode($value = 'original')
     {
         return update_option('aviffallbackmode', $value);
     }

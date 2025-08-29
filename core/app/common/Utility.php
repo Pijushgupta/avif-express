@@ -20,7 +20,7 @@ class Utility
     /**
      * Checks if local conversion is supported.
      */
-    public static function isLocalAvifConversionSupported(): bool
+    public static function isLocalAvifConversionSupported()
     {
         return IS_IMAGICK_AVIF || IS_GD_AVIF;
     }

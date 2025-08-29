@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 class Setting
 {
-    public static function avif_set_time_limit(): bool
+    public static function avif_set_time_limit()
     {
         if (function_exists('wp_is_ini_value_changeable') && wp_is_ini_value_changeable('max_execution_time')) {
             set_time_limit(0);
@@ -32,7 +32,7 @@ class Setting
     /**
      * deleteLogFile
      */
-    public static function deleteLogFile(): bool
+    public static function deleteLogFile()
     {
         if (file_exists(AVIF_LOG_FILE)) {
             @unlink(AVIF_LOG_FILE);
@@ -59,7 +59,7 @@ class Setting
     /**
      * isLogFileExists
      */
-    public static function isLogFileExists(): bool
+    public static function isLogFileExists()
     {
         if (file_exists(AVIF_LOG_FILE)) {
             return true;

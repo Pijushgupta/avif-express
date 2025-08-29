@@ -6,15 +6,15 @@ if (!defined('ABSPATH')) exit;
 
 use Avife\interface\Lazyload;
 use Masterminds\HTML5;
-use Avife\trait\DomHelperTrait;
+use Avife\traits\DomHelperTrait;
 
 
 class Lazyloadjs implements Lazyload
 {
     use DomHelperTrait;
-    private string $threshold;
-    private string $rootMargin;
-    private string $background;
+    private $threshold;
+    private $rootMargin;
+    private $background;
 
     public function __construct($rootMargin = '0px 0px 200px 0px', $threshold = '0', $background = false)
     {

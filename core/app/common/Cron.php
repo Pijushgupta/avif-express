@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 use Avife\common\CronManager;
 use Avife\common\Options;
 use Avife\common\BackgroundImageConverter;
-use Avife\trait\FileTrait;
+use Avife\traits\FileTrait;
 
 class Cron
 {
@@ -50,7 +50,7 @@ class Cron
     }
 
     //the actual work getting done here - not related to schedule or action hook
-    public function initiateConversion(): bool
+    public function initiateConversion()
     {
         // check if background image conversion is enabled or not 
         $directoryToTarget = Options::getBackgroundConv();

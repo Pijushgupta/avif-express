@@ -476,7 +476,7 @@ class Html
      * @param string $url
      * @return boolean true on success and false on fail
      */
-    public static function isFileExists(string $url): bool
+    public static function isFileExists(string $url)
     {
         $path = Utility::attachmentUrlToPath($url);
         if (!$path) return false;

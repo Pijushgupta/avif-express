@@ -12,11 +12,11 @@ class BackgroundImageConverter extends WP_Background_Process{
 
     protected  $action = 'bgic';
 
-    protected int $quality;
+    protected $quality;
 
-    protected int $speed;
+    protected $speed;
 
-    protected string $driver;
+    protected $driver;
 
     private static $instance;
 

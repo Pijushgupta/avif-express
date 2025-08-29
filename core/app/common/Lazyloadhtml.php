@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 use  Avife\interface\Lazyload;
 use Masterminds\HTML5;
-use Avife\trait\DomHelperTrait;
+use Avife\traits\DomHelperTrait;
 
 class Lazyloadhtml implements Lazyload
 {

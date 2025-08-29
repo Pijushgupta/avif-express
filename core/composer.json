@@ -14,6 +14,7 @@
 		"voku/simple_html_dom": "^4.8",
 		"masterminds/html5": "^2.10",
 		"deliciousbrains/wp-background-processing": "^1.4",
+		"symfony/css-selector": "^5.4",
 		"pijushgupta/image-converter": "dev-main"
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Avife\trait;
+namespace Avife\traits;
 
 trait FileTrait{
     /**
@@ -9,7 +9,7 @@ trait FileTrait{
      * @param int $hasAvif - 1: only unconverted files; 0: all files (both source files that have a converted copy and files without one); -1: only converted files
      * @return array - list of files 
      */
-    private function findFiles(string $basePath, array $exts, int $hasAvif = 0) : array
+    private function findFiles(string $basePath, array $exts, int $hasAvif = 0)
     {
         /**
          * To store the paths

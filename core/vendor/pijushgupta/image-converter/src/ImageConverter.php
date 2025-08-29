@@ -6,12 +6,12 @@ namespace PijushGupta\ImageConverter;
 class ImageConverter
 {
 
-    private ?string $source = null;
-    private ?string $destination = null;
-    private int $quality = 70;
-    private int $speed = 6;
-    private string $toFormat = 'avif';
-    private string $driver = 'imagick';
+    private $source = null;
+    private $destination = null;
+    private $quality = 70;
+    private $speed = 6;
+    private $toFormat = 'avif';
+    private $driver = 'imagick';
 
     public function __construct(string $source = '', string $destination = '')
     {
@@ -19,7 +19,7 @@ class ImageConverter
         if (!empty($destination)) $this->setDestination($destination);
     }
 
-    public function setSource(string $source = ''):self
+    public function setSource(string $source = '')
     {
         if (!is_file($source)) {
             throw new \InvalidArgumentException("Source file '{$source}' does not exist.");
@@ -32,7 +32,7 @@ class ImageConverter
         return $this;
     }
 
-    public function setDestination(string $destination = ''):self
+    public function setDestination(string $destination = '')
     {
         if ($destination == '') {
             throw new \InvalidArgumentException('Destination is not provided');
@@ -45,7 +45,7 @@ class ImageConverter
         return $this;
     }
 
-    public function setQuality(int $quality = 70):self
+    public function setQuality(int $quality = 70)
     {
         if ($quality < 0 || $quality > 100) {
             throw new \InvalidArgumentException('Quality must be between 0 - 100');
@@ -56,7 +56,7 @@ class ImageConverter
     }
 
 
-    public function setSpeed(int $speed = 6):self
+    public function setSpeed(int $speed = 6)
     {
         if ($speed < 0 || $speed > 10) {
             throw new \InvalidArgumentException('Speed must be between 0 - 9');
@@ -66,7 +66,7 @@ class ImageConverter
         return $this;
     }
 
-    public function setFormat(string $toFormat = 'avif'):self
+    public function setFormat(string $toFormat = 'avif')
     {
         if (!in_array(strtolower($toFormat), ['avif', 'webp'])) {
             throw new \InvalidArgumentException('Format must be "avif" or "webp"');
@@ -75,7 +75,7 @@ class ImageConverter
         return $this;
     }
 
-    public function setDriver(string $driver = 'imagick'):self
+    public function setDriver(string $driver = 'imagick')
     {
         if (!in_array(strtolower($driver), ['imagick', 'gd'])) {
             throw new \InvalidArgumentException('Driver must be "gd" or "imagick"');
@@ -86,7 +86,7 @@ class ImageConverter
     }
 
 
-    public function convert():bool
+    public function convert()
     {
         if(is_null($this->source)) return false;
         
@@ -101,7 +101,7 @@ class ImageConverter
         return false;
     }
 
-    private function convertImagick():bool
+    private function convertImagick()
     {
         if (!extension_loaded('imagick')) {
             throw new \RuntimeException('Imagick extension is not loaded.');
@@ -122,7 +122,7 @@ class ImageConverter
     }
 
 
-    private function convertGD():bool
+    private function convertGD()
     {
         if (!extension_loaded('gd')) {
             throw new \RuntimeException('GD extension is not loaded.');
@@ -184,7 +184,7 @@ class ImageConverter
         return true;
     }
 
-    private function getDestination():string
+    private function getDestination()
     {
         if (isset($this->destination)) {
             return $this->destination;
@@ -199,7 +199,7 @@ class ImageConverter
         return $this->destination;
     }
 
-    private function  isImage(string $file): bool
+    private function  isImage(string $file)
     {
         if (!is_file($file)) {
             return false;
@@ -212,14 +212,14 @@ class ImageConverter
             }
             $mime  = finfo_file($finfo, $file);
             finfo_close($finfo);
-            return str_starts_with($mime, 'image/');
+            return strpos($mime, 'image/') === 0;
         }
 
         // fallback
         return (bool) getimagesize($file);
     }
 
-    private function validateDestinationDirectory(string $path): void
+    private function validateDestinationDirectory(string $path)
     {
         $dir = dirname($path);
 

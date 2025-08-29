@@ -4,7 +4,7 @@ namespace Avife\common;
 
 if (!defined('ABSPATH')) exit;
 
-use Avife\trait\ImageHelperTrait;
+use Avife\traits\ImageHelperTrait;
 
 class Media
 {
@@ -26,7 +26,7 @@ class Media
      *
      * @return array in array(number of converted images, number of total images, number of various image sizes)
      */
-    public static function countMedia(): array
+    public static function countMedia()
     {
         $uploadDirPath = wp_upload_dir()['basedir'];
 
@@ -146,7 +146,7 @@ class Media
      * delete All converted Images
      * @return bool true as signal
      */
-    public static function deleteAll() : bool
+    public static function deleteAll()
     {
 
         $uploadDirPath = wp_upload_dir()['basedir'];
