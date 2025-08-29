@@ -127,7 +127,7 @@ class Utility
             /**
              * delete fallback webp
              */
-            $dest = (string)rtrim($file, '.' . pathinfo($file, PATHINFO_EXTENSION)) . '.webp';
+            //$dest = (string)rtrim($file, '.' . pathinfo($file, PATHINFO_EXTENSION)) . '.webp';
 
             /**
              * deleting the file
