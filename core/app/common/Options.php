@@ -122,7 +122,7 @@ class Options
     {
         $engine = get_option('avifconversionengine', false);
         if (!$engine) {
-            update_option('avifconversionengine', sanitize_text_field('cloud'));
+            update_option('avifconversionengine', sanitize_text_field('local'));
         }
         return get_option('avifconversionengine');
     }
