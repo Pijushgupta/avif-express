@@ -3,7 +3,7 @@ Contributors: Pijush_Gupta
 Tags: avif, images, performance
 Requires at least: 6.0
 Tested up to: 6.8.1
-Stable tag: 2025.08.11
+Stable tag: 2025.08.29
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,6 +16,7 @@ On upload, images like jpg, png and WebP gets converted to avif format. Converte
 = Feature list =
 * Images get converted on upload.
 * Bulk convert previously uploaded images.
+* Schedule Bulk convert in the background. 
 * Bulk convert theme images.
 * Local Conversion
 * Cloud Conversion (Freemium)
@@ -25,7 +26,7 @@ On upload, images like jpg, png and WebP gets converted to avif format. Converte
 * Native Language Support for German, Spanish, Russian, French, Hindi and Bengali.
 
 = Official documentation of Avif Express =
-For a more detailed description of options and features of Avif Express, please read the [official documentation](https://www.aavoya.co/avif-express "Avif Express official documentation").
+For a more detailed description of options and features of Avif Express, please read the [official documentation](https://github.com/Pijushgupta/avif-express "Avif Express official documentation").
 
 == Installation ==
 1. Download and Unzip the file.
@@ -33,8 +34,10 @@ For a more detailed description of options and features of Avif Express, please 
 3. Activate `Avif Express` from plugin page.
 
 == Frequently Asked Questions ==
+= documentation =
+Quick documentation [Avif express documentation](https://github.com/Pijushgupta/avif-express)
 = How to obtain API key =
-You can obtain API key from [Avif Express API](https://rapidapi.com/aavoya-aavoya-default/api/avif-express)
+You can obtain API key from [Avif Express API](https://rapidapi.com/aavoya-aavoya-default/api/avif-express) - discontinued.
 = How to generate avif images from previously uploaded images =
 Go to "Avif Express" on the left sidebar menu > On the "Avif express" page > Click on the generate button on "Upload directory" row.
 = How to generate avif images from theme's image =
@@ -43,8 +46,12 @@ Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Click o
 Go to "Avif Express" on left sidebar menu > On the "Avif express" page > Select the mode from the dropdown on "Rendering" row.
 
 == Change Log ==
-= 11.08.2025 =
-
+= 29.08.2025 =
+1. Background Image processing
+2. Background Image Scanning for Image processing
+3. Image Lazy loading - Native, JavaScript, Background Lazy loading
+4. Bug fix: - false negative condition for local image conversion. [Issue](https://github.com/Pijushgupta/avif-express/issues/24) by [David Degner](https://github.com/ddegner).
+   
 
 = 01.12.05.2025 = 
 1.Improved background replacement logic.
