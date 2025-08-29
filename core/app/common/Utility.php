@@ -126,11 +126,13 @@ class Utility
 
             /**
              * delete fallback webp
+             * theme are shipped with webp images, so do not delete webp
              */
             //$dest = (string)rtrim($file, '.' . pathinfo($file, PATHINFO_EXTENSION)) . '.webp';
 
             /**
              * deleting the file
+             * theme are shipped with webp images, so do not delete webp
              */
             //if (file_exists($dest)) wp_delete_file($dest);
         }
