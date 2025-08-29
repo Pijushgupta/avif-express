@@ -45,6 +45,7 @@ jobs:
             --exclude '.editorconfig' \
             --exclude 'README.md' \
             --exclude '.gitignore' \
+            --exclude 'readme-screens' \
             --exclude 'core/app/backend/fonts' \
             --exclude 'core/app/backend/assets/src' \
             --exclude 'core/app/backend/assets/stores' \
