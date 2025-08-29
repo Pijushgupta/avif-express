@@ -1,6 +1,4 @@
 {
     "/assets/dist/app.js": "/assets/dist/app.js",
-    "/assets/dist/app.css": "/assets/dist/app.css",
-    "/assets/dist/fonts/fira-sans-v17-latin-600.woff2": "/assets/dist/fonts/fira-sans-v17-latin-600.woff2",
-    "/assets/dist/fonts/fira-sans-v17-latin-regular.woff2": "/assets/dist/fonts/fira-sans-v17-latin-regular.woff2"
+    "/assets/dist/app.css": "/assets/dist/app.css"
 }
