@@ -42,6 +42,7 @@ git clone https://github.com/Pijushgupta/avif-express.git
 Automatically convert every uploaded image.
 
 **Automatic image Processing in Background**
+
 Schedule Image Processing in Background.
 
 ![Background Service](https://github.com/Pijushgupta/avif-express/blob/main/readme-screens/background-image-processing.png)
@@ -52,7 +53,9 @@ Schedule Image Processing in Background.
 - **Theme & Upload Directory** : Background Service is enabled for Theme & Upload direcory.
 
 **Automatically scan Directory**
+
 Automatically scan directories and convert images on a schedule:
+
 - **Hourly**
 - **Twice Daily**
 - **Daily**
@@ -80,6 +83,7 @@ Lazy loading is loading image only when it’s needed(visible), instead of loadi
     <img src="example.avif" alt="example image" loading="lazy"/>
     ```
 - **Java Script**: Removes the src/source from iframe, img, video, and audio elements, replacing them with data-src, and restores them when they become visible in the viewport.
+    
     *Initial Stage*:
     ```html
     <img data-src="example.avif" alt="example image" />
