@@ -163,7 +163,6 @@ onMounted(async ()=>{
 });
 const checkLocalConversionSupport = () => {
   if(hasImagickstatus != '1' && avifsupportstatus != '1' && isEnabledCloud !='1'){
-    
      toast.error("The PHP GD extension with libavif support or the Imagick extension with AVIF support is not installed or enabled for Local Conversion.")
   }
 }
