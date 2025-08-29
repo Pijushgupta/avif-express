@@ -132,7 +132,7 @@ class Utility
             /**
              * deleting the file
              */
-            if (file_exists($dest)) wp_delete_file($dest);
+            //if (file_exists($dest)) wp_delete_file($dest);
         }
         return true;
     }
