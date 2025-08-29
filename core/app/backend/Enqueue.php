@@ -25,5 +25,9 @@ final class Enqueue
         if (file_exists(AVIFE_ABS . 'core/app/backend/assets/dist/app.css')) {
             wp_enqueue_style('avife-tailwind-style', AVIFE_REL . '/core/app/backend/assets/dist/app.css', array(), '1.0.0');
         }
+
+        if (file_exists(AVIFE_ABS . 'core/app/backend/assets/fonts/fonts.css')) {
+            wp_enqueue_style('avife-font-style', AVIFE_REL . '/core/app/backend/assets/fonts/fonts.css', array(), '1.0.0');
+        }
     }
 }
