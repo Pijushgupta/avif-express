@@ -62,7 +62,7 @@ class Html
         /**
          * checking, if the browser support avif format
          */
-        self::$isAvifSupported = strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'image/avif');
+        self::$isAvifSupported = true; // even edge supports avif.
 
         /**
          * this to compliment for very old browser that don't support avif
@@ -261,7 +261,7 @@ class Html
 
 
             $imagePathSrc = Utility::attachmentUrlToPath($imageUrl);
-            $imagePathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
+            $imagePathDest = Image::avifify($imagePathSrc);
 
             Image::convert($imagePathSrc, $imagePathDest, Options::getImageQuality(), Options::getComSpeed());
 
@@ -303,7 +303,7 @@ class Html
             /**
              * creating new image file url with altered extension
              */
-            $avifImageUrl = rtrim($v, '.' . pathinfo($v, PATHINFO_EXTENSION)) . '.avif';
+            $avifImageUrl = Image::avifify($v);
 
             /**
              * checking if new file exists or not
@@ -324,7 +324,7 @@ class Html
 
 
                 $imagePathSrc = Utility::attachmentUrlToPath($v);
-                $imagePathDest = rtrim($imagePathSrc, '.' . pathinfo($imagePathSrc, PATHINFO_EXTENSION)) . '.avif';
+                $imagePathDest = Image::avifify($imagePathSrc);
 
                 Image::convert($imagePathSrc, $imagePathDest, Options::getImageQuality(), Options::getComSpeed());
 

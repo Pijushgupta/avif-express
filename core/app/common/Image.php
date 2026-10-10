@@ -8,6 +8,16 @@ class Image
 {
 
     /**
+     * Avif-ify the given filename. Assumes it is given a path.
+     *
+     * @return string
+     */
+    public static function avifify(string $file):string {
+        return dirname($file). DIRECTORY_SEPARATOR .
+            basename($file, '.'.pathinfo($file, PATHINFO_EXTENSION)).
+            ".avif";
+    }
+    /**
      * activate
      * Adding our methods to WordPress hooks
      * @return void
@@ -79,11 +89,11 @@ class Image
                  */
                 $srcPath = Utility::attachmentUrlToPath($originalImage);
 
-                if ($srcPath && $srcPath != '') {
+                if (is_string($srcPath) && $srcPath != '') {
                     /**
                      * creating destination file path
                      */
-                    $desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
+                    $desPath = self::avifify($srcPath);
 
                     if (Options::getConversionEngine() == 'local') {
                         /**
@@ -113,9 +123,9 @@ class Image
 
             $srcPath = Utility::attachmentUrlToPath($originalImages[0]);
 
-            if ($srcPath && $srcPath != '') {
+            if (is_string($srcPath) && $srcPath != '') {
 
-                $desPath = rtrim($srcPath, '.' . pathinfo($srcPath, PATHINFO_EXTENSION)) . '.avif';
+                $desPath = self::avifify($srcPath);
 
                 if (Options::getConversionEngine() == 'local') {
 
@@ -147,7 +157,7 @@ class Image
             $src = trailingslashit($fileDir) . $size['file'];
 
             if (file_exists($src)) {
-                $des = rtrim($src, '.' . pathinfo($src, PATHINFO_EXTENSION)) . '.avif';
+                $des = self::avifify($src);
 
                 if (Options::getConversionEngine() == 'local') {
 
@@ -201,12 +211,12 @@ class Image
         if ($orginalImageUrls[0] != $orginalImageUrls[1]) {
             foreach ($orginalImageUrls as $orginalImageUrl) {
                 $orginalImagePath = Utility::attachmentUrlToPath($orginalImageUrl);
-                $orginalImagePath = rtrim($orginalImagePath, '.' . pathinfo($orginalImagePath, PATHINFO_EXTENSION)) . '.avif';
+                $orginalImagePath = self::avifify($orginalImagePath);
                 if (file_exists($orginalImagePath)) wp_delete_file($orginalImagePath);
             }
         } else {
             $orginalImagePath = Utility::attachmentUrlToPath($orginalImageUrls[0]);
-            $orginalImagePath = rtrim($orginalImagePath, '.' . pathinfo($orginalImagePath, PATHINFO_EXTENSION)) . '.avif';
+            $orginalImagePath = self::avifify($orginalImagePath);
             if (file_exists($orginalImagePath)) wp_delete_file($orginalImagePath);
         }
 
@@ -217,7 +227,7 @@ class Image
         $sizes = $attachment_meta['sizes'];
         foreach ($sizes as $size) {
             $file = $fileDir . '/' . $size['file'];
-            $file = rtrim($file, '.' . pathinfo($file, PATHINFO_EXTENSION)) . '.avif';
+            $file = self::avifify($file);
             if (file_exists($file)) wp_delete_file($file);
         }
 

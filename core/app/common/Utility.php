@@ -117,7 +117,7 @@ class Utility
             /**
              * creating path for file to delete. Just by removing original extension with .avif
              */
-            $dest = (string)rtrim($file, '.' . pathinfo($file, PATHINFO_EXTENSION)) . '.avif';
+            $dest = dirname($file). DIRECTORY_SEPARATOR . basename($file,'.'. pathinfo($file, PATHINFO_EXTENSION)). ".avif";
 
             /**
              * Finally deleting the file

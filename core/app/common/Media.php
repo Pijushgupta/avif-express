@@ -101,7 +101,11 @@ class Media
                 /**
                  * creating path for file to delete. Just by removing original extension with .avif
                  */
-                $dest = (string)rtrim($unConvertedAttachment, '.' . pathinfo($unConvertedAttachment, PATHINFO_EXTENSION)) . '.avif';
+                $dest = dirname($unConvertedAttachment). DIRECTORY_SEPARATOR .
+                    basename(
+                        $unConvertedAttachment, '.'.
+                        pathinfo($unConvertedAttachment, PATHINFO_EXTENSION)
+                    ).".avif";
 
                 Image::convert($unConvertedAttachment, $dest, $quality, $speed);
 
